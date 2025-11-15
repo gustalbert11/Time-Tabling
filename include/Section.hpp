@@ -25,11 +25,11 @@ public:
     { 
         return course; 
     }
-    const std::vector<Days>& get_days() const 
+    const Designar::SortedArraySet<Days>& get_days() const 
     { 
         return time_slot.first; 
     }
-    const std::vector<u_int>& get_hours() const 
+    const Designar::SortedArraySet<uint>& get_hours() const 
     { 
         return time_slot.second;
     }
@@ -38,5 +38,5 @@ private:
     std::string id;
     Professor* professor;
     Course* course;
-    std::pair<std::vector<Days>, std::vector<u_int>> time_slot;
+    std::pair<Designar::SortedArraySet<Days>, Designar::SortedArraySet<uint>> time_slot;
 };

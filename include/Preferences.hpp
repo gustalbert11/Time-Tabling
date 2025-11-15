@@ -21,11 +21,11 @@ public:
     { 
         return type; 
     }
-    const std::vector<Days>& get_days() const 
+    const Designar::SortedArraySet<Days>& get_days() const 
     { 
         return days; 
     }
-    const std::vector<uint>& get_hours() const 
+    const Designar::SortedArraySet<uint>& get_hours() const 
     { 
         return hours; 
     }
@@ -33,7 +33,6 @@ public:
 private:
     std::string description;
     PreferenceType type;
-    std::vector<Days> days;
-    std::vector<uint> hours;
-    //Use a container from DeSiGNAR library
+    Designar::SortedArraySet<Days> days;
+    Designar::SortedArraySet<uint> hours;
 };
