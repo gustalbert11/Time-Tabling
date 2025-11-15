@@ -35,4 +35,5 @@ private:
     PreferenceType type;
     std::vector<Days> days;
     std::vector<uint> hours;
+    //Use a container from DeSiGNAR library
 };

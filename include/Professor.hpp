@@ -44,6 +44,8 @@ private:
     std::string id;
     u_int num_sections;
     std::vector<Section*> sections;
+    Designar::SLList<Section*> assigned_sections;
+    //Use a container from DeSiGNAR library
     u_int max_daily_hours;
     u_int max_consecutive_hours;
     std::vector<Preferences*> preferences;

@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 
+# --- INICIO: Configuración DeSiGNAR ---
+# 1. Define la ruta a la biblioteca DeSiGNAR,
+# set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
+set(DESIGNAR_PATH /home/mquintero/projects/DeSiGNAR-2.0.0)
+# --- FIN: Configuración DeSiGNAR ---
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -24,17 +30,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET TimeTabling APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
         add_library(TimeTabling SHARED
             ${PROJECT_SOURCES}
         )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(TimeTabling
             ${PROJECT_SOURCES}
@@ -42,7 +42,26 @@ else()
     endif()
 endif()
 
-target_link_libraries(TimeTabling PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+# --- INICIO: Enlazar DeSiGNAR y Headers del Proyecto ---
+
+# 2. Añade los directorios de "include"
+target_include_directories(TimeTabling PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include  
+    ${DESIGNAR_PATH}/include             
+)
+
+# 3. Añade la ruta donde CMake buscará las bibliotecas (.so o .a)
+target_link_directories(TimeTabling PRIVATE 
+    ${DESIGNAR_PATH}/lib                 
+)
+
+# 4. Enlaza las bibliotecas
+target_link_libraries(TimeTabling PRIVATE 
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Designar                             
+)
+# --- FIN: Enlazar DeSiGNAR y Headers del Proyecto ---
+
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

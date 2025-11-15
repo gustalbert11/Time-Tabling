@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include "Settings.hpp"
 
 class Section;
 
@@ -51,6 +50,7 @@ private:
     u_int num_credits;
     u_int num_sections;
     std::vector<Section*> sections;
+    //Use a container from DeSiGNAR library
     u_int num_weekly_hours;
     u_int max_daily_hours;
 };
