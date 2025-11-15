@@ -8,12 +8,8 @@ class Course;
 class Section
 {
 public:
-    // Section(const std::string& id, Professor* professor, Course* course,
-    //         const std::pair<u_int, u_int>& time_slot)
-    //     : id(id), professor(professor), course(course), time_slot(time_slot)
-    //       {}
 
-    const std::string& get_id() const 
+    const std::string &get_id() const 
     { 
         return id; 
     }
@@ -25,13 +21,65 @@ public:
     { 
         return course; 
     }
-    const Designar::SortedArraySet<Days>& get_days() const 
+    const Designar::SortedArraySet<Days> &get_days() const 
     { 
         return time_slot.first; 
     }
-    const Designar::SortedArraySet<uint>& get_hours() const 
+    const Designar::SortedArraySet<uint> &get_hours() const 
     { 
         return time_slot.second;
+    }
+
+    bool set_id(const std::string &id)
+    {
+        if (id.empty())
+        {
+            return false;
+        }
+        this->id = id;
+        return true;
+    }
+    bool set_professor(Professor* professor)
+    {
+        if (professor == nullptr)
+        {
+            return false;
+        }
+        this->professor = professor;
+        return true;
+    }
+    bool set_course(Course* course)
+    {
+        if (course == nullptr)
+        {
+            return false;
+        }
+        this->course = course;
+        return true;
+    }
+    bool add_day(const Days &day)
+    {
+        if (day < Days::MONDAY || 
+            day > Days::FRIDAY ||
+            time_slot.first.contains(day))
+        {
+            return false;
+        }
+        time_slot.first.append(day);
+        return true;
+    }
+    bool add_hour(const uint &hour)
+    {
+        //if (time_slot.second.size() == professor.MAX_DAILY_HOURS ||
+        if (hour < 1 || 
+            hour > 7 || 
+            time_slot.second.size() == 7 || 
+            time_slot.second.contains(hour))
+        {
+            return false;
+        }
+        time_slot.second.append(hour);
+        return true;
     }
 
 private:
