@@ -25,6 +25,7 @@ This project links to DeSiGNAR using a path variable. Open the main `CMakeLists.
 ```cmake
 # Verify this path is correct for your machine
 set(DESIGNAR_PATH /path/to/your/DeSiGNAR)
+```
 
 ### 2. Build the Project
 From the root of the project directory, create and navigate into a build directory, configure the project with CMake, and compile using make:
@@ -34,9 +35,11 @@ $ mkdir build
 $ cd build
 $ cmake .. 
 $ make
+```
 
 ### 3. Run the Application
 After a successful compilation, the executable (named TimeTabling) will be located in the build directory.
 
 ```shell
 $ ./TimeTabling
+```
