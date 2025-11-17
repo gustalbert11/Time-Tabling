@@ -17,10 +17,10 @@ public:
     size_t get_professor_count() const;
     size_t get_course_count() const;
     size_t get_section_count() const;
-
+    
     const std::unordered_map<std::string, std::unique_ptr<Professor>> &get_professors() const;
     const std::unordered_map<std::string, std::unique_ptr<Course>> &get_courses() const;
-    const std::unordered_map<std::string, std::unique_ptr<Section>> &get_sections() const;
+    const std::unordered_map<std::string, std::unique_ptr<Section>> &get_sections() const;  
 
     bool add_professor(std::unique_ptr<Professor> professor);   
     bool add_course(std::unique_ptr<Course> course);
