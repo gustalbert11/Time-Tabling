@@ -22,6 +22,8 @@ private slots:
 
     void volver_ventana();
 
+    void importar_json();
+
 
 private:
     Ui::MainWindow *ui;
