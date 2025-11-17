@@ -23,11 +23,11 @@ int main(int argc, char *argv[])
     // Para simplificar, asumiremos que 'test_data.json' ya existe en el directorio de ejecución.
     
     // Limpiar antes de importar para asegurar la prueba
-    instance.clear_all_data(); 
+    dm_instance.clear_all_data(); 
 
     // 3. Realizar la importación
     cout << "Intentando importar datos desde " << json_filename << "..." << endl;
-    bool import_successful = instance.import_from_JSON(json_filename);
+    bool import_successful = dm_instance.import_from_JSON(json_filename);
     
     // 4. Verificación de resultados
     if (import_successful) 
@@ -40,15 +40,30 @@ int main(int argc, char *argv[])
     }
     
     cout << "\n--- RESULTADOS DE LA VERIFICACIÓN ---" << endl;
-    cout << "Profesores importados: " << instance.get_professor_count() << endl;
-    cout << "Materias importadas: " << instance.get_course_count() << endl;
+    cout << "Profesores importados: " << dm_instance.get_professor_count() << endl;
+    cout << "Materias importadas: " << dm_instance.get_course_count() << endl;
+    cout << "Secciones importadas: " << dm_instance.get_section_count() << endl;
 
     // Verificación de conteo (debería ser 2 y 2 según el JSON de prueba)
-    if (instance.get_professor_count() == 2 && 
-    instance.get_course_count() == 2) 
+    if (dm_instance.get_professor_count() == 2 && 
+    dm_instance.get_course_count() == 2 &&
+    dm_instance.get_section_count() == 3)
     {
-        cout << "VERIFICACIÓN CONTEO: PASSED. Se importaron 2 profesores y 2 materias." << endl;
-        return 0; // Retorna 0 si la prueba es exitosa
+        cout << "VERIFICACIÓN CONTEO: PASSED. Se importaron 2 profesores, 2 materias y 3 secciones." << endl;
+
+        // for (auto professor : instance.get_professors()) 
+        // {
+        //    cout << "Profesor ID: " << prof_id << endl;
+        // }
+        // for (auto course : instance.get_courses()) 
+        // {
+        //    cout << "Materia ID: " << course_id << endl;
+        // }
+        // for (auto section : instance.get_sections())
+        // {
+        //    cout << "Sección ID: " << section_id << endl;
+        // }
+        // return 0; // Retorna 0 si la prueba es exitosa
     } 
     else 
     {
