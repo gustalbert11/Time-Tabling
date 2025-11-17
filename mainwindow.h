@@ -17,6 +17,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void avanzar_ventana();  // Cambia el nombre del slot
+
+    void volver_ventana();
+
+
 private:
     Ui::MainWindow *ui;
 };
