@@ -17,13 +17,18 @@ public:
     size_t get_professor_count() const;
     size_t get_course_count() const;
     size_t get_section_count() const;
+    
+    const std::unordered_map<std::string, std::unique_ptr<Professor>> &get_professors() const;
+    const std::unordered_map<std::string, std::unique_ptr<Course>> &get_courses() const;
+    const std::unordered_map<std::string, std::unique_ptr<Section>> &get_sections() const;  
 
     bool add_professor(std::unique_ptr<Professor> professor);   
     bool add_course(std::unique_ptr<Course> course);
     bool add_section(std::unique_ptr<Section> section);
     
-    bool import_professors_from_CSV(const std::string& filename);
-    bool import_courses_from_CSV(const std::string& filename);
+    bool import_professors_from_CSV(const std::string& file_name);
+    bool import_courses_from_CSV(const std::string& file_name);
+    //bool import_sections_from_CSV(const std::string& file_name);
     //bool export_to_CSV(const std::string& filename) const;
     bool import_from_JSON(const std::string& filename);
     //bool import_from_JSON2(const std::string& filename);
@@ -41,8 +46,8 @@ protected:
 // extern DataManager *ptr_instance;
 // extern DataManager &instance;
 
-inline DataManager *ptr_instance = DataManager::get_ptr_instance();
-inline DataManager &instance = DataManager::get_instance();
+inline DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
+inline DataManager &dm_instance = DataManager::get_instance();
 
 // *  Usage example:
 //    *
