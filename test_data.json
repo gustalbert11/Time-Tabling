@@ -30,5 +30,16 @@
             "max_daily_hours": 3,
             "num_sections": 4
         }
+    ],
+    "sections": [
+        {
+            "id": "S001"
+        },
+        {
+            "id": "S002"
+        },
+        {
+            "id": "S003"
+        }
     ]
 }

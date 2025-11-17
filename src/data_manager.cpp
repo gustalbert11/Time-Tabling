@@ -38,6 +38,19 @@ size_t DataManager::get_section_count() const
     return sections.size();
 }
 
+const std::unordered_map<std::string, std::unique_ptr<Professor>>& DataManager::get_professors() const
+{
+    return professors;
+}
+const std::unordered_map<std::string, std::unique_ptr<Course>>& DataManager::get_courses() const
+{
+    return courses;
+}
+const std::unordered_map<std::string, std::unique_ptr<Section>>& DataManager::get_sections() const
+{
+    return sections;
+}   
+
 bool DataManager::add_professor(std::unique_ptr<Professor> professor)
 {
     if (!professor) 
@@ -87,9 +100,9 @@ bool DataManager::add_section(std::unique_ptr<Section> section)
     return true;
 }
 
-bool DataManager::import_professors_from_CSV(const std::string& filename)
+bool DataManager::import_professors_from_CSV(const std::string& file_name)
 {
-    std::ifstream file(filename);
+    std::ifstream file(file_name);
     if (!file.is_open())
     {
         return false;
@@ -136,9 +149,9 @@ bool DataManager::import_professors_from_CSV(const std::string& filename)
     return true;
 }
 
-bool DataManager::import_courses_from_CSV(const std::string& filename)
+bool DataManager::import_courses_from_CSV(const std::string& file_name)
 {
-    std::ifstream file(filename);
+    std::ifstream file(file_name);
     if (!file.is_open())
     {
         return false;
@@ -189,10 +202,9 @@ bool DataManager::import_courses_from_CSV(const std::string& filename)
     return true;
 }
 
-bool DataManager::import_from_JSON(const std::string &filename)
+bool DataManager::import_from_JSON(const std::string &file_name)
 {
-    // Abrir el archivo con Qt
-    QFile file(QString::fromStdString(filename));
+    QFile file(QString::fromStdString(file_name));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
     {
         return false;
@@ -212,7 +224,6 @@ bool DataManager::import_from_JSON(const std::string &filename)
 
     QJsonObject rootObj = doc.object();
 
-    // --- IMPORTAR PROFESORES ---
     if (rootObj.contains("professors") && 
         rootObj["professors"].isArray()) 
     {
@@ -247,8 +258,8 @@ bool DataManager::import_from_JSON(const std::string &filename)
         }
     }
 
-    // --- IMPORTAR CURSOS ---
-    if (rootObj.contains("courses") && rootObj["courses"].isArray()) 
+    if (rootObj.contains("courses") && 
+        rootObj["courses"].isArray()) 
     {
         QJsonArray courseArray = rootObj["courses"].toArray();
 
@@ -285,144 +296,35 @@ bool DataManager::import_from_JSON(const std::string &filename)
         }
     }
 
+    if (rootObj.contains("sections") && 
+        rootObj["sections"].isArray()) 
+    {
+        QJsonArray sectionArray = rootObj["sections"].toArray();
+
+        for (const QJsonValue &value : sectionArray) 
+        {
+            if (!value.isObject()) 
+            {
+                continue;
+            }
+
+            QJsonObject pObj = value.toObject();
+
+            QString idStr = pObj.value("id").toString();
+            if (idStr.isEmpty()) 
+            {
+                continue;
+            }
+
+            auto section = std::make_unique<Section>();
+            section->set_id(idStr.toStdString());
+
+            add_section(std::move(section));
+        }
+    }    
+
     return true;
 }
-
-// bool DataManager::import_from_JSON2(const std::string& filename)
-// {
-//     // Si quieres borrar todo antes de importar, hazlo desde fuera:
-//     // DataManager::get_instance().clear_all_data();
-
-//     QFile file(QString::fromStdString(filename));
-//     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//     {
-//         // No se pudo abrir el archivo
-//         return false;
-//     }
-
-//     QByteArray rawData = file.readAll();
-//     file.close();
-
-//     QJsonParseError parseError;
-//     QJsonDocument doc = QJsonDocument::fromJson(rawData, &parseError);
-
-//     if (parseError.error != QJsonParseError::NoError || 
-//         !doc.isObject())
-//     {
-//         // JSON inválido o no es un objeto en la raíz
-//         return false;
-//     }
-
-//     QJsonObject root = doc.object();
-
-//     // ---------------- PROFESORES ----------------
-//     if (root.contains("professors") && 
-//         root["professors"].isArray())
-//     {
-//         QJsonArray profArray = root["professors"].toArray();
-
-//         for (const QJsonValue &val : profArray)
-//         {
-//             if (!val.isObject())
-//             {
-//                 continue;
-//             }
-
-//             QJsonObject obj = val.toObject();
-
-//             QString qid = obj.value("id").toString();
-//             if (qid.isEmpty())
-//             {
-//                 continue;
-//             }
-
-//             auto professor = std::make_unique<Professor>();
-//             professor->set_id(qid.toStdString());
-
-//             if (obj.contains("num_sections"))
-//             {
-//                 professor->set_num_sections(
-//                     static_cast<uint>(obj.value("num_sections").toInt())
-//                 );
-//             }
-//             if (obj.contains("max_daily_hours"))
-//             { 
-//                 professor->set_max_daily_hours(
-//                     static_cast<uint>(obj.value("max_daily_hours").toInt())
-//                 );
-//             }
-//             if (obj.contains("max_consecutive_hours"))
-//             {
-//                 professor->set_max_consecutive_hours(
-//                     static_cast<uint>(obj.value("max_consecutive_hours").toInt())
-//                 );
-//             }
-
-//             add_professor(std::move(professor));
-//         }
-//     }
-
-//     // ---------------- CURSOS/MATERIAS ----------------
-//     if (root.contains("courses") && 
-//         root["courses"].isArray())
-//     {
-//         QJsonArray courseArray = root["courses"].toArray();
-
-//         for (const QJsonValue &val : courseArray)
-//         {
-//             if (!val.isObject())
-//             {
-//                 continue;
-//             }
-
-//             QJsonObject obj = val.toObject();
-
-//             QString qid = obj.value("id").toString();
-//             if (qid.isEmpty())
-//             {
-//                 continue;
-//             }
-
-//             auto course = std::make_unique<Course>();
-//             course->set_id(qid.toStdString());
-
-//             if (obj.contains("level"))
-//             {
-//                 course->set_level(
-//                     static_cast<uint>(obj.value("level").toInt())
-//                 );
-//             }
-//             if (obj.contains("num_credits"))
-//             {
-//                 course->set_num_credits(
-//                     static_cast<uint>(obj.value("num_credits").toInt())
-//                 );
-//             }
-//             if (obj.contains("num_sections"))
-//             {
-//                 course->set_num_sections(
-//                     static_cast<uint>(obj.value("num_sections").toInt())
-//                 );
-//             }
-//             if (obj.contains("num_weekly_hours"))
-//             {
-//                 course->set_num_weekly_hours(
-//                     static_cast<uint>(obj.value("num_weekly_hours").toInt())
-//                 );
-//             }
-//             if (obj.contains("max_daily_hours"))
-//             {
-//                 course->set_max_daily_hours(
-//                     static_cast<uint>(obj.value("max_daily_hours").toInt())
-//                 );
-//             }
-
-//             add_course(std::move(course));
-//         }
-//     }
-
-//     return true;
-// }
 
 void DataManager::clear_all_data()
 {
