@@ -31,7 +31,7 @@ void MainWindow::avanzar_ventana()
 {
     ui->stackedWidget->setCurrentIndex(1);
 
-    instance.clear_all_data();
+    dm_instance.clear_all_data();
 
 }
 
@@ -54,7 +54,7 @@ void MainWindow::importar_json()
         return;
     }
 
-    bool ok = instance.import_from_JSON(filename.toStdString());
+    bool ok = dm_instance.import_from_JSON(filename.toStdString());
 
     
     if (ok) {
