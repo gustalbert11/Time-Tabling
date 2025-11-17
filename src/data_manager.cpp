@@ -1,4 +1,4 @@
-#include "include/data_manager.hpp"
+#include "../include/data_manager.hpp"
 #include <fstream>
 #include <sstream>
 
@@ -6,6 +6,37 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+
+// DataManager *ptr_instance = DataManager::get_ptr_instance();
+// DataManager &instance = DataManager::get_instance();
+
+Professor* DataManager::get_professor(const std::string& id) const
+{
+    auto it = professors.find(id);
+    return it != professors.end() ? it->second.get() : nullptr;
+}
+Course* DataManager::get_course(const std::string& id) const
+{
+    auto it = courses.find(id);
+    return it != courses.end() ? it->second.get() : nullptr;
+}
+Section* DataManager::get_section(const std::string& id) const
+{
+    auto it = sections.find(id);
+    return it != sections.end() ? it->second.get() : nullptr;
+}
+size_t DataManager::get_professor_count() const
+{
+    return professors.size();
+}
+size_t DataManager::get_course_count() const
+{
+    return courses.size();
+}
+size_t DataManager::get_section_count() const
+{
+    return sections.size();
+}
 
 bool DataManager::add_professor(std::unique_ptr<Professor> professor)
 {
@@ -23,7 +54,6 @@ bool DataManager::add_professor(std::unique_ptr<Professor> professor)
     professors[id] = std::move(professor);
     return true;
 }
-
 bool DataManager::add_course(std::unique_ptr<Course> course)
 {
     if (!course) 
@@ -40,7 +70,6 @@ bool DataManager::add_course(std::unique_ptr<Course> course)
     courses[id] = std::move(course);
     return true;
 }
-
 bool DataManager::add_section(std::unique_ptr<Section> section)
 {
     if (!section) 
@@ -56,24 +85,6 @@ bool DataManager::add_section(std::unique_ptr<Section> section)
     
     sections[id] = std::move(section);
     return true;
-}
-
-Professor* DataManager::get_professor(const std::string& id) const
-{
-    auto it = professors.find(id);
-    return it != professors.end() ? it->second.get() : nullptr;
-}
-
-Course* DataManager::get_course(const std::string& id) const
-{
-    auto it = courses.find(id);
-    return it != courses.end() ? it->second.get() : nullptr;
-}
-
-Section* DataManager::get_section(const std::string& id) const
-{
-    auto it = sections.find(id);
-    return it != sections.end() ? it->second.get() : nullptr;
 }
 
 bool DataManager::import_professors_from_CSV(const std::string& filename)
@@ -418,19 +429,4 @@ void DataManager::clear_all_data()
     professors.clear();
     courses.clear();
     sections.clear();
-}
-
-size_t DataManager::get_professor_count() const
-{
-    return professors.size();
-}
-
-size_t DataManager::get_course_count() const
-{
-    return courses.size();
-}
-
-size_t DataManager::get_section_count() const
-{
-    return sections.size();
 }

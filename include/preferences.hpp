@@ -7,11 +7,15 @@ enum PreferenceType
     NO_PREFERENCE, 
     DAYS, 
     HOURS, 
-    DAYS_HOURS };
+    DAYS_HOURS 
+};
 
 class Preferences
 {
 public:
+    Preferences() = default;
+    Preferences(const Preferences&) = default;
+    Preferences(Preferences&&) = default;
 
     const std::string &get_description() const;
     const PreferenceType &get_type() const;

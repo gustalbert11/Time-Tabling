@@ -7,6 +7,10 @@ class Section;
 class Professor
 {
 public:
+    Professor() = default;
+    Professor(const Professor&) = default;
+    Professor(Professor&&) = default;
+
     const std::string &get_id() const;
     const uint &get_num_sections() const;
     const Designar::ArraySet<Section*> &get_sections() const;

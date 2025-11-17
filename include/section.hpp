@@ -8,6 +8,10 @@ class Course;
 class Section
 {
 public:
+    Section() = default;
+    Section(const Section&) = default;
+    Section(Section&&) = default;
+
     const std::string &get_id() const;
     Professor* get_professor() const;
     Course* get_course() const;

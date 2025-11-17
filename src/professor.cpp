@@ -1,4 +1,4 @@
-#include "include/professor.hpp"
+#include "../include/professor.hpp"
 
 const std::string& Professor::get_id() const 
 { 

@@ -1,4 +1,4 @@
-#include "include/course.hpp"
+#include "../include/course.hpp"
 
 const std::string& Course::get_id() const 
 { 

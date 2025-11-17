@@ -23,6 +23,11 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        src/data_manager.cpp
+        src/professor.cpp
+        src/course.cpp
+        src/section.cpp
+        src/preferences.cpp 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -58,11 +63,43 @@ target_link_directories(TimeTabling PRIVATE
 # 4. Enlaza las bibliotecas
 target_link_libraries(TimeTabling PRIVATE 
     Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Core
     Designar                             
 )
 # --- FIN: Enlazar DeSiGNAR y Headers del Proyecto ---
 
+# --- INICIO: Configuración para pruebas del DataManager ---
+
+# Agregar el ejecutable de prueba con todos los archivos necesarios
+add_executable(test_data_manager 
+    test_data_manager.cpp
+    src/data_manager.cpp
+    src/professor.cpp
+    src/course.cpp
+    src/section.cpp
+    src/preferences.cpp  # Si existe este archivo
+)
+
+# Configurar las inclusiones
+target_include_directories(test_data_manager PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include  
+    ${DESIGNAR_PATH}/include             
+)
+
+target_link_directories(test_data_manager PRIVATE 
+    ${DESIGNAR_PATH}/lib                 
+)
+
+target_link_libraries(test_data_manager PRIVATE 
+    Qt${QT_VERSION_MAJOR}::Core
+    Designar                             
+)
+
+# Opcional: Configurar propiedades para el ejecutable de prueba
+# set_target_properties(test_data_manager PROPERTIES
+#     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests
+# )
+
+# --- FIN: Configuración para pruebas del DataManager ---
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

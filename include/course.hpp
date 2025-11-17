@@ -7,6 +7,10 @@ class Section;
 class Course
 {
 public:
+    Course() = default;
+    Course(const Course&) = default;
+    Course(Course&&) = default;
+
     const std::string &get_id() const;
     const uint &get_level() const;
     const uint &get_num_credits() const;
