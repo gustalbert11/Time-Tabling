@@ -49,4 +49,3 @@ private:
 
 extern DataManager *dm_ptr_instance;
 extern DataManager &dm_instance;
-

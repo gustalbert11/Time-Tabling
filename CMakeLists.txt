@@ -76,7 +76,7 @@ add_executable(test_data_manager
     src/professor.cpp
     src/course.cpp
     src/section.cpp
-    src/preference.cpp  # Si existe este archivo
+    src/preference.cpp
 )
 
 # Configurar las inclusiones

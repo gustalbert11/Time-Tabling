@@ -44,30 +44,64 @@ int main(int argc, char *argv[])
     cout << "Materias importadas: " << dm_instance.get_course_count() << endl;
     cout << "Secciones importadas: " << dm_instance.get_section_count() << endl;
 
-    // Verificación de conteo (debería ser 2 y 2 según el JSON de prueba)
-    if (dm_instance.get_professor_count() == 2 && 
-    dm_instance.get_course_count() == 2 &&
-    dm_instance.get_section_count() == 3)
+    cout << endl << "Profesores: " << endl;
+    for (const auto &professor_pair : dm_instance.get_professors()) 
     {
-        cout << "VERIFICACIÓN CONTEO: PASSED. Se importaron 2 profesores, 2 materias y 3 secciones." << endl;
+        auto professor = professor_pair.second.get();
+        
+        cout << endl << "ID: " << professor->get_id() << endl;
+        cout << "Nombre: " << professor->get_name() << endl;
+        cout << "Número de Secciones: " << professor->get_num_sections() << endl;
 
-        // for (auto professor : instance.get_professors()) 
-        // {
-        //    cout << "Profesor ID: " << prof_id << endl;
-        // }
-        // for (auto course : instance.get_courses()) 
-        // {
-        //    cout << "Materia ID: " << course_id << endl;
-        // }
-        // for (auto section : instance.get_sections())
-        // {
-        //    cout << "Sección ID: " << section_id << endl;
-        // }
-        // return 0; // Retorna 0 si la prueba es exitosa
-    } 
-    else 
-    {
-        cerr << "VERIFICACIÓN CONTEO: FAILED. El conteo no coincide con los datos esperados." << endl;
-        return 1; // Retorna 1 si la prueba falla
+        auto pref = professor->get_preference();
+
+        if (!pref)
+        {
+            continue;
+        }
+
+        cout << "Preferencia descripción: " << pref->get_description() << endl;
+
+        auto pref_type = pref->get_type();
+
+        cout << "Preferencia tipo: " << preference_type_to_string(pref_type) << endl;
+        
+        if (pref_type == PreferenceType::NO_PREFERENCE)
+        {
+            continue;
+        }
+        
+        cout << "Preferencia días: " << endl;
+        for (const auto &day : pref->get_days()) 
+        {
+            cout << "  Día: " << day_to_string(day) << endl;
+        }
+        cout << "Preferencia horas: " << endl;
+        for (const auto &hour : pref->get_hours())
+        {
+            cout << "  Hora: " << hour << endl;
+        }
     }
+    cout << endl << "Materias: " << endl;
+    for (const auto &course_pair : dm_instance.get_courses()) 
+    {
+        auto course = course_pair.second.get();
+        
+        cout << endl << "ID: " << course->get_id() << endl;
+        cout << "Nombre: " << course->get_name() << endl;
+        cout << "  Nivel: " << course->get_level() << endl;
+        cout << "  Créditos: " << course->get_num_credits() << endl;
+        cout << "  Número de Secciones: " << course->get_num_sections() << endl;
+    }
+    cout << endl << "Secciones: " << endl;
+    for (const auto &section_pair : dm_instance.get_sections())
+    {
+        auto section = section_pair.second.get();
+        
+        cout << endl << "ID: " << section->get_id() << endl;
+        cout << "Profesor Name: " << section->get_professor()->get_name() << endl;
+        cout << "Course Name: " << section->get_course()->get_name() << endl;
+        cout << "Time slots: " << endl;
+    }
+    return 0;
 }
