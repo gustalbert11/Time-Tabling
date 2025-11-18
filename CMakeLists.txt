@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
         src/professor.cpp
         src/course.cpp
         src/section.cpp
-        src/preferences.cpp 
+        src/preference.cpp 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -76,7 +76,7 @@ add_executable(test_data_manager
     src/professor.cpp
     src/course.cpp
     src/section.cpp
-    src/preferences.cpp  # Si existe este archivo
+    src/preference.cpp  # Si existe este archivo
 )
 
 # Configurar las inclusiones

@@ -24,6 +24,7 @@ private slots:
 
     void importar_json();
 
+    void mostrar_profesores_en_tabla();
 
 private:
     Ui::MainWindow *ui;

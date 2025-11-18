@@ -7,8 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-// DataManager *ptr_instance = DataManager::get_ptr_instance();
-// DataManager &instance = DataManager::get_instance();
+DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
+DataManager &dm_instance = DataManager::get_instance();
 
 Professor* DataManager::get_professor(const std::string& id) const
 {
@@ -254,6 +254,16 @@ bool DataManager::import_from_JSON(const std::string &file_name)
             professor->set_max_daily_hours(static_cast<uint>(maxDailyHours));
             professor->set_max_consecutive_hours(static_cast<uint>(maxConsecHours));
 
+            if (pObj.contains("preference") && pObj["preference"].isObject())
+            {
+                QJsonObject prefObj = pObj["preference"].toObject();
+                auto preference = process_preference_from_json(prefObj);
+                if (preference)
+                {
+                    professor->set_preference(std::move(preference));
+                }
+            }
+
             add_professor(std::move(professor));
         }
     }
@@ -331,4 +341,67 @@ void DataManager::clear_all_data()
     professors.clear();
     courses.clear();
     sections.clear();
+}
+
+std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& prefObj)
+{
+    auto preference = std::make_unique<Preference>();
+        
+    // Descripción
+    if (prefObj.contains("description") && 
+        prefObj["description"].isString())
+    {
+        QString desc = prefObj["description"].toString();
+        if (!desc.isEmpty())
+        {
+            preference->set_description(desc.toStdString());
+        }
+    }
+    
+    if (prefObj.contains("type") && 
+        prefObj["type"].isString())
+    {
+        QString typeStr = prefObj["type"].toString();
+
+        PreferenceType type = string_to_preference_type(typeStr.toStdString());
+
+        preference->set_type(type);
+    }
+    
+    if (preference.get()->get_type() == PreferenceType::NO_PREFERENCE)
+    {
+        return preference;
+    }
+
+    // Días preferidos
+    if (prefObj.contains("days") && 
+        prefObj["days"].isArray())
+    {
+        QJsonArray daysArray = prefObj["days"].toArray();
+        for (const QJsonValue &dayValue : daysArray)
+        {
+            QString dayStr = dayValue.toString();
+
+            Days day = string_to_day(dayStr.toStdString());
+
+            preference->add_day(day);
+        }
+    }
+    
+    // Horas preferidas
+    if (prefObj.contains("hours") && 
+        prefObj["hours"].isArray())
+    {
+        QJsonArray hoursArray = prefObj["hours"].toArray();
+        for (const QJsonValue &hourValue : hoursArray)
+        {
+            int hour = hourValue.toInt(-1);
+            if (hour >= 1 && hour <= MAX_DAILY_HOURS)
+            {
+                preference->add_hour(static_cast<uint>(hour));
+            }
+        }
+    }
+    
+    return preference;
 }

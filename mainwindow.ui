@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>637</width>
-    <height>319</height>
+    <width>1018</width>
+    <height>605</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,6 +141,9 @@
          </layout>
         </item>
         <item>
+         <widget class="QTableWidget" name="tableProfessors"/>
+        </item>
+        <item>
          <widget class="QPushButton" name="importButton">
           <property name="text">
            <string>Importar Archivo</string>
@@ -209,7 +212,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>637</width>
+     <width>1018</width>
      <height>20</height>
     </rect>
    </property>
@@ -222,4 +225,5 @@
  <resources/>
  <connections/>
 </ui>
+
 
