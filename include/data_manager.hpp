@@ -49,6 +49,3 @@ private:
 
 extern DataManager *dm_ptr_instance;
 extern DataManager &dm_instance;
-
-// inline DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
-// inline DataManager &dm_instance = DataManager::get_instance();

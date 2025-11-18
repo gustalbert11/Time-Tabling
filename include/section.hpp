@@ -2,31 +2,31 @@
 
 #include "settings.hpp"
 
+extern uint num_sections;
+
 class Professor;
 class Course;
 
 class Section
 {
 public:
-    Section() = default;
-    Section(const Section&) = default;
-    Section(Section&&) = default;
+    Section();
+    Section(const Section&);
 
     const std::string &get_id() const;
     Professor* get_professor() const;
     Course* get_course() const;
-    const Designar::SortedArraySet<Days> &get_days() const;
-    const Designar::SortedArraySet<uint> &get_hours() const;
+    const Designar::SortedArraySet<std::pair<Days, uint>> &get_time_slots() const;
 
-    bool set_id(const std::string &id);
     bool set_professor(Professor* professor);
     bool set_course(Course* course);
-    bool add_day(const Days &day);
-    bool add_hour(const uint &hour);
+    bool add_time_slot(const Days& day, const uint& hour);
 
 private:
     std::string id;
     Professor* professor;
     Course* course;
-    std::pair<Designar::SortedArraySet<Days>, Designar::SortedArraySet<uint>> time_slot;
+    Designar::SortedArraySet<std::pair<Days, uint>> time_slots;
+
+    bool set_id();
 };

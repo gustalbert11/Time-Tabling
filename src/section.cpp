@@ -1,5 +1,23 @@
 #include "../include/section.hpp"
 
+uint num_sections = 0;
+
+Section::Section()
+: professor(nullptr),
+  course(nullptr),
+  time_slots(MAX_NUM_DAYS)
+{
+    set_id();
+}
+Section::Section(const Section& other)
+: id(other.id),
+  professor(other.professor),
+  course(other.course),
+  time_slots(other.time_slots)
+{
+
+}
+
 const std::string& Section::get_id() const 
 { 
     return id; 
@@ -12,24 +30,11 @@ Course* Section::get_course() const
 { 
     return course; 
 }
-const Designar::SortedArraySet<Days>& Section::get_days() const 
-{ 
-    return time_slot.first; 
-}
-const Designar::SortedArraySet<uint>& Section::get_hours() const 
-{ 
-    return time_slot.second;
+Designar::SortedArraySet<std::pair<Days, uint>> const &Section::get_time_slots() const
+{
+    return time_slots;
 }
 
-bool Section::set_id(const std::string &id)
-{
-    if (id.empty())
-    {
-        return false;
-    }
-    this->id = id;
-    return true;
-}
 bool Section::set_professor(Professor* professor)
 {
     if (!professor)
@@ -48,26 +53,32 @@ bool Section::set_course(Course* course)
     this->course = course;
     return true;
 }
-bool Section::add_day(const Days &day)
+bool Section::add_time_slot(const Days& day, const uint& hour)
 {
     if (day < Days::MONDAY || 
-        day > Days::FRIDAY ||
-        time_slot.first.contains(day))
+        day > Days::FRIDAY)
     {
         return false;
     }
-    time_slot.first.append(day);
+    if (hour < 1 || 
+        hour > MAX_DAILY_HOURS)
+    {
+        return false;
+    }
+
+    auto time_slot = std::make_pair(day, hour);
+
+    if (time_slots.contains(time_slot))
+    {
+        return false;
+    }
+    
+    time_slots.append(time_slot);
     return true;
 }
-bool Section::add_hour(const uint &hour)
+
+bool Section::set_id()
 {
-    if (hour < 1 || 
-        hour > MAX_DAILY_HOURS ||
-        time_slot.second.size() == MAX_DAILY_HOURS || 
-        time_slot.second.contains(hour))
-    {
-        return false;
-    }
-    time_slot.second.append(hour);
+    this->id = "SEC_" + std::to_string(++num_sections);
     return true;
 }

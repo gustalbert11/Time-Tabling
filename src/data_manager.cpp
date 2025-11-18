@@ -110,10 +110,9 @@ bool DataManager::import_professors_from_CSV(const std::string& file_name)
 
     std::string line;
 
-    // Si el archivo tiene encabezado, lo leemos y lo ignoramos.
     if (!std::getline(file, line))
     {
-        return false; // archivo vacío
+        return false;
     }
 
     while (std::getline(file, line))
@@ -124,20 +123,20 @@ bool DataManager::import_professors_from_CSV(const std::string& file_name)
         }
 
         std::stringstream ss(line);
-        std::string id_str, num_sec_str, max_daily_str, max_consec_str;
+        std::string name_str, num_sec_str, max_daily_str, max_consec_str;
 
-        std::getline(ss, id_str, ';');
+        std::getline(ss, name_str, ';');
         std::getline(ss, num_sec_str, ';');
         std::getline(ss, max_daily_str, ';');
         std::getline(ss, max_consec_str, ';');
 
-        if (id_str.empty())
+        if (name_str.empty())
         {
             continue;
         }
 
         auto prof = std::make_unique<Professor>();
-        prof->set_id(id_str);
+        prof->set_name(name_str);
         prof->set_num_sections(static_cast<uint>(std::stoul(num_sec_str)));
         prof->set_max_daily_hours(static_cast<uint>(std::stoul(max_daily_str)));
         prof->set_max_consecutive_hours(static_cast<uint>(std::stoul(max_consec_str)));
@@ -159,7 +158,6 @@ bool DataManager::import_courses_from_CSV(const std::string& file_name)
 
     std::string line;
 
-    // Encabezado
     if (!std::getline(file, line))
     {
         return false;
@@ -173,22 +171,22 @@ bool DataManager::import_courses_from_CSV(const std::string& file_name)
         }
 
         std::stringstream ss(line);
-        std::string id_str, level_str, credits_str, num_sec_str, weekly_str, max_daily_str;
+        std::string name_str, level_str, credits_str, num_sec_str, weekly_str, max_daily_str;
 
-        std::getline(ss, id_str, ';');
+        std::getline(ss, name_str, ';');
         std::getline(ss, level_str, ';');
         std::getline(ss, credits_str, ';');
         std::getline(ss, num_sec_str, ';');
         std::getline(ss, weekly_str, ';');
         std::getline(ss, max_daily_str, ';');
 
-        if (id_str.empty())
+        if (name_str.empty())
         {
             continue;
         }
 
         auto course = std::make_unique<Course>();
-        course->set_id(id_str);
+        course->set_name(name_str);
         course->set_level(static_cast<uint>(std::stoul(level_str)));
         course->set_num_credits(static_cast<uint>(std::stoul(credits_str)));
         course->set_num_sections(static_cast<uint>(std::stoul(num_sec_str)));
@@ -238,8 +236,8 @@ bool DataManager::import_from_JSON(const std::string &file_name)
 
             QJsonObject pObj = value.toObject();
 
-            QString idStr = pObj.value("id").toString();
-            if (idStr.isEmpty()) 
+            QString nameStr = pObj.value("name").toString();
+            if (nameStr.isEmpty()) 
             {
                 continue;
             }
@@ -249,7 +247,7 @@ bool DataManager::import_from_JSON(const std::string &file_name)
             int maxConsecHours = pObj.value("max_consecutive_hours").toInt(0);
 
             auto professor = std::make_unique<Professor>();
-            professor->set_id(idStr.toStdString());
+            professor->set_name(nameStr.toStdString());
             professor->set_num_sections(static_cast<uint>(numSections));
             professor->set_max_daily_hours(static_cast<uint>(maxDailyHours));
             professor->set_max_consecutive_hours(static_cast<uint>(maxConsecHours));
@@ -282,8 +280,8 @@ bool DataManager::import_from_JSON(const std::string &file_name)
 
             QJsonObject cObj = value.toObject();
 
-            QString idStr = cObj.value("id").toString();
-            if (idStr.isEmpty()) 
+            QString nameStr = cObj.value("name").toString();
+            if (nameStr.isEmpty()) 
             {
                 continue;
             }
@@ -295,7 +293,7 @@ bool DataManager::import_from_JSON(const std::string &file_name)
             int maxDailyHours = cObj.value("max_daily_hours").toInt(0);
 
             auto course = std::make_unique<Course>();
-            course->set_id(idStr.toStdString());
+            course->set_name(nameStr.toStdString());
             course->set_level(static_cast<uint>(level));
             course->set_num_credits(static_cast<uint>(numCredits));
             course->set_num_sections(static_cast<uint>(numSections));
@@ -310,28 +308,70 @@ bool DataManager::import_from_JSON(const std::string &file_name)
         rootObj["sections"].isArray()) 
     {
         QJsonArray sectionArray = rootObj["sections"].toArray();
-
         for (const QJsonValue &value : sectionArray) 
         {
-            if (!value.isObject()) 
+            if (!value.isObject())
             {
                 continue;
             }
-
-            QJsonObject pObj = value.toObject();
-
-            QString idStr = pObj.value("id").toString();
-            if (idStr.isEmpty()) 
-            {
-                continue;
-            }
-
+            
+            QJsonObject sObj = value.toObject();
+            
             auto section = std::make_unique<Section>();
-            section->set_id(idStr.toStdString());
+
+            if (sObj.contains("professor") && 
+                sObj["professor"].isString())
+            {
+                QString profId = sObj["professor"].toString();
+                Professor* prof = get_professor(profId.toStdString());
+                if (prof)
+                {
+                    section->set_professor(prof);
+                    prof->add_section(section.get());
+                }
+            }
+
+            if (sObj.contains("course") && 
+                sObj["course"].isString())
+            {
+                QString courseId = sObj["course"].toString();
+                Course* course = get_course(courseId.toStdString());
+                if (course)
+                {
+                    section->set_course(course);
+                    course->add_section(section.get());
+                }
+            }
+
+            if (sObj.contains("time_slots") && 
+                sObj["time_slots"].isArray())
+            {
+                QJsonArray slotsArray = sObj["time_slots"].toArray();
+                for (const QJsonValue &slotValue : slotsArray)
+                {
+                    if (!slotValue.isObject()) 
+                    {
+                        continue;
+                    }
+                    
+                    QJsonObject slotObj = slotValue.toObject();
+                    
+                    QString dayStr = slotObj.value("day").toString();
+                    int hour = slotObj.value("hour").toInt(-1);
+                    
+                    if (!dayStr.isEmpty() && 
+                        hour >= 1 && 
+                        hour <= MAX_DAILY_HOURS)
+                    {
+                        Days day = string_to_day(dayStr.toStdString());
+                        section->add_time_slot(day, static_cast<uint>(hour));
+                    }
+                }
+            }
 
             add_section(std::move(section));
         }
-    }    
+    }     
 
     return true;
 }
@@ -347,7 +387,6 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
 {
     auto preference = std::make_unique<Preference>();
         
-    // Descripción
     if (prefObj.contains("description") && 
         prefObj["description"].isString())
     {
@@ -373,7 +412,6 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         return preference;
     }
 
-    // Días preferidos
     if (prefObj.contains("days") && 
         prefObj["days"].isArray())
     {
@@ -388,7 +426,6 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         }
     }
     
-    // Horas preferidas
     if (prefObj.contains("hours") && 
         prefObj["hours"].isArray())
     {

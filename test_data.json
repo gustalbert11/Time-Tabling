@@ -1,66 +1,78 @@
 {
     "professors": [
         {
-            "id": "PROF001",
+            "name": "Manuel",
             "num_sections": 3,
             "max_daily_hours": 4,
             "max_consecutive_hours": 2,
             "preference": {
-                "description": "Prefiere lunes y martes en primeras horas",
-                "type": "DAYS_HOURS",
-                "days": ["MONDAY", "TUESDAY"],
+                "description": "Prefiere lunes y martes",
+                "type": "DAYS",
+                "days": ["MONDAY", "TUESDAY"]
+            }
+        },
+        {
+            "name": "Gustavo",
+            "num_sections": 3,
+            "max_daily_hours": 4,
+            "max_consecutive_hours": 2,
+            "preference": {
+                "description": "Prefiere primera y segunda hora",
+                "type": "HOURS",
                 "hours": [1, 2]
             }
         },
         {
-            "id": "PROF002",
-            "num_sections": 2,
-            "max_daily_hours": 3,
-            "max_consecutive_hours": 2,
-            "preference": {
-                "description": "Solo prefiere ciertos días",
-                "type": "DAYS",
-                "days": ["WEDNESDAY", "THURSDAY"]
-            }
-        },
-        {
-            "id": "PROF003", 
-            "num_sections": 4,
-            "max_daily_hours": 5,
+            "name": "Eldry",
+            "num_sections": 3,
+            "max_daily_hours": 4,
             "max_consecutive_hours": 2,
             "preference": {
                 "description": "No tiene preferencias",
-                "type": "NO_PREFERENCE"
+                "type": "NO PREFERENCE"
             }
         }
     ],
     "courses": [
         {
-            "id": "C101",
+            "name": "Mathematics 101",
             "level": 1,
-            "num_credits": 3,
-            "num_weekly_hours": 6,
-            "max_daily_hours": 2,
-            "num_sections": 3
+            "num_credits": 5,
+            "num_sections": 5,
+            "num_weekly_hours": 8,
+            "max_daily_hours": 2
         },
         {
-            "id": "C202",
-            "level": 2,
+            "name": "Physics 101",
+            "level": 1,
             "num_credits": 4,
+            "num_sections": 2,
             "num_weekly_hours": 8,
-            "max_daily_hours": 3,
-            "num_sections": 4
+            "max_daily_hours": 2
         }
     ],
     "sections": [
         {
-            "id": "S001"
+            "professor": "PROF_1",
+            "course": "COURSE_2",
+            "time_slots": [
+                {"day": "MONDAY", "hour": 1},
+                {"day": "MONDAY", "hour": 2},
+                {"day": "MONDAY", "hour": 5},
+                {"day": "MONDAY", "hour": 6}
+            ]
         },
         {
-            "id": "S002"
-        },
-        {
-            "id": "S003"
+            "professor": "PROF_3",
+            "course": "COURSE_1",
+            "time_slots": [
+                {"day": "MONDAY", "hour": 1},
+                {"day": "MONDAY", "hour": 2},
+                {"day": "WEDNESDAY", "hour": 1},
+                {"day": "WEDNESDAY", "hour": 2},
+                {"day": "FRIDAY", "hour": 1},
+                {"day": "FRIDAY", "hour": 1}
+            ]
         }
     ]
 }

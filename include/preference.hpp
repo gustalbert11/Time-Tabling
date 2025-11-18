@@ -21,16 +21,20 @@ inline std::string preference_type_to_string(PreferenceType type)
             return "HOURS";
 
         case DAYS_HOURS: 
-            return "DAYS_HOURS";
+            return "DAYS & HOURS";
 
         default: 
-            return "NO_PREFERENCE";
+            return "NO PREFERENCE";
     }
 }
 
 inline PreferenceType string_to_preference_type(const std::string& str)
 {
-    if (str == "DAYS") 
+    if (str == "NO PREFERENCE")
+    {
+        return NO_PREFERENCE;
+    }
+    else if (str == "DAYS") 
     {
         return DAYS;
     }
@@ -38,7 +42,7 @@ inline PreferenceType string_to_preference_type(const std::string& str)
     {
         return HOURS;
     }
-    else if (str == "DAYS_HOURS") 
+    else if (str == "DAYS_HOURS" || str == "DAYS & HOURS") 
     {
         return DAYS_HOURS;
     }
