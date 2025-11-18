@@ -1,0 +1,45 @@
+{
+    "professors": [
+        {
+            "id": "P001",
+            "max_daily_hours": 7,
+            "max_consecutive_hours": 2,
+            "num_sections": 3
+        },
+        {
+            "id": "P002",
+            "max_daily_hours": 5,
+            "max_consecutive_hours": 2,
+            "num_sections": 4
+        }
+    ],
+    "courses": [
+        {
+            "id": "C101",
+            "level": 1,
+            "num_credits": 3,
+            "num_weekly_hours": 6,
+            "max_daily_hours": 2,
+            "num_sections": 3
+        },
+        {
+            "id": "C202",
+            "level": 2,
+            "num_credits": 4,
+            "num_weekly_hours": 8,
+            "max_daily_hours": 3,
+            "num_sections": 4
+        }
+    ],
+    "sections": [
+        {
+            "id": "S001"
+        },
+        {
+            "id": "S002"
+        },
+        {
+            "id": "S003"
+        }
+    ]
+}
