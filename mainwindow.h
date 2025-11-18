@@ -17,6 +17,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void avanzar_ventana();  // Cambia el nombre del slot
+
+    void volver_ventana();
+
+    void importar_json();
+
+    void mostrar_profesores_en_tabla();
+
 private:
     Ui::MainWindow *ui;
 };

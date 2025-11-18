@@ -378,9 +378,13 @@ bool DataManager::import_from_JSON(const std::string &file_name)
 
 void DataManager::clear_all_data()
 {
+    sections.clear();
     professors.clear();
     courses.clear();
-    sections.clear();
+
+    num_sections = 0;
+    num_professors = 0;
+    num_courses = 0;
 }
 
 std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& prefObj)
