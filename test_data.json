@@ -1,16 +1,37 @@
 {
     "professors": [
         {
-            "id": "P001",
-            "max_daily_hours": 7,
+            "id": "PROF001",
+            "num_sections": 3,
+            "max_daily_hours": 4,
             "max_consecutive_hours": 2,
-            "num_sections": 3
+            "preference": {
+                "description": "Prefiere lunes y martes en primeras horas",
+                "type": "DAYS_HOURS",
+                "days": ["MONDAY", "TUESDAY"],
+                "hours": [1, 2]
+            }
         },
         {
-            "id": "P002",
+            "id": "PROF002",
+            "num_sections": 2,
+            "max_daily_hours": 3,
+            "max_consecutive_hours": 2,
+            "preference": {
+                "description": "Solo prefiere ciertos días",
+                "type": "DAYS",
+                "days": ["WEDNESDAY", "THURSDAY"]
+            }
+        },
+        {
+            "id": "PROF003", 
+            "num_sections": 4,
             "max_daily_hours": 5,
             "max_consecutive_hours": 2,
-            "num_sections": 4
+            "preference": {
+                "description": "No tiene preferencias",
+                "type": "NO_PREFERENCE"
+            }
         }
     ],
     "courses": [

@@ -6,6 +6,8 @@
 #include "../include/section.hpp"
 #include <unordered_map>
 
+class QJsonObject;
+
 class DataManager : public Designar::Singleton<DataManager>
 {
     friend class Designar::Singleton<DataManager>;
@@ -31,7 +33,6 @@ public:
     //bool import_sections_from_CSV(const std::string& file_name);
     //bool export_to_CSV(const std::string& filename) const;
     bool import_from_JSON(const std::string& filename);
-    //bool import_from_JSON2(const std::string& filename);
     //bool export_to_JSON(const std::string& filename) const;
     
     void clear_all_data();
@@ -41,29 +42,13 @@ protected:
     std::unordered_map<std::string, std::unique_ptr<Professor>> professors;
     std::unordered_map<std::string, std::unique_ptr<Course>> courses;
     std::unordered_map<std::string, std::unique_ptr<Section>> sections;
+
+private:
+    std::unique_ptr<Preference> process_preference_from_json(const QJsonObject& prefObj);
 };
 
-// extern DataManager *ptr_instance;
-// extern DataManager &instance;
+extern DataManager *dm_ptr_instance;
+extern DataManager &dm_instance;
 
-inline DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
-inline DataManager &dm_instance = DataManager::get_instance();
-
-// *  Usage example:
-//    *
-//    *  \code{.cpp}
-//    *  class MySingletonClass : public Singleton<MySingletonClass>
-//    *  {
-//    *    friend class Singleton<MySingletonClass>;
-//    *
-//    *    // If you need default constructor, make it protected.
-//    *  protected:
-//    *    MySingletonClass() { }
-//    *
-//    *    // Any attributes or methods;
-//    *  };
-//    *
-//    *  MySingletonClass * ptr_instance = MySingletonClass::get_ptr_instance();
-//    *
-//    *  MySingletonClass & instance = MySingletonClass::get_instance();
-//    *  \endcode
+// inline DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
+// inline DataManager &dm_instance = DataManager::get_instance();

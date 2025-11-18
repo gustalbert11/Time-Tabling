@@ -1,23 +1,23 @@
-#include "../include/preferences.hpp"
+#include "../include/preference.hpp"
 
-const std::string& Preferences::get_description() const 
+const std::string& Preference::get_description() const 
 { 
     return description; 
 }
-const PreferenceType& Preferences::get_type() const 
+const PreferenceType& Preference::get_type() const 
 { 
     return type; 
 }
-const Designar::SortedArraySet<Days>& Preferences::get_days() const 
+const Designar::SortedArraySet<Days>& Preference::get_days() const 
 { 
     return days; 
 }
-const Designar::SortedArraySet<uint>& Preferences::get_hours() const 
+const Designar::SortedArraySet<uint>& Preference::get_hours() const 
 { 
     return hours; 
 }
 
-bool Preferences::set_description(const std::string &description)
+bool Preference::set_description(const std::string &description)
 {
     if (description.empty())
     {
@@ -26,7 +26,7 @@ bool Preferences::set_description(const std::string &description)
     this->description = description;
     return true;
 }
-bool Preferences::set_type(const PreferenceType &type)
+bool Preference::set_type(const PreferenceType &type)
 {
     if (type < NO_PREFERENCE || 
         type > DAYS_HOURS)
@@ -36,7 +36,7 @@ bool Preferences::set_type(const PreferenceType &type)
     this->type = type;
     return true;
 }
-bool Preferences::add_day(const Days &day)
+bool Preference::add_day(const Days &day)
 {
     if (day < Days::MONDAY || 
         day > Days::FRIDAY || 
@@ -47,7 +47,7 @@ bool Preferences::add_day(const Days &day)
     days.append(day);
     return true;
 }
-bool Preferences::add_hour(const uint &hour)
+bool Preference::add_hour(const uint &hour)
 {
     if (hour < 1 || 
         hour > MAX_DAILY_HOURS || 

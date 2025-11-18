@@ -20,9 +20,9 @@ const uint& Professor::get_max_consecutive_hours() const
 { 
     return max_consecutive_hours; 
 }
-const Designar::ArraySet<Preferences*>& Professor::get_preferences() const 
+const Preference* Professor::get_preference() const 
 { 
-    return preferences; 
+    return preference.get(); 
 }
 
 bool Professor::set_id(const std::string &id)
@@ -63,6 +63,16 @@ bool Professor::set_max_consecutive_hours(const uint &max_consecutive_hours)
         return false;
     }
     this->max_consecutive_hours = max_consecutive_hours;
+    return true;
+}
+bool Professor::set_preference(std::unique_ptr<Preference> preference)
+{
+    if (!preference)
+    {
+        return false;
+    }
+    
+    this->preference = std::move(preference);
     return true;
 }
 
