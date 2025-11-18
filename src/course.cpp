@@ -1,8 +1,39 @@
 #include "../include/course.hpp"
 
+uint num_courses = 0;
+
+Course::Course()
+: name(""),
+  level(MAX_NUM_LEVEL),
+  num_credits(MAX_NUM_CREDITS),
+  num_sections(MAX_NUM_SECTIONS),
+  sections(MAX_NUM_SECTIONS),
+  num_weekly_hours(MAX_WEEKLY_HOURS),
+  max_daily_hours(MAX_DAILY_HOURS)
+{
+    set_id();
+}
+
+Course::Course(const Course& other)
+: id(other.id), 
+  name(other.name),
+  level(other.level),
+  num_credits(other.num_credits),
+  sections(other.sections),
+  num_sections(other.num_sections),
+  num_weekly_hours(other.num_weekly_hours),
+  max_daily_hours(other.max_daily_hours)
+{
+
+}
+
 const std::string& Course::get_id() const 
 { 
     return id; 
+}
+const std::string& Course::get_name() const 
+{ 
+    return name; 
 }
 const uint& Course::get_level() const 
 { 
@@ -29,13 +60,13 @@ const uint& Course::get_max_daily_hours() const
     return max_daily_hours; 
 }
 
-bool Course::set_id(const std::string &id)
+bool Course::set_name(const std::string &name)
 {
-    if (id.empty())
+    if (name.empty())
     {
         return false;
     }
-    this->id = id;
+    this->name = name;
     return true;
 }
 bool Course::set_level(const uint &level)
@@ -116,3 +147,9 @@ bool Course::add_section(Section* section)
 //     }
 //     return false;
 // }
+
+bool Course::set_id()
+{
+    this->id = "COURSE_" + std::to_string(++num_courses);
+    return true;
+}

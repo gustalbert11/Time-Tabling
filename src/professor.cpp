@@ -1,8 +1,36 @@
 #include "../include/professor.hpp"
 
+uint num_professors = 0;
+
+Professor::Professor()
+: name(""),
+  num_sections(MAX_NUM_SECTIONS),
+  sections(MAX_NUM_SECTIONS),
+  max_daily_hours(MAX_DAILY_HOURS),
+  max_consecutive_hours(MAX_CONSECUTIVE_HOURS),
+  preference(nullptr)
+{
+    set_id();
+}
+Professor::Professor(const Professor& other)
+: id(other.id),
+  name(other.name),
+  num_sections(other.num_sections),
+  sections(other.sections),
+  max_daily_hours(other.max_daily_hours),
+  max_consecutive_hours(other.max_consecutive_hours)
+  //preference(other.preference ? std::make_unique<Preference>(*other.preference) : nullptr)
+{
+
+}
+
 const std::string& Professor::get_id() const 
 { 
     return id; 
+}
+const std::string& Professor::get_name() const 
+{ 
+    return name; 
 }
 const uint& Professor::get_num_sections() const 
 { 
@@ -25,13 +53,13 @@ const Preference* Professor::get_preference() const
     return preference.get(); 
 }
 
-bool Professor::set_id(const std::string &id)
+bool Professor::set_name(const std::string &name)
 {
-    if (id.empty())
+    if (name.empty())
     {
         return false;
     }
-    this->id = id;
+    this->name = name;
     return true;
 }
 bool Professor::set_num_sections(const uint &num_sections)
@@ -85,5 +113,11 @@ bool Professor::add_section(Section* section)
         return false;
     }
     sections.append(section);
+    return true;
+}
+
+bool Professor::set_id()
+{
+    this->id = "PROF_" + std::to_string(++num_professors);
     return true;
 }

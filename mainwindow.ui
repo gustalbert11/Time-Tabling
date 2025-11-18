@@ -141,7 +141,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableProfessors"/>
+         <widget class="QTableWidget" name="tableInfo"/>
         </item>
         <item>
          <widget class="QPushButton" name="importButton">
