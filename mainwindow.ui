@@ -21,7 +21,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -109,6 +109,13 @@
          </spacer>
         </item>
         <item>
+         <widget class="QPushButton" name="avanzarPg3Button">
+          <property name="text">
+           <string>Avanzar</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="backButton">
           <property name="text">
            <string>Volver</string>
@@ -153,7 +160,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="formProfButton">
           <property name="text">
            <string>PushButton</string>
           </property>

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "secondwindow.h"
+#include "include/Professor.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,8 +24,17 @@ private slots:
 
     void volver_ventana();
 
+    void show_professor_form();
+
+    void avanzar_pg2();
+
+    void on_professor_window_closed();
+
 
 private:
     Ui::MainWindow *ui;
+    SecondWindow* professorWindow = nullptr;
+    Professor p;
+
 };
 #endif // MAINWINDOW_H
