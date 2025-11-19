@@ -15,16 +15,16 @@
 #include "../include/data_manager.hpp"
 
 namespace Ui {
-class formInsertProf;
+class ProfessorForm;
 }
 
-class formInsertProf : public QMainWindow
+class ProfessorForm : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit formInsertProf(QWidget *parent = nullptr);
-    ~formInsertProf();
+    explicit ProfessorForm(QWidget *parent = nullptr);
+    ~ProfessorForm();
 
 private slots:
     void onSubmit();
@@ -56,7 +56,7 @@ private:void processForm();
 
     QPushButton *submitButton;
 
-    Ui::formInsertProf *ui;
+    Ui::ProfessorForm *ui;
 };
 
 #endif // FORMINSERTPROF_H

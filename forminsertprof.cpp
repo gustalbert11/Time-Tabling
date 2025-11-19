@@ -1,9 +1,9 @@
 #include "forminsertprof.h"
 #include "ui_forminsertprof.h"
 
-formInsertProf::formInsertProf(QWidget *parent)
+ProfessorForm::ProfessorForm(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::formInsertProf)
+    , ui(new Ui::ProfessorForm)
 {
     ui->setupUi(this);
 
@@ -95,35 +95,35 @@ formInsertProf::formInsertProf(QWidget *parent)
     setupConnections();
 }
 
-void formInsertProf::setupConnections()
+void ProfessorForm::setupConnections()
 {
     // Conectar Enter en cada campo
-    connect(lineEdit1, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
-    //connect(spinbox1, &QSpinBox::returnPressed, this, &formInsertProf::onFieldReturnPressed);
-    //connect(lineEdit3, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
-    //connect(lineEdit4, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
-    connect(lineEdit5, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+    connect(lineEdit1, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
+    //connect(spinbox1, &QSpinBox::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
+    //connect(lineEdit3, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
+    //connect(lineEdit4, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
+    connect(lineEdit5, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
 
-    connect(submitButton, &QPushButton::clicked, this, &formInsertProf::onSubmit);
+    connect(submitButton, &QPushButton::clicked, this, &ProfessorForm::onSubmit);
     submitButton->setDefault(true);
 }
 
-formInsertProf::~formInsertProf()
+ProfessorForm::~ProfessorForm()
 {
     delete ui;
 }
 
-void formInsertProf::onFieldReturnPressed()
+void ProfessorForm::onFieldReturnPressed()
 {
    onSubmit(); // Último campo: enviar
 }
 
-void formInsertProf::onSubmit()
+void ProfessorForm::onSubmit()
 {
     processForm();
 }
 
-void formInsertProf::processForm()
+void ProfessorForm::processForm()
 {
     // Obtener y procesar todos los
     auto prof = std::make_unique<Professor>();

@@ -100,9 +100,9 @@ bool DataManager::add_section(std::unique_ptr<Section> section)
     return true;
 }
 
-bool DataManager::import_professors_from_CSV(const std::string& file_name)
+bool DataManager::import_professors_from_csv(const std::string& filename)
 {
-    std::ifstream file(file_name);
+    std::ifstream file(filename);
     if (!file.is_open())
     {
         return false;
@@ -148,9 +148,9 @@ bool DataManager::import_professors_from_CSV(const std::string& file_name)
     return true;
 }
 
-bool DataManager::import_courses_from_CSV(const std::string& file_name)
+bool DataManager::import_courses_from_csv(const std::string& filename)
 {
-    std::ifstream file(file_name);
+    std::ifstream file(filename);
     if (!file.is_open())
     {
         return false;
@@ -200,62 +200,63 @@ bool DataManager::import_courses_from_CSV(const std::string& file_name)
     return true;
 }
 
-bool DataManager::import_from_JSON(const std::string &file_name)
+bool DataManager::import_from_json(const std::string &filename)
 {
-    QFile file(QString::fromStdString(file_name));
+    QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
     {
         return false;
     }
 
-    QByteArray rawData = file.readAll();
+    QByteArray raw_data = file.readAll();
     file.close();
 
-    QJsonParseError parseError;
-    QJsonDocument doc = QJsonDocument::fromJson(rawData, &parseError);
+    QJsonParseError parse_error;
+    QJsonDocument doc = QJsonDocument::fromJson(raw_data, &parse_error);
 
-    if (parseError.error != QJsonParseError::NoError || 
-        !doc.isObject()) 
+    if (parse_error.error != QJsonParseError::NoError || 
+        !doc.isObject())
     {
         return false;
     }
 
-    QJsonObject rootObj = doc.object();
+    QJsonObject root_obj = doc.object();
 
-    if (rootObj.contains("professors") && 
-        rootObj["professors"].isArray()) 
+    if (root_obj.contains("professors") && 
+        root_obj["professors"].isArray()) 
     {
-        QJsonArray profArray = rootObj["professors"].toArray();
+        QJsonArray prof_array = root_obj["professors"].toArray();
 
-        for (const QJsonValue &value : profArray) 
+        for (const QJsonValue &value : prof_array) 
         {
             if (!value.isObject()) 
             {
                 continue;
             }
 
-            QJsonObject pObj = value.toObject();
+            QJsonObject prof_obj = value.toObject();
 
-            QString nameStr = pObj.value("name").toString();
-            if (nameStr.isEmpty()) 
+            QString name_str = prof_obj.value("name").toString();
+            if (name_str.isEmpty()) 
             {
                 continue;
             }
 
-            int numSections = pObj.value("num_sections").toInt(0);
-            int maxDailyHours = pObj.value("max_daily_hours").toInt(0);
-            int maxConsecHours = pObj.value("max_consecutive_hours").toInt(0);
+            int num_sections = prof_obj.value("num_sections").toInt(0);
+            int max_daily_hours = prof_obj.value("max_daily_hours").toInt(0);
+            int max_consecutive_hours = prof_obj.value("max_consecutive_hours").toInt(0);
 
             auto professor = std::make_unique<Professor>();
-            professor->set_name(nameStr.toStdString());
-            professor->set_num_sections(static_cast<uint>(numSections));
-            professor->set_max_daily_hours(static_cast<uint>(maxDailyHours));
-            professor->set_max_consecutive_hours(static_cast<uint>(maxConsecHours));
+            professor->set_name(name_str.toStdString());
+            professor->set_num_sections(static_cast<uint>(num_sections));
+            professor->set_max_daily_hours(static_cast<uint>(max_daily_hours));
+            professor->set_max_consecutive_hours(static_cast<uint>(max_consecutive_hours));
 
-            if (pObj.contains("preference") && pObj["preference"].isObject())
+            if (prof_obj.contains("preference") && 
+                prof_obj["preference"].isObject())
             {
-                QJsonObject prefObj = pObj["preference"].toObject();
-                auto preference = process_preference_from_json(prefObj);
+                QJsonObject pref_obj = prof_obj["preference"].toObject();
+                auto preference = process_preference_from_json(pref_obj);
                 if (preference)
                 {
                     professor->set_preference(std::move(preference));
@@ -266,106 +267,80 @@ bool DataManager::import_from_JSON(const std::string &file_name)
         }
     }
 
-    if (rootObj.contains("courses") && 
-        rootObj["courses"].isArray()) 
+    if (root_obj.contains("courses") && 
+        root_obj["courses"].isArray()) 
     {
-        QJsonArray courseArray = rootObj["courses"].toArray();
+        QJsonArray course_array = root_obj["courses"].toArray();
 
-        for (const QJsonValue &value : courseArray) 
+        for (const QJsonValue &value : course_array) 
         {
             if (!value.isObject()) 
             {
                 continue;
             }
 
-            QJsonObject cObj = value.toObject();
+            QJsonObject course_obj = value.toObject();
 
-            QString nameStr = cObj.value("name").toString();
-            if (nameStr.isEmpty()) 
+            QString name_str = course_obj.value("name").toString();
+            if (name_str.isEmpty()) 
             {
                 continue;
             }
 
-            int level = cObj.value("level").toInt(0);
-            int numCredits = cObj.value("num_credits").toInt(0);
-            int numSections = cObj.value("num_sections").toInt(0);
-            int weeklyHours = cObj.value("num_weekly_hours").toInt(0);
-            int maxDailyHours = cObj.value("max_daily_hours").toInt(0);
+            int level = course_obj.value("level").toInt(0);
+            int num_credits = course_obj.value("num_credits").toInt(0);
+            int num_sections = course_obj.value("num_sections").toInt(0);
+            int num_weekly_hours = course_obj.value("num_weekly_hours").toInt(0);
+            int max_daily_hours = course_obj.value("max_daily_hours").toInt(0);
 
             auto course = std::make_unique<Course>();
-            course->set_name(nameStr.toStdString());
+            course->set_name(name_str.toStdString());
             course->set_level(static_cast<uint>(level));
-            course->set_num_credits(static_cast<uint>(numCredits));
-            course->set_num_sections(static_cast<uint>(numSections));
-            course->set_num_weekly_hours(static_cast<uint>(weeklyHours));
-            course->set_max_daily_hours(static_cast<uint>(maxDailyHours));
+            course->set_num_credits(static_cast<uint>(num_credits));
+            course->set_num_sections(static_cast<uint>(num_sections));
+            course->set_num_weekly_hours(static_cast<uint>(num_weekly_hours));
+            course->set_max_daily_hours(static_cast<uint>(max_daily_hours));
 
             add_course(std::move(course));
         }
     }
 
-    if (rootObj.contains("sections") && 
-        rootObj["sections"].isArray()) 
+    if (root_obj.contains("sections") && 
+        root_obj["sections"].isArray()) 
     {
-        QJsonArray sectionArray = rootObj["sections"].toArray();
-        for (const QJsonValue &value : sectionArray) 
+        QJsonArray sect_array = root_obj["sections"].toArray();
+        for (const QJsonValue &value : sect_array) 
         {
             if (!value.isObject())
             {
                 continue;
             }
             
-            QJsonObject sObj = value.toObject();
+            QJsonObject sect_obj = value.toObject();
             
             auto section = std::make_unique<Section>();
 
-            if (sObj.contains("professor") && 
-                sObj["professor"].isString())
+            if (sect_obj.contains("professor") && 
+                sect_obj["professor"].isString())
             {
-                QString profId = sObj["professor"].toString();
-                Professor* prof = get_professor(profId.toStdString());
-                if (prof)
+                QString prof_id = sect_obj["professor"].toString();
+                Professor* professor = get_professor(prof_id.toStdString());
+                if (professor)
                 {
-                    section->set_professor(prof);
-                    prof->add_section(section.get());
+                    section->set_professor(professor);
+                    professor->add_section(section.get());
                 }
             }
 
-            if (sObj.contains("course") && 
-                sObj["course"].isString())
+            if (sect_obj.contains("course") && 
+                sect_obj["course"].isString())
             {
-                QString courseId = sObj["course"].toString();
-                Course* course = get_course(courseId.toStdString());
+                QString course_id = sect_obj["course"].toString();
+                Course* course = get_course(course_id.toStdString());
                 if (course)
                 {
                     section->set_course(course);
                     course->add_section(section.get());
-                }
-            }
-
-            if (sObj.contains("time_slots") && 
-                sObj["time_slots"].isArray())
-            {
-                QJsonArray slotsArray = sObj["time_slots"].toArray();
-                for (const QJsonValue &slotValue : slotsArray)
-                {
-                    if (!slotValue.isObject()) 
-                    {
-                        continue;
-                    }
-                    
-                    QJsonObject slotObj = slotValue.toObject();
-                    
-                    QString dayStr = slotObj.value("day").toString();
-                    int hour = slotObj.value("hour").toInt(-1);
-                    
-                    if (!dayStr.isEmpty() && 
-                        hour >= 1 && 
-                        hour <= MAX_DAILY_HOURS)
-                    {
-                        Days day = string_to_day(dayStr.toStdString());
-                        section->add_time_slot(day, static_cast<uint>(hour));
-                    }
                 }
             }
 
@@ -387,26 +362,26 @@ void DataManager::clear_all_data()
     num_courses = 0;
 }
 
-std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& prefObj)
+std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& pref_obj)
 {
     auto preference = std::make_unique<Preference>();
         
-    if (prefObj.contains("description") && 
-        prefObj["description"].isString())
+    if (pref_obj.contains("description") && 
+        pref_obj["description"].isString())
     {
-        QString desc = prefObj["description"].toString();
+        QString desc = pref_obj["description"].toString();
         if (!desc.isEmpty())
         {
             preference->set_description(desc.toStdString());
         }
     }
     
-    if (prefObj.contains("type") && 
-        prefObj["type"].isString())
+    if (pref_obj.contains("type") && 
+        pref_obj["type"].isString())
     {
-        QString typeStr = prefObj["type"].toString();
+        QString type_str = pref_obj["type"].toString();
 
-        PreferenceType type = string_to_preference_type(typeStr.toStdString());
+        PreferenceType type = string_to_preference_type(type_str.toStdString());
 
         preference->set_type(type);
     }
@@ -416,31 +391,27 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         return preference;
     }
 
-    if (prefObj.contains("days") && 
-        prefObj["days"].isArray())
+    if (pref_obj.contains("days") && 
+        pref_obj["days"].isArray())
     {
-        QJsonArray daysArray = prefObj["days"].toArray();
-        for (const QJsonValue &dayValue : daysArray)
+        QJsonArray days_array = pref_obj["days"].toArray();
+        for (const QJsonValue &day_value : days_array)
         {
-            QString dayStr = dayValue.toString();
+            QString day_str = day_value.toString();
 
-            Days day = string_to_day(dayStr.toStdString());
-
+            Days day = string_to_day(day_str.toStdString());
             preference->add_day(day);
         }
     }
     
-    if (prefObj.contains("hours") && 
-        prefObj["hours"].isArray())
+    if (pref_obj.contains("hours") && 
+        pref_obj["hours"].isArray())
     {
-        QJsonArray hoursArray = prefObj["hours"].toArray();
-        for (const QJsonValue &hourValue : hoursArray)
+        QJsonArray hours_array = pref_obj["hours"].toArray();
+        for (const QJsonValue &hour_value : hours_array)
         {
-            int hour = hourValue.toInt(-1);
-            if (hour >= 1 && hour <= MAX_DAILY_HOURS)
-            {
-                preference->add_hour(static_cast<uint>(hour));
-            }
+            int hour = hour_value.toInt(-1);
+            preference->add_hour(static_cast<uint>(hour));
         }
     }
     

@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->backButton, &QPushButton::clicked, this, &MainWindow::volver_ventana);
 
-    connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::importar_json);
+    connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::import_json);
 
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
 
@@ -56,9 +56,8 @@ void MainWindow::volver_ventana()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWindow::importar_json()
+void MainWindow::import_json()
 {
-    
     QString filename = QFileDialog::getOpenFileName(
         this,
         "Seleccionar archivo JSON",
@@ -66,22 +65,25 @@ void MainWindow::importar_json()
         "JSON Files (*.json)"
     );
 
-    if (filename.isEmpty()) {
+    if (filename.isEmpty()) 
+    {
         return;
     }
 
-    bool ok = dm_instance.import_from_JSON(filename.toStdString());
+    bool ok = dm_instance.import_from_json(filename.toStdString());
 
-    
-    if (ok) {
+    if (ok) 
+    {
         QMessageBox::information(this, "Éxito", "El archivo JSON fue importado correctamente.");
-        mostrar_profesores_en_tabla();
-    } else {
+        update_prof_table();
+    } 
+    else 
+    {
         QMessageBox::warning(this, "Error", "No se pudo procesar el archivo JSON.");
     }
 }
 
-void MainWindow::mostrar_profesores_en_tabla()
+void MainWindow::update_prof_table()
 {
     const auto& professors = dm_instance.get_professors();
 
@@ -104,23 +106,25 @@ void MainWindow::mostrar_profesores_en_tabla()
 }
 void MainWindow::open_prof_form()
 {
-    if (!professorWindow) {
-        professorWindow = new formInsertProf();
-        professorWindow->setAttribute(Qt::WA_DeleteOnClose);
+    if (!prof_form) 
+    {
+        prof_form = new ProfessorForm();
+        prof_form->setAttribute(Qt::WA_DeleteOnClose);
 
         // Conectar la señal de destrucción
-        connect(professorWindow, &formInsertProf::destroyed, this, &MainWindow::on_professor_window_closed);
+        connect(prof_form, &ProfessorForm::destroyed, this, &MainWindow::on_professor_window_closed);
 
-        professorWindow->show();
+        prof_form->show();
     }
-    else {
-        professorWindow->raise();
-        professorWindow->activateWindow();
+    else 
+    {
+        prof_form->raise();
+        prof_form->activateWindow();
     }
 }
 
 void MainWindow::on_professor_window_closed()
 {
-    professorWindow = nullptr;
-    mostrar_profesores_en_tabla();
+    prof_form = nullptr;
+    update_prof_table();
 }

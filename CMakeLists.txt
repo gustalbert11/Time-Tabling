@@ -5,7 +5,7 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # --- INICIO: Configuración DeSiGNAR ---
 # 1. Define la ruta a la biblioteca DeSiGNAR,
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
-set(DESIGNAR_PATH /home/eldry/DeSiGNAR-main)
+set(DESIGNAR_PATH /home/mquintero/projects/DeSiGNAR-2.0.0)
 # --- FIN: Configuración DeSiGNAR ---
 
 set(CMAKE_AUTOUIC ON)
@@ -67,40 +67,6 @@ target_link_libraries(TimeTabling PRIVATE
     Designar                             
 )
 # --- FIN: Enlazar DeSiGNAR y Headers del Proyecto ---
-
-# --- INICIO: Configuración para pruebas del DataManager ---
-
-# Agregar el ejecutable de prueba con todos los archivos necesarios
-add_executable(test_data_manager 
-    test_data_manager.cpp
-    src/data_manager.cpp
-    src/professor.cpp
-    src/course.cpp
-    src/section.cpp
-    src/preference.cpp
-)
-
-# Configurar las inclusiones
-target_include_directories(test_data_manager PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include  
-    ${DESIGNAR_PATH}/include             
-)
-
-target_link_directories(test_data_manager PRIVATE 
-    ${DESIGNAR_PATH}/lib                 
-)
-
-target_link_libraries(test_data_manager PRIVATE 
-    Qt${QT_VERSION_MAJOR}::Core
-    Designar                             
-)
-
-# Opcional: Configurar propiedades para el ejecutable de prueba
-# set_target_properties(test_data_manager PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests
-# )
-
-# --- FIN: Configuración para pruebas del DataManager ---
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

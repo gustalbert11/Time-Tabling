@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>formInsertProf</class>
+ <class>ProfessorForm</class>
  <widget class="QMainWindow" name="formInsertProf">
   <property name="geometry">
    <rect>

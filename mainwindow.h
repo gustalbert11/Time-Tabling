@@ -23,9 +23,9 @@ private slots:
 
     void volver_ventana();
 
-    void importar_json();
+    void import_json();
 
-    void mostrar_profesores_en_tabla();
+    void update_prof_table();
 
     void open_prof_form();
 
@@ -33,6 +33,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    formInsertProf* professorWindow = nullptr;
+    ProfessorForm* prof_form = nullptr;
 };
 #endif // MAINWINDOW_H
