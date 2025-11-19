@@ -20,7 +20,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void avanzar_ventana();  // Cambia el nombre del slot
+    void avanzar_ventana();
 
     void volver_ventana();
 

@@ -14,7 +14,7 @@ SecondWindow::SecondWindow(QWidget *parent, Professor* p) :
 
     // Configurar la ventana
     this->setWindowTitle("Formulario de Datos");
-    this->setMinimumSize(600, 400);
+    this->setMinimumSize(600, 300);
 
     // Crear los campos de entrada y etiquetas
     label1 = new QLabel("Descripción 1:", this);
@@ -53,12 +53,17 @@ SecondWindow::SecondWindow(QWidget *parent, Professor* p) :
     layout5->addWidget(label5);
     layout5->addWidget(lineEdit5);
 
+    submitButton = new QPushButton();
+    QHBoxLayout *layout6 = new QHBoxLayout();
+    layout6->addWidget(submitButton);
+
     // Agregar los layouts al layout principal
     mainLayout->addLayout(layout1);
     mainLayout->addLayout(layout2);
     mainLayout->addLayout(layout3);
     mainLayout->addLayout(layout4);
     mainLayout->addLayout(layout5);
+    mainLayout->addLayout(layout6);
 
     // Agregar un espacio elástico al final para que los campos no se expandan demasiado
     mainLayout->addStretch();
@@ -77,8 +82,6 @@ void SecondWindow::setupConnections()
     connect(lineEdit4, &QLineEdit::returnPressed, this, &SecondWindow::onFieldReturnPressed);
     connect(lineEdit5, &QLineEdit::returnPressed, this, &SecondWindow::onFieldReturnPressed);
 
-    // Botón de enviar
-    submitButton = new QPushButton("Enviar Formulario", this);
     connect(submitButton, &QPushButton::clicked, this, &SecondWindow::onSubmit);
     submitButton->setDefault(true);
 }
