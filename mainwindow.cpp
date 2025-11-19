@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::importar_json);
 
+    connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
+
 }
 
 MainWindow::~MainWindow()
@@ -99,4 +101,26 @@ void MainWindow::mostrar_profesores_en_tabla()
         ui->tableInfo->setItem(row, 6, new QTableWidgetItem(QString::fromStdString(p->get_preference()->get_description())));
         row++;
     }
+}
+void MainWindow::open_prof_form()
+{
+    if (!professorWindow) {
+        professorWindow = new formInsertProf();
+        professorWindow->setAttribute(Qt::WA_DeleteOnClose);
+
+        // Conectar la señal de destrucción
+        connect(professorWindow, &formInsertProf::destroyed, this, &MainWindow::on_professor_window_closed);
+
+        professorWindow->show();
+    }
+    else {
+        professorWindow->raise();
+        professorWindow->activateWindow();
+    }
+}
+
+void MainWindow::on_professor_window_closed()
+{
+    professorWindow = nullptr;
+    mostrar_profesores_en_tabla();
 }

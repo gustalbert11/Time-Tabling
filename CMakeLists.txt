@@ -5,7 +5,7 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # --- INICIO: Configuración DeSiGNAR ---
 # 1. Define la ruta a la biblioteca DeSiGNAR,
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
-set(DESIGNAR_PATH /home/gustavo/pr/DeSiGNAR-2.0.0)
+set(DESIGNAR_PATH /home/eldry/DeSiGNAR-main)
 # --- FIN: Configuración DeSiGNAR ---
 
 set(CMAKE_AUTOUIC ON)
@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TimeTabling
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        forminsertprof.h forminsertprof.cpp forminsertprof.ui
     )
 else()
     if(ANDROID)

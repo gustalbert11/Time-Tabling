@@ -1,0 +1,164 @@
+#include "forminsertprof.h"
+#include "ui_forminsertprof.h"
+
+formInsertProf::formInsertProf(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::formInsertProf)
+{
+    ui->setupUi(this);
+
+    // Crear widget central y layout principal
+    QWidget *centralWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
+
+    // Configurar la ventana
+    this->setWindowTitle("Formulario de Datos");
+    this->setMinimumSize(600, 300);
+
+    // Crear los campos de entrada y etiquetas
+    label1 = new QLabel("Nombre del Profesor:", this);
+    lineEdit1 = new QLineEdit(this);
+
+    label2 = new QLabel("Numero de Secciones:", this);
+    spinbox1 = new QSpinBox(this);
+    spinbox1->setRange(1,MAX_NUM_SECTIONS);
+
+    label3 = new QLabel("Maximo de horas diarias:", this);
+    spinbox2 = new QSpinBox(this);
+    spinbox2->setRange(2,MAX_DAILY_HOURS);
+
+    label4 = new QLabel("Maximo de horas consecutivas:", this);
+    spinbox3 = new QSpinBox(this);
+    spinbox3->setRange(2,MAX_CONSECUTIVE_HOURS);
+
+    labelp = new QLabel("PREFERENCIAS\n", this);
+
+    label5 = new QLabel("Descripcion:", this);
+    lineEdit5 = new QLineEdit(this);
+
+    label6 = new QLabel("Tipo de preferencia:", this);
+    combox1 = new QComboBox(this);
+    combox1->addItem("NO PREFERENCE", QVariant(PreferenceType::NO_PREFERENCE));
+    combox1->addItem("DAYS",       QVariant(PreferenceType::DAYS));
+    combox1->addItem("HOURS",      QVariant(PreferenceType::HOURS));
+    combox1->addItem("DAYS & HOURS",    QVariant(PreferenceType::DAYS_HOURS));
+
+    // Crear layout para cada campo
+    QHBoxLayout *layout1 = new QHBoxLayout();
+    layout1->addWidget(label1);
+    layout1->addWidget(lineEdit1);
+
+    QHBoxLayout *layout2 = new QHBoxLayout();
+    layout2->addWidget(label2);
+    layout2->addWidget(spinbox1);
+
+    QHBoxLayout *layout3 = new QHBoxLayout();
+    layout3->addWidget(label3);
+    layout3->addWidget(spinbox2);
+
+    QHBoxLayout *layout4 = new QHBoxLayout();
+    layout4->addWidget(label4);
+    layout4->addWidget(spinbox3);
+
+    QHBoxLayout *layoutp = new QHBoxLayout();
+    layoutp->addWidget(labelp);
+
+    QHBoxLayout *layout5 = new QHBoxLayout();
+    layout5->addWidget(label5);
+    layout5->addWidget(lineEdit5);
+
+
+    QHBoxLayout *layout6 = new QHBoxLayout();
+    layout5->addWidget(label6);
+    layout5->addWidget(combox1);
+
+
+    submitButton = new QPushButton(this);
+    submitButton->setText("Enviar");
+    QHBoxLayout *layoutl = new QHBoxLayout();
+    layoutl->addWidget(submitButton);
+
+    // Agregar los layouts al layout principal
+    mainLayout->addLayout(layout1);
+    mainLayout->addLayout(layout2);
+    mainLayout->addLayout(layout3);
+    mainLayout->addLayout(layout4);
+    mainLayout->addLayout(layoutp);
+    mainLayout->addLayout(layout5);
+    mainLayout->addLayout(layoutl);
+
+    // Agregar un espacio elástico al final para que los campos no se expandan demasiado
+    mainLayout->addStretch();
+
+    // Configurar el widget central
+    this->setCentralWidget(centralWidget);
+    setupConnections();
+}
+
+void formInsertProf::setupConnections()
+{
+    // Conectar Enter en cada campo
+    connect(lineEdit1, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+    //connect(spinbox1, &QSpinBox::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+    //connect(lineEdit3, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+    //connect(lineEdit4, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+    connect(lineEdit5, &QLineEdit::returnPressed, this, &formInsertProf::onFieldReturnPressed);
+
+    connect(submitButton, &QPushButton::clicked, this, &formInsertProf::onSubmit);
+    submitButton->setDefault(true);
+}
+
+formInsertProf::~formInsertProf()
+{
+    delete ui;
+}
+
+void formInsertProf::onFieldReturnPressed()
+{
+   onSubmit(); // Último campo: enviar
+}
+
+void formInsertProf::onSubmit()
+{
+    processForm();
+}
+
+void formInsertProf::processForm()
+{
+    // Obtener y procesar todos los
+    auto prof = std::make_unique<Professor>();
+
+    QString data1 = lineEdit1->text();
+    prof->set_name(data1.toStdString());
+
+    uint data2 = static_cast<uint>(spinbox1->value());
+    prof->set_num_sections(data2);
+
+    uint data3 = static_cast<uint>(spinbox2->value());
+    prof->set_max_daily_hours(data3);
+
+    uint data4 = static_cast<uint>(spinbox3->value());
+    prof->set_max_consecutive_hours(data4);
+
+    auto pref = std::make_unique<Preference>();
+    QString data5 = lineEdit5->text();
+    pref->set_description(data5.toStdString());
+
+    QString data6 = combox1->currentText();
+
+    pref->set_type(string_to_preference_type(data6.toStdString()));
+
+    prof->set_preference(std::move(pref));
+
+    // Validar y procesar datos
+    if (data1.isEmpty() || data5.isEmpty())
+    {
+        QMessageBox::warning(this, "Error", "Por favor complete los campos obligatorios");
+        return;
+    }
+    qDebug() << "Formulario enviado:" << data1 << data2 << data3 << data4 << data5;
+
+
+    dm_instance.add_professor(std::move(prof));
+    this->close();
+}

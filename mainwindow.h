@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "forminsertprof.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,7 +27,12 @@ private slots:
 
     void mostrar_profesores_en_tabla();
 
+    void open_prof_form();
+
+    void on_professor_window_closed();
+
 private:
     Ui::MainWindow *ui;
+    formInsertProf* professorWindow = nullptr;
 };
 #endif // MAINWINDOW_H
