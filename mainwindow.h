@@ -25,14 +25,21 @@ private slots:
 
     void import_json();
 
-    void update_prof_table();
+    void show_professors();
 
     void open_prof_form();
 
     void on_professor_window_closed();
 
+    void show_courses();
+
+    void update_table();
+    
+    
+
 private:
     Ui::MainWindow *ui;
     ProfessorForm* prof_form = nullptr;
+    bool showing_professors = false;
 };
 #endif // MAINWINDOW_H
