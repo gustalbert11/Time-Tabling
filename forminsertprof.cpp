@@ -38,10 +38,24 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     label6 = new QLabel("Tipo de preferencia:", this);
     combox1 = new QComboBox(this);
-    combox1->addItem("NO PREFERENCE", QVariant(PreferenceType::NO_PREFERENCE));
-    combox1->addItem("DAYS",       QVariant(PreferenceType::DAYS));
-    combox1->addItem("HOURS",      QVariant(PreferenceType::HOURS));
+
     combox1->addItem("DAYS & HOURS",    QVariant(PreferenceType::DAYS_HOURS));
+    combox1->addItem("DAYS",       QVariant(PreferenceType::DAYS));
+    combox1->addItem("NO PREFERENCE", QVariant(PreferenceType::NO_PREFERENCE));
+    combox1->addItem("HOURS",      QVariant(PreferenceType::HOURS));
+
+
+    checkBoxes.push_back(new QCheckBox("MONDAY",this));
+    checkBoxes.push_back(new QCheckBox("TUESDAY",this));
+    checkBoxes.push_back(new QCheckBox("WEDNESDAY",this));
+    checkBoxes.push_back(new QCheckBox("THURSDAY",this));
+    checkBoxes.push_back(new QCheckBox("FRIDAY",this));
+
+    label7 = new QLabel("Hora de Incio - Hora final (Formato 24h)");
+    spinbox4 = new QSpinBox(this);
+    spinbox4->setRange(7,17);
+    spinbox5 = new QSpinBox(this);
+    spinbox5->setRange(8,18);
 
     // Crear layout para cada campo
     QHBoxLayout *layout1 = new QHBoxLayout();
@@ -69,8 +83,23 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
 
     QHBoxLayout *layout6 = new QHBoxLayout();
-    layout5->addWidget(label6);
-    layout5->addWidget(combox1);
+    layout6->addWidget(label6);
+    layout6->addWidget(combox1);
+
+    QHBoxLayout *layout7 = new QHBoxLayout();
+    layout7->addWidget(label6);
+    layout7->addWidget(combox1);
+
+    QHBoxLayout *layout8 = new QHBoxLayout();
+    for(int i = 0; i < checkBoxes.size(); i++)
+    {
+        layout8->addWidget(checkBoxes[i]);
+    }
+
+    QHBoxLayout *layout9 = new QHBoxLayout();
+    layout9->addWidget(label7);
+    layout9->addWidget(spinbox4);
+    layout9->addWidget(spinbox5);
 
 
     submitButton = new QPushButton(this);
@@ -85,6 +114,10 @@ ProfessorForm::ProfessorForm(QWidget *parent)
     mainLayout->addLayout(layout4);
     mainLayout->addLayout(layoutp);
     mainLayout->addLayout(layout5);
+    mainLayout->addLayout(layout6);
+    mainLayout->addLayout(layout7);
+    mainLayout->addLayout(layout8);
+    mainLayout->addLayout(layout9);
     mainLayout->addLayout(layoutl);
 
     // Agregar un espacio elástico al final para que los campos no se expandan demasiado
@@ -103,6 +136,7 @@ void ProfessorForm::setupConnections()
     //connect(lineEdit3, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
     //connect(lineEdit4, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
     connect(lineEdit5, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
+    connect(combox1, &QComboBox::currentTextChanged, this, &ProfessorForm::combox1_current_text_changed);
 
     connect(submitButton, &QPushButton::clicked, this, &ProfessorForm::onSubmit);
     submitButton->setDefault(true);
@@ -116,6 +150,36 @@ ProfessorForm::~ProfessorForm()
 void ProfessorForm::onFieldReturnPressed()
 {
    onSubmit(); // Último campo: enviar
+}
+
+void ProfessorForm::combox1_current_text_changed()
+{
+    if(combox1->currentText() != "DAYS" && combox1->currentText() != "DAYS & HOURS")
+    {
+        for (int i = 0; i < checkBoxes.size(); ++i)
+        {
+            checkBoxes[i]->hide();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < checkBoxes.size(); ++i)
+        {
+            checkBoxes[i]->show();
+        }
+    }
+    if(combox1->currentText() != "HOURS" && combox1->currentText() != "DAYS & HOURS")
+    {
+        label7->hide();
+        spinbox4->hide();
+        spinbox5->hide();
+    }
+    else
+    {
+        label7->show();
+        spinbox4->show();
+        spinbox5->show();
+    }
 }
 
 void ProfessorForm::onSubmit()
@@ -148,15 +212,25 @@ void ProfessorForm::processForm()
 
     pref->set_type(string_to_preference_type(data6.toStdString()));
 
-    prof->set_preference(std::move(pref));
+    for (int i = 0; i < checkBoxes.size(); ++i)
+    {
+        if(checkBoxes[i]->isChecked())
+        {
+            pref->add_day(static_cast<Days>(i));
+        }
+    }
 
+    pref->add_hour(static_cast<uint>(spinbox4->value()) , static_cast<uint>(spinbox5->value()));
+
+
+    prof->set_preference(std::move(pref));
     // Validar y procesar datos
     if (data1.isEmpty() || data5.isEmpty())
     {
         QMessageBox::warning(this, "Error", "Por favor complete los campos obligatorios");
         return;
     }
-    qDebug() << "Formulario enviado:" << data1 << data2 << data3 << data4 << data5;
+    //qDebug() << "Formulario enviado:" << data1 << data2 << data3 << data4 << data5;
 
 
     dm_instance.add_professor(std::move(prof));

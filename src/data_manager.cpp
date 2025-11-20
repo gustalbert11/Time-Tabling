@@ -405,16 +405,34 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         }
     }
     
-    // if (pref_obj.contains("hours") && 
-    //     pref_obj["hours"].isArray())
-    // {
-    //     QJsonArray hours_array = pref_obj["hours"].toArray();
-    //     for (const QJsonValue &hour_value : hours_array)
-    //     {
-    //         int hour = hour_value.toInt(-1);
-    //         preference->add_hour(static_cast<uint>(hour));
-    //     }
-    // }
+    if (pref_obj.contains("hours") && 
+        pref_obj["hours"].isArray())
+    {
+        QJsonArray hours_array = pref_obj["hours"].toArray();
+
+        for (const QJsonValue &val : hours_array)
+        {
+            if (!val.isArray())
+            {
+                continue;
+            }
+
+            QJsonArray interval = val.toArray();
+
+            if (interval.size() != 2)
+            {
+                continue;
+            }
+
+            int start = interval[0].toInt(-1);
+            int end = interval[1].toInt(-1);
+
+            if (start >= 0 && end >= 0)
+            {
+                preference->add_hour(static_cast<uint>(start), static_cast<uint>(end));
+            }
+        }
+    }
     
     return preference;
 }

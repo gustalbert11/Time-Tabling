@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "forminsertprof.h"
+#include "courseform.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,17 +30,20 @@ private slots:
 
     void open_prof_form();
 
+    void on_course_window_closed();
+
     void on_professor_window_closed();
 
     void show_courses();
 
     void update_table();
-    
-    
+
+    void open_course_form();
 
 private:
     Ui::MainWindow *ui;
     ProfessorForm* prof_form = nullptr;
+    CourseForm* course_form = nullptr;
     bool showing_professors = false;
 };
 #endif // MAINWINDOW_H

@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QCheckBox>
 #include "../include/data_manager.hpp"
 
 namespace Ui {
@@ -29,7 +30,7 @@ public:
 private slots:
     void onSubmit();
     void onFieldReturnPressed();
-
+    void combox1_current_text_changed();
 private:void processForm();
     void setupConnections();
     Professor* prof;
@@ -39,6 +40,8 @@ private:void processForm();
     QSpinBox *spinbox1;
     QSpinBox *spinbox2;
     QSpinBox *spinbox3;
+    QSpinBox *spinbox4;
+    QSpinBox *spinbox5;
 
     QLineEdit *lineEdit5;
 
@@ -49,10 +52,14 @@ private:void processForm();
     QLabel *label4;
     QLabel *label5;
     QLabel *label6;
+    QLabel *label7;
     QLabel *labelp;
 
 
     QComboBox *combox1;
+
+
+    std::vector<QCheckBox*> checkBoxes;
 
     QPushButton *submitButton;
 

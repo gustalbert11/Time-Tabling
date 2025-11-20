@@ -39,6 +39,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
 
     connect(ui->ShowInfo, &QPushButton::clicked, this, &MainWindow::update_table);
+
+    connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
+
+
     
 
 }
@@ -203,4 +207,30 @@ void MainWindow::update_table()
     }
 }
 
+
+void MainWindow::open_course_form()
+{
+    if (!course_form)
+    {
+        course_form = new CourseForm();
+        course_form->setAttribute(Qt::WA_DeleteOnClose);
+
+        // Conectar la señal de destrucción
+        connect(course_form, &CourseForm::destroyed, this, &MainWindow::on_professor_window_closed);
+
+        course_form->show();
+    }
+    else
+    {
+        course_form->raise();
+        course_form->activateWindow();
+    }
+}
+
+void MainWindow::on_course_window_closed()
+{
+    course_form = nullptr;
+    update_table();
+
+}
 
