@@ -213,8 +213,7 @@ void MainWindow::open_course_form()
         course_form = new CourseForm();
         course_form->setAttribute(Qt::WA_DeleteOnClose);
 
-        // Conectar la señal de destrucción
-        connect(course_form, &CourseForm::destroyed, this, &MainWindow::on_professor_window_closed);
+        connect(course_form, &CourseForm::destroyed, this, &MainWindow::on_course_window_closed);
 
         course_form->show();
     }

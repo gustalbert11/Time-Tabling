@@ -1,7 +1,6 @@
 #ifndef COURSEFORM_H
 #define COURSEFORM_H
 
-#include <QMainWindow>
 #include "forminsertprof.h"
 
 namespace Ui {

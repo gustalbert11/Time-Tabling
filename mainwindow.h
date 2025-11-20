@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "forminsertprof.h"
 #include "courseform.h"
 
 QT_BEGIN_NAMESPACE
