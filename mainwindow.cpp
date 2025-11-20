@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
-#include <QMessageBox>
-#include "../include/data_manager.hpp" 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -84,6 +82,7 @@ void MainWindow::import_json()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "El archivo JSON fue importado correctamente.");
+        showing_professors = !showing_professors;
         update_table();
     } 
     else 
@@ -207,7 +206,6 @@ void MainWindow::update_table()
     }
 }
 
-
 void MainWindow::open_course_form()
 {
     if (!course_form)
@@ -230,7 +228,7 @@ void MainWindow::open_course_form()
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
+    showing_professors = !showing_professors;
     update_table();
-
 }
 

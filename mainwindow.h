@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "forminsertprof.h"
 #include "courseform.h"
 
@@ -44,6 +43,6 @@ private:
     Ui::MainWindow *ui;
     ProfessorForm* prof_form = nullptr;
     CourseForm* course_form = nullptr;
-    bool showing_professors = false;
+    bool showing_professors = true;
 };
 #endif // MAINWINDOW_H
