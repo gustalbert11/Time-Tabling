@@ -30,11 +30,7 @@ inline std::string preference_type_to_string(PreferenceType type)
 
 inline PreferenceType string_to_preference_type(const std::string& str)
 {
-    if (str == "NO PREFERENCE")
-    {
-        return NO_PREFERENCE;
-    }
-    else if (str == "DAYS") 
+    if (str == "DAYS") 
     {
         return DAYS;
     }
@@ -59,18 +55,17 @@ public:
 
     const std::string &get_description() const;
     const PreferenceType &get_type() const;
-    const Designar::SortedArraySet<Days> &get_days() const;
-    const Designar::SortedArraySet<uint> &get_hours() const;
+    const Designar::ArraySet<Days> &get_days() const;
+    const Designar::ArraySet<std::pair<uint, uint>> &get_hours() const;
 
     bool set_description(const std::string &description);
     bool set_type(const PreferenceType &type);
     
     bool add_day(const Days &day);
-    bool add_hour(const uint &hour);
+    bool add_hour(const uint &start, const uint &end);
 
 private:
     std::string description;
     PreferenceType type;
-    Designar::SortedArraySet<Days> days;
-    Designar::SortedArraySet<uint> hours;
+    std::pair<Designar::ArraySet<Days>, Designar::ArraySet<std::pair<uint, uint>>> days_hours_pair;
 };

@@ -6,11 +6,12 @@
 
 enum Days 
 { 
-    MONDAY = 1, 
-    TUESDAY = 2, 
-    WEDNESDAY = 3, 
-    THURSDAY = 4, 
-    FRIDAY = 5 
+    NO_SPECIFIED,
+    MONDAY, 
+    TUESDAY, 
+    WEDNESDAY, 
+    THURSDAY, 
+    FRIDAY 
 };
 
 inline std::string day_to_string(Days day)
@@ -33,7 +34,7 @@ inline std::string day_to_string(Days day)
             return "FRIDAY";
 
         default: 
-            return "UNKNOWN";
+            return "NO SPECIFIED";
     }
 }
 
@@ -59,7 +60,8 @@ inline Days string_to_day(const std::string& str)
     {
         return FRIDAY;
     }
-    return MONDAY;
+
+    return NO_SPECIFIED;
 }
 
 const uint MAX_NUM_DAYS = 5;

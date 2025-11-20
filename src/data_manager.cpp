@@ -386,10 +386,11 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         preference->set_type(type);
     }
     
-    if (preference.get()->get_type() == PreferenceType::NO_PREFERENCE)
+    auto pref_type = preference->get_type();
+    if (pref_type == PreferenceType::NO_PREFERENCE)
     {
         return preference;
-    }
+    }    
 
     if (pref_obj.contains("days") && 
         pref_obj["days"].isArray())
@@ -404,16 +405,16 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
         }
     }
     
-    if (pref_obj.contains("hours") && 
-        pref_obj["hours"].isArray())
-    {
-        QJsonArray hours_array = pref_obj["hours"].toArray();
-        for (const QJsonValue &hour_value : hours_array)
-        {
-            int hour = hour_value.toInt(-1);
-            preference->add_hour(static_cast<uint>(hour));
-        }
-    }
+    // if (pref_obj.contains("hours") && 
+    //     pref_obj["hours"].isArray())
+    // {
+    //     QJsonArray hours_array = pref_obj["hours"].toArray();
+    //     for (const QJsonValue &hour_value : hours_array)
+    //     {
+    //         int hour = hour_value.toInt(-1);
+    //         preference->add_hour(static_cast<uint>(hour));
+    //     }
+    // }
     
     return preference;
 }
