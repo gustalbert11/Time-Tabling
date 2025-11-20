@@ -31,7 +31,8 @@ private slots:
     void onSubmit();
     void onFieldReturnPressed();
     void combox1_current_text_changed();
-private:void processForm();
+private:
+    void processForm();
     void setupConnections();
     Professor* prof;
 

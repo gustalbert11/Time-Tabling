@@ -230,6 +230,7 @@ void MainWindow::open_course_form()
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
+    showing_professors = !showing_professors;
     update_table();
 
 }
