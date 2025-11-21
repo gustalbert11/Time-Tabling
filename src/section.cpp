@@ -1,11 +1,10 @@
 #include "../include/section.hpp"
 
-uint num_sections = 0;
+uint Section::num_sections = 0;
 
 Section::Section()
 : professor(nullptr),
-  course(nullptr),
-  time_slots(MAX_NUM_DAYS)
+  course(nullptr)
 {
     set_id();
 }
@@ -30,9 +29,13 @@ Course* Section::get_course() const
 { 
     return course; 
 }
-Designar::SortedArraySet<std::pair<Days, uint>> const &Section::get_time_slots() const
-{
-    return time_slots;
+const Designar::ArraySet<Days>& Section::get_days() const 
+{ 
+    return time_slots.first; 
+}
+const Designar::ArraySet<std::pair<uint, uint>>& Section::get_hours() const 
+{ 
+    return time_slots.second; 
 }
 
 bool Section::set_professor(Professor* professor)
@@ -53,27 +56,32 @@ bool Section::set_course(Course* course)
     this->course = course;
     return true;
 }
-bool Section::add_time_slot(const Days& day, const uint& hour)
+
+bool Section::add_day(const Days &day)
 {
     if (day < Days::MONDAY || 
         day > Days::FRIDAY)
     {
         return false;
     }
-    if (hour < 1 || 
-        hour > MAX_DAILY_HOURS)
+    time_slots.first.append(day);
+    return true;
+}
+bool Section::add_hour(const uint &start, const uint &end)
+{
+    if (start >= end || 
+        end > MAX_DAILY_HOURS)
     {
         return false;
     }
 
-    auto time_slot = std::make_pair(day, hour);
-
-    if (time_slots.contains(time_slot))
+    auto hours_interval = std::make_pair(start, end);
+    if (time_slots.second.contains(hours_interval))
     {
         return false;
     }
     
-    time_slots.append(time_slot);
+    time_slots.second.append(hours_interval);
     return true;
 }
 

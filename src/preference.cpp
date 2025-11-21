@@ -10,11 +10,11 @@ const PreferenceType& Preference::get_type() const
 }
 const Designar::ArraySet<Days>& Preference::get_days() const 
 { 
-    return days_hours_pair.first; 
+    return time_slots.first; 
 }
 const Designar::ArraySet<std::pair<uint, uint>>& Preference::get_hours() const 
 { 
-    return days_hours_pair.second; 
+    return time_slots.second; 
 }
 
 bool Preference::set_description(const std::string &description)
@@ -45,23 +45,25 @@ bool Preference::add_day(const Days &day)
     {
         return false;
     }
-    days_hours_pair.first.append(day);
+    time_slots.first.append(day);
     return true;
 }
 bool Preference::add_hour(const uint &start, const uint &end)
 {
-    if (type != HOURS ||
+    if (start >= end || 
+        end > MAX_DAILY_HOURS ||
+        type != HOURS ||
         type != DAYS_HOURS)
     {
         return false;
     }
 
     auto hours_interval = std::make_pair(start, end);
-    if (days_hours_pair.second.contains(hours_interval))
+    if (time_slots.second.contains(hours_interval))
     {
         return false;
     }
     
-    days_hours_pair.second.append(hours_interval);
+    time_slots.second.append(hours_interval);
     return true;
 }

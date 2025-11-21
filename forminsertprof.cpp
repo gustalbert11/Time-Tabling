@@ -21,11 +21,11 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     label2 = new QLabel("Numero de Secciones:", this);
     spinbox1 = new QSpinBox(this);
-    spinbox1->setRange(1,MAX_NUM_SECTIONS);
+    spinbox1->setRange(1,PROF_MAX_NUM_SECTIONS);
 
     label3 = new QLabel("Maximo de horas diarias:", this);
     spinbox2 = new QSpinBox(this);
-    spinbox2->setRange(2,MAX_DAILY_HOURS);
+    spinbox2->setRange(2,PROF_MAX_DAILY_HOURS);
 
     label4 = new QLabel("Maximo de horas consecutivas:", this);
     spinbox3 = new QSpinBox(this);

@@ -1,12 +1,12 @@
 #include "../include/professor.hpp"
 
-uint num_professors = 0;
+uint Professor::num_professors = 0;
 
 Professor::Professor()
 : name(""),
-  num_sections(MAX_NUM_SECTIONS),
-  sections(MAX_NUM_SECTIONS),
-  max_daily_hours(MAX_DAILY_HOURS),
+  num_sections(PROF_MAX_NUM_SECTIONS),
+  sections(PROF_MAX_NUM_SECTIONS),
+  max_daily_hours(PROF_MAX_DAILY_HOURS),
   max_consecutive_hours(MAX_CONSECUTIVE_HOURS),
   preference(nullptr)
 {
@@ -65,7 +65,7 @@ bool Professor::set_name(const std::string &name)
 bool Professor::set_num_sections(const uint &num_sections)
 {
     if (num_sections < 1 || 
-        num_sections > MAX_NUM_SECTIONS)
+        num_sections > PROF_MAX_NUM_SECTIONS)
     {
         return false;
     }
@@ -75,7 +75,7 @@ bool Professor::set_num_sections(const uint &num_sections)
 bool Professor::set_max_daily_hours(const uint &max_daily_hours)
 {
     if (max_daily_hours < 2 || 
-        max_daily_hours > MAX_DAILY_HOURS)
+        max_daily_hours > PROF_MAX_DAILY_HOURS)
     {
         return false;
     }
@@ -85,7 +85,7 @@ bool Professor::set_max_daily_hours(const uint &max_daily_hours)
 bool Professor::set_max_consecutive_hours(const uint &max_consecutive_hours)
 {
     if (max_consecutive_hours < 2 || 
-        max_consecutive_hours >= this->max_daily_hours ||
+        max_consecutive_hours > this->max_daily_hours ||
         max_consecutive_hours > MAX_CONSECUTIVE_HOURS)
     {
         return false;

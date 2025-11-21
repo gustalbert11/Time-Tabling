@@ -21,23 +21,23 @@ CourseForm::CourseForm(QWidget *parent)
 
     labels.push_back(new QLabel("Nivel de la materia", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[0]->setRange(0 , 10);
+    spinboxes[0]->setRange(1, MAX_NUM_LEVEL);
 
     labels.push_back(new QLabel("Numero de UC", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[1]->setRange(0 , 10);
+    spinboxes[1]->setRange(1, MAX_NUM_CREDITS);
 
     labels.push_back(new QLabel("Numero de secciones", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[2]->setRange(0 , 10);
+    spinboxes[2]->setRange(1, COURSE_MAX_NUM_SECTIONS);
 
     labels.push_back(new QLabel("Horas semanales", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[3]->setRange(0 , 10);
+    spinboxes[3]->setRange(4, MAX_WEEKLY_HOURS);
 
     labels.push_back(new QLabel("Horas maximas diarias", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[4]->setRange(0 , 10);
+    spinboxes[4]->setRange(2, MAX_DAILY_HOURS);
 
     std::vector<QHBoxLayout*> layouts;
     layouts.push_back(new QHBoxLayout());

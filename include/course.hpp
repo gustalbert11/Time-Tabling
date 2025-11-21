@@ -2,8 +2,6 @@
 
 #include "settings.hpp"
 
-extern uint num_courses;
-
 class Section;
 
 class Course
@@ -40,6 +38,8 @@ private:
     Designar::ArraySet<Section*> sections;
     uint num_weekly_hours;
     uint max_daily_hours;
+
+    static uint num_courses;
 
     bool set_id();
 };

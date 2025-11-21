@@ -2,8 +2,6 @@
 
 #include "preference.hpp"
 
-extern uint num_professors;
-
 class Section;
 
 class Professor
@@ -36,6 +34,8 @@ private:
     uint max_daily_hours;
     uint max_consecutive_hours;
     std::unique_ptr<Preference> preference;
+
+    static uint num_professors;
 
     bool set_id();
 };
