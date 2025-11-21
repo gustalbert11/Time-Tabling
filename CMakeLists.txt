@@ -6,7 +6,7 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # 1. Define la ruta a la biblioteca DeSiGNAR,
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
 #designar eldry /home/eldry/DeSiGNAR-main
-set(DESIGNAR_PATH /home/eldry/DeSiGNAR-main)
+set(DESIGNAR_PATH /home/gustavo/pr/DeSiGNAR-2.0.0)
 # --- FIN: Configuración DeSiGNAR ---
 
 set(CMAKE_AUTOUIC ON)
