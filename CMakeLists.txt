@@ -7,7 +7,7 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
 #designar eldry /home/eldry/DeSiGNAR-main
 #designar manuel /home/mquintero/projects/DeSiGNAR-2.0.0
-set(DESIGNAR_PATH /home/mquintero/projects/DeSiGNAR-2.0.0)
+set(DESIGNAR_PATH /home/gustavo/pr/DeSiGNAR-2.0.0)
 # --- FIN: Configuración DeSiGNAR ---
 
 set(CMAKE_AUTOUIC ON)
