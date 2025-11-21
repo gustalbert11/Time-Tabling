@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
-#include <QMessageBox>
-#include "../include/data_manager.hpp" 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
    
     ui->setupUi(this);
-
-    ui->ShowInfo->setText("Mostrar Materias");
+    ui->insertCourseButton->hide();
+    ui->ShowInfoButton->setText("Mostrar Materias");
     ui->tableInfo->setColumnCount(7);
     ui->tableInfo->setHorizontalHeaderLabels(
         {"ID","Nombre", "Secciones", "Max horas diario", "Max horas consecutivo","Tipo de Pref","Descripcion Pref"}
@@ -38,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
 
-    connect(ui->ShowInfo, &QPushButton::clicked, this, &MainWindow::update_table);
+    connect(ui->ShowInfoButton, &QPushButton::clicked, this, &MainWindow::update_table);
 
     connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
 
@@ -84,6 +82,7 @@ void MainWindow::import_json()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "El archivo JSON fue importado correctamente.");
+        showing_professors = !showing_professors;
         update_table();
     } 
     else 
@@ -170,7 +169,9 @@ void MainWindow::update_table()
   
     if(showing_professors)
     {
-        ui->ShowInfo->setText("Mostrar Profesores");
+        ui->insertProfButton->hide();
+        ui->insertCourseButton->show();
+        ui->ShowInfoButton->setText("Mostrar Profesores");
         ui->tableInfo->setColumnCount(6);
         ui->tableInfo->setHorizontalHeaderLabels(
         {"Nombre", "Semestre", "U.C", "Secciones","Horas Semanales","Max Horas Diarias"}
@@ -183,13 +184,16 @@ void MainWindow::update_table()
         ui->tableInfo->setColumnWidth(5, 180);
 
         show_courses();
+        
 
         showing_professors = false;
     
     } 
     else
     {
-        ui->ShowInfo->setText("Mostrar Materias");
+        ui->insertProfButton->show();
+        ui->insertCourseButton->hide();
+        ui->ShowInfoButton->setText("Mostrar Materias");
         ui->tableInfo->setColumnCount(7);
         ui->tableInfo->setHorizontalHeaderLabels(
         {"ID","Nombre", "Secciones", "Max horas diario", "Max horas consecutivo","Tipo de Pref","Descripcion Pref"}
@@ -207,7 +211,6 @@ void MainWindow::update_table()
     }
 }
 
-
 void MainWindow::open_course_form()
 {
     if (!course_form)
@@ -215,8 +218,7 @@ void MainWindow::open_course_form()
         course_form = new CourseForm();
         course_form->setAttribute(Qt::WA_DeleteOnClose);
 
-        // Conectar la señal de destrucción
-        connect(course_form, &CourseForm::destroyed, this, &MainWindow::on_professor_window_closed);
+        connect(course_form, &CourseForm::destroyed, this, &MainWindow::on_course_window_closed);
 
         course_form->show();
     }
@@ -232,6 +234,4 @@ void MainWindow::on_course_window_closed()
     course_form = nullptr;
     showing_professors = !showing_professors;
     update_table();
-
 }
-

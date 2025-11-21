@@ -44,6 +44,6 @@ private:
     Ui::MainWindow *ui;
     ProfessorForm* prof_form = nullptr;
     CourseForm* course_form = nullptr;
-    bool showing_professors = false;
+    bool showing_professors = true;
 };
 #endif // MAINWINDOW_H
