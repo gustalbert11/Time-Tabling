@@ -5,6 +5,8 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # --- INICIO: Configuración DeSiGNAR ---
 # 1. Define la ruta a la biblioteca DeSiGNAR,
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
+#designar eldry /home/eldry/DeSiGNAR-main
+#designar manuel /home/mquintero/projects/DeSiGNAR-2.0.0
 set(DESIGNAR_PATH /home/mquintero/projects/DeSiGNAR-2.0.0)
 # --- FIN: Configuración DeSiGNAR ---
 
@@ -15,20 +17,30 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        forminsertprof.cpp
+        forminsertprof.h
+        forminsertprof.ui
+        src/data_manager.cpp
+        src/professor.cpp
+        src/course.cpp
+        src/section.cpp
+        src/preference.cpp 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TimeTabling
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        forminsertprof.h forminsertprof.cpp forminsertprof.ui
+        courseform.h courseform.cpp courseform.ui
     )
 else()
     if(ANDROID)
@@ -61,7 +73,6 @@ target_link_libraries(TimeTabling PRIVATE
     Designar                             
 )
 # --- FIN: Enlazar DeSiGNAR y Headers del Proyecto ---
-
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
