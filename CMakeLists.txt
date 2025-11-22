@@ -6,7 +6,7 @@ project(TimeTabling VERSION 0.1 LANGUAGES CXX)
 # 1. Define la ruta a la biblioteca DeSiGNAR,
 # set(DESIGNAR_PATH ruta/a/tu/carpeta/DeSiGNAR) 
 #designar eldry /home/eldry/DeSiGNAR-main
-set(DESIGNAR_PATH /home/gustavo/pr/DeSiGNAR-2.0.0)
+set(DESIGNAR_PATH /home/eldry/DeSiGNAR-main)
 # --- FIN: Configuración DeSiGNAR ---
 
 set(CMAKE_AUTOUIC ON)
@@ -40,6 +40,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         forminsertprof.h forminsertprof.cpp forminsertprof.ui
         courseform.h courseform.cpp courseform.ui
+        sectionwindow.h sectionwindow.cpp sectionwindow.ui
+
+
     )
 else()
     if(ANDROID)

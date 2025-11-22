@@ -40,9 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
 
-
-    
-
+    connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
 }
 
 MainWindow::~MainWindow()
@@ -229,9 +227,32 @@ void MainWindow::open_course_form()
     }
 }
 
+void MainWindow::open_section_form()
+{
+    if (!section_window)
+    {
+        section_window = new SectionWindow();
+        section_window->setAttribute(Qt::WA_DeleteOnClose);
+
+        connect(section_window, &SectionWindow::destroyed, this, &MainWindow::on_section_window_closed);
+
+        section_window->show();
+    }
+    else
+    {
+        section_window->raise();
+        section_window->activateWindow();
+    }
+}
+
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
     showing_professors = !showing_professors;
     update_table();
+}
+
+void MainWindow::on_section_window_closed()
+{
+    section_window = nullptr;
 }
