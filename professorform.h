@@ -1,5 +1,5 @@
-#ifndef FORMINSERTPROF_H
-#define FORMINSERTPROF_H
+#ifndef PROFESSORFORM_H
+#define PROFESSORFORM_H
 
 #include <QMainWindow>
 #include <QLineEdit>
@@ -67,4 +67,4 @@ private:
     Ui::ProfessorForm *ui;
 };
 
-#endif // FORMINSERTPROF_H
+#endif // PROFESSORFORM_H

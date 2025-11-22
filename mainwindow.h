@@ -1,8 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include "forminsertprof.h"
 #include "courseform.h"
 #include "sectionwindow.h"
 

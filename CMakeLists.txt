@@ -24,9 +24,9 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        forminsertprof.cpp
-        forminsertprof.h
-        forminsertprof.ui
+        professorform.cpp
+        professorform.h
+        professorform.ui
         src/data_manager.cpp
         src/professor.cpp
         src/course.cpp
@@ -38,7 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TimeTabling
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        forminsertprof.h forminsertprof.cpp forminsertprof.ui
+        professorform.h professorform.cpp professorform.ui
         courseform.h courseform.cpp courseform.ui
         sectionwindow.h sectionwindow.cpp sectionwindow.ui
 

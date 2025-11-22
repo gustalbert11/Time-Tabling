@@ -2,8 +2,6 @@
 
 #include "settings.hpp"
 
-extern uint num_sections;
-
 class Professor;
 class Course;
 
@@ -27,6 +25,8 @@ private:
     Professor* professor;
     Course* course;
     Designar::SortedArraySet<std::pair<Days, uint>> time_slots;
+
+    static uint num_sections;
 
     bool set_id();
 };
