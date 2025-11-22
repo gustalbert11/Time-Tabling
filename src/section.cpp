@@ -30,7 +30,7 @@ Course* Section::get_course() const
 { 
     return course; 
 }
-Designar::SortedArraySet<std::pair<Days, uint>> const &Section::get_time_slots() const
+Designar::ArraySet<std::pair<Days, std::pair<uint, uint>>> const &Section::get_time_slots() const
 {
     return time_slots;
 }
@@ -53,21 +53,18 @@ bool Section::set_course(Course* course)
     this->course = course;
     return true;
 }
-bool Section::add_time_slot(const Days& day, const uint& hour)
+
+bool Section::add_time_slot(const Days& day, const uint &start, const uint &end)
 {
     if (day < Days::MONDAY || 
-        day > Days::FRIDAY)
-    {
-        return false;
-    }
-    if (hour < 1 || 
-        hour > MAX_DAILY_HOURS)
+        day > Days::FRIDAY ||
+        start >= end || 
+        end > MAX_DAILY_HOURS)
     {
         return false;
     }
 
-    auto time_slot = std::make_pair(day, hour);
-
+    auto time_slot = std::make_pair(day, std::make_pair(start, end));
     if (time_slots.contains(time_slot))
     {
         return false;

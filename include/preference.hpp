@@ -67,5 +67,5 @@ public:
 private:
     std::string description;
     PreferenceType type;
-    std::pair<Designar::ArraySet<Days>, Designar::ArraySet<std::pair<uint, uint>>> days_hours_pair;
+    std::pair<Designar::ArraySet<Days>, Designar::ArraySet<std::pair<uint, uint>>> time_slots;
 };
