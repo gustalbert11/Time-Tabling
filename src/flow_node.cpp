@@ -1,6 +1,6 @@
 #include "../include/flow_node.hpp"
 
-FlowNode::FlowNode(const std::string &id, const FlowNodeType &type) 
+FlowNode::FlowNode(std::string id, FlowNodeType type) 
 : id(id), type(type) 
 {
 
