@@ -1,6 +1,6 @@
 #include "../include/section.hpp"
 
-uint num_sections = 0;
+uint Section::num_sections = 0;
 
 Section::Section()
 : professor(nullptr),

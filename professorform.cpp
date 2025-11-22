@@ -1,5 +1,5 @@
-#include "forminsertprof.h"
-#include "ui_forminsertprof.h"
+#include "professorform.h"
+#include "ui_professorform.h"
 
 ProfessorForm::ProfessorForm(QWidget *parent)
     : QMainWindow(parent)
@@ -21,7 +21,7 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     label2 = new QLabel("Numero de Secciones:", this);
     spinbox1 = new QSpinBox(this);
-    spinbox1->setRange(1,MAX_NUM_SECTIONS);
+    spinbox1->setRange(1,PROF_MAX_NUM_SECTIONS);
 
     label3 = new QLabel("Maximo de horas diarias:", this);
     spinbox2 = new QSpinBox(this);

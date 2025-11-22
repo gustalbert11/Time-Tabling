@@ -1,11 +1,11 @@
 #include "../include/professor.hpp"
 
-uint num_professors = 0;
+uint Professor::num_professors = 0;
 
 Professor::Professor()
 : name(""),
-  num_sections(MAX_NUM_SECTIONS),
-  sections(MAX_NUM_SECTIONS),
+  num_sections(PROF_MAX_NUM_SECTIONS),
+  sections(PROF_MAX_NUM_SECTIONS),
   max_daily_hours(MAX_DAILY_HOURS),
   max_consecutive_hours(MAX_CONSECUTIVE_HOURS),
   preference(nullptr)
@@ -65,7 +65,7 @@ bool Professor::set_name(const std::string &name)
 bool Professor::set_num_sections(const uint &num_sections)
 {
     if (num_sections < 1 || 
-        num_sections > MAX_NUM_SECTIONS)
+        num_sections > PROF_MAX_NUM_SECTIONS)
     {
         return false;
     }

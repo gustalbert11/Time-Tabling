@@ -1,13 +1,13 @@
 #include "../include/course.hpp"
 
-uint num_courses = 0;
+uint Course::num_courses = 0;
 
 Course::Course()
 : name(""),
   level(MAX_NUM_LEVEL),
   num_credits(MAX_NUM_CREDITS),
-  num_sections(MAX_NUM_SECTIONS),
-  sections(MAX_NUM_SECTIONS),
+  num_sections(COURSE_MAX_NUM_SECTIONS),
+  sections(COURSE_MAX_NUM_SECTIONS),
   num_weekly_hours(MAX_WEEKLY_HOURS),
   max_daily_hours(MAX_DAILY_HOURS)
 {
@@ -92,7 +92,7 @@ bool Course::set_num_credits(const uint &num_credits)
 bool Course::set_num_sections(const uint &num_sections)
 {
     if (num_sections < 1 || 
-        num_sections > MAX_NUM_SECTIONS)
+        num_sections > COURSE_MAX_NUM_SECTIONS)
     {
         return false;
     }
@@ -101,7 +101,7 @@ bool Course::set_num_sections(const uint &num_sections)
 }
 bool Course::set_num_weekly_hours(const uint &num_weekly_hours)
 {
-    if (num_weekly_hours < 1 || 
+    if (num_weekly_hours < 4 || 
         num_weekly_hours > MAX_WEEKLY_HOURS)
     {
         return false;
@@ -111,7 +111,7 @@ bool Course::set_num_weekly_hours(const uint &num_weekly_hours)
 }
 bool Course::set_max_daily_hours(const uint &max_daily_hours)
 {
-    if (max_daily_hours < 1 || 
+    if (max_daily_hours < 2 || 
         max_daily_hours > MAX_DAILY_HOURS)
     {
         return false;

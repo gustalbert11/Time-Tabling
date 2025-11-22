@@ -357,9 +357,9 @@ void DataManager::clear_all_data()
     professors.clear();
     courses.clear();
 
-    num_sections = 0;
-    num_professors = 0;
-    num_courses = 0;
+    // num_sections = 0;
+    // num_professors = 0;
+    // num_courses = 0;
 }
 
 std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& pref_obj)
