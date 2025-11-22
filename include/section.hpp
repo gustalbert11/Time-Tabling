@@ -19,7 +19,7 @@ public:
     bool set_professor(Professor* professor);
     bool set_course(Course* course);
 
-    bool add_time_slot(const Days& day, const uint &start, const uint &end);
+    bool add_time_slot(const Days& day, const uint &start_hour, const uint &end_hour);
 
 private:
     std::string id;

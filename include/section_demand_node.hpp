@@ -4,7 +4,7 @@
 class SectionDemandNode : public FlowNode 
 {
 public:
-    SectionDemandNode(const std::string& id, Section* section, const std::pair<uint, uint>& hour);
+    SectionDemandNode(std::string id, Section* section, uint start_hour, uint end_hour);
 
     Section* get_section() const;
     const std::pair<uint, uint> &get_hour() const;

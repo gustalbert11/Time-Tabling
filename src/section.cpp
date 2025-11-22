@@ -54,17 +54,17 @@ bool Section::set_course(Course* course)
     return true;
 }
 
-bool Section::add_time_slot(const Days& day, const uint &start, const uint &end)
+bool Section::add_time_slot(const Days& day, const uint &start_hour, const uint &end_hour)
 {
     if (day < Days::MONDAY || 
         day > Days::FRIDAY ||
-        start >= end || 
-        end > MAX_DAILY_HOURS)
+        start_hour >= end_hour || 
+        end_hour > MAX_DAILY_HOURS)
     {
         return false;
     }
 
-    auto time_slot = std::make_pair(day, std::make_pair(start, end));
+    auto time_slot = std::make_pair(day, std::make_pair(start_hour, end_hour));
     if (time_slots.contains(time_slot))
     {
         return false;

@@ -17,7 +17,7 @@ public:
     FlowNode() = default;
     FlowNode(const FlowNode &) = default;
 
-    FlowNode(const std::string &id, const FlowNodeType &type);
+    FlowNode(std::string id, FlowNodeType type);
 
     const std::string &get_id() const;
     const FlowNodeType &get_type() const;
