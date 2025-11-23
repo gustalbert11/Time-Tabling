@@ -4,7 +4,7 @@ SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uin
 : FlowNode(id, FlowNodeType::SECTION_TIME),
   section(section), day(day)
 {
-
+    set_hour(start_hour, end_hour);
 }
 
 Section* SectionTimeNode::get_section() const
