@@ -31,7 +31,12 @@ set(PROJECT_SOURCES
         src/professor.cpp
         src/course.cpp
         src/section.cpp
-        src/preference.cpp 
+        src/preference.cpp
+        src/flow_node.cpp
+        src/section_demand_node.cpp
+        src/professor_time_node.cpp
+        src/section_time_node.cpp
+        src/flow_network.cpp 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

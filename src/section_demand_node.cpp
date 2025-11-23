@@ -36,7 +36,7 @@ bool SectionDemandNode::set_hour(const uint &start, const uint &end)
     auto hours_interval = std::make_pair(start, end);
     if (section->get_time_slots().none([hours_interval](auto pair)
     {
-        pair.second == hours_interval;
+        return pair.second == hours_interval;
     }))
     {
         return false;

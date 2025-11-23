@@ -1,5 +1,19 @@
 #include "../include/flow_network.hpp"
 
+FlowNetwork *fn_ptr_instance = FlowNetwork::get_ptr_instance();
+FlowNetwork &fn_instance = FlowNetwork::get_instance();
+
+void FlowNetwork::init()
+{
+    if (is_initialized)
+    {
+        return;
+    }
+    
+    create_network();
+    is_initialized = true;
+}
+
 uint FlowNetwork::get_section_demand_nodes_count() const
 {
     return num_section_demand_nodes;
@@ -41,6 +55,11 @@ bool FlowNetwork::add_node(const std::shared_ptr<FlowNode> &node)
     }
 
     return true;
+}
+
+FlowNetwork::FlowNetwork()
+{
+    
 }
 
 void FlowNetwork::create_nodes()
@@ -123,4 +142,13 @@ void FlowNetwork::create_nodes()
             }
         }
     }
+}
+
+void FlowNetwork::create_network()
+{
+    num_section_demand_nodes = 0;
+    num_professor_time_nodes = 0;
+    num_section_time_nodes = 0;
+
+    create_nodes();
 }
