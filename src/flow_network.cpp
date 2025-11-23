@@ -26,19 +26,55 @@ uint FlowNetwork::get_section_time_nodes_count() const
 {
     return num_section_time_nodes;
 }
+uint FlowNetwork::get_arcs_count() const
+{
+    return network.get_num_arcs();
+}
+
+// bool FlowNetwork::add_node(const std::shared_ptr<FlowNode> &node)
+// {
+//     if (!node)
+//     {
+//         return false;
+//     }
+    
+//     network.insert_node(node);
+
+//     switch (node->get_type())
+//     {
+//     case FlowNodeType::SECTION_DEMAND:
+//         ++num_section_demand_nodes;
+//         break;
+
+//     case FlowNodeType::PROFESSOR_TIME:
+//         ++num_professor_time_nodes;
+//         break;
+
+//     case FlowNodeType::SECTION_TIME:
+//         ++num_section_time_nodes;
+//         break;
+
+//     default:
+//         break;
+//     }
+
+//     return true;
+// }
 
 bool FlowNetwork::add_node(const std::shared_ptr<FlowNode> &node)
 {
-    if (!node)
+    if (!node) 
     {
         return false;
     }
-    
-    network.insert_node(node);
+
+    auto graph_node = network.insert_node(node);
+    graph_node_map[node->get_id()] = graph_node;
 
     switch (node->get_type())
     {
     case FlowNodeType::SECTION_DEMAND:
+        section_demand_nodes.push_back(graph_node);
         ++num_section_demand_nodes;
         break;
 
@@ -116,9 +152,6 @@ void FlowNetwork::create_nodes()
                 );   
 
                 add_node(pt_node);
-
-                // Aquí es buen lugar para guardar el índice/nodo en
-                // un mapa auxiliar si luego lo necesitas para crear aristas.
             }
         }
     }
@@ -188,7 +221,22 @@ void FlowNetwork::create_nodes()
         }
     }
 }
+void FlowNetwork::create_arcs()
+{
+    auto it = graph_node_map.find("SOURCE");
+    if (it == graph_node_map.end()) 
+    {
+        return;
+    }
+    GraphNode* src = it->second;
 
+    for (auto demand_node : section_demand_nodes)
+    {
+        network.insert_arc(src, demand_node, static_cast<uint>(1));
+    }
+
+    // más arcos a crear...
+}
 void FlowNetwork::create_network()
 {
     num_section_demand_nodes = 0;
@@ -196,4 +244,5 @@ void FlowNetwork::create_network()
     num_section_time_nodes = 0;
 
     create_nodes();
+    create_arcs();
 }

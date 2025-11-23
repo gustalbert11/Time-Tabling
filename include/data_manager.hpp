@@ -38,7 +38,7 @@ public:
     void clear_all_data();
 
 protected:
-    DataManager() {}
+    DataManager();
     std::unordered_map<std::string, std::unique_ptr<Professor>> professors;
     std::unordered_map<std::string, std::unique_ptr<Course>> courses;
     std::unordered_map<std::string, std::unique_ptr<Section>> sections;
