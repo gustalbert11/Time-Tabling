@@ -18,7 +18,7 @@ private:
     uint num_professor_time_nodes = 0;
     uint num_section_time_nodes = 0;
 
-    void create_network();
+    void create_nodes();
 };
 
 // class FlowNetwork
@@ -36,5 +36,5 @@ private:
 //     uint num_professor_time_nodes;
 //     uint num_section_time_nodes;
 
-//     void create_network();
+//     void create_nodes();
 // };
