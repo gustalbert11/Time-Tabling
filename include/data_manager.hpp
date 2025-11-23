@@ -36,6 +36,7 @@ public:
     //bool export_to_json(const std::string& filename) const;
     
     void remove_professor(std::string id);
+    void remove_course(std::string id);
     void clear_all_data();
 
 protected:
