@@ -4,7 +4,7 @@ ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days 
 : FlowNode(id, FlowNodeType::PROFESSOR_TIME),
   professor(professor), day(day)
 {
-
+    set_hour(start_hour, end_hour);
 }
 
 Professor* ProfessorTimeNode::get_professor() const

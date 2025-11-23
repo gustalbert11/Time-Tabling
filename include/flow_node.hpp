@@ -22,8 +22,6 @@ public:
     const std::string &get_id() const;
     const FlowNodeType &get_type() const;
 
-    bool set_type(const FlowNodeType &type);
-
 private:
     std::string id;
     FlowNodeType type;

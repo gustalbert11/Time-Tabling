@@ -15,15 +15,3 @@ const FlowNodeType& FlowNode::get_type() const
 {
     return type;
 }
-
-bool FlowNode::set_type(const FlowNodeType &type)
-{
-    if (type < FlowNodeType::SOURCE ||
-        type > FlowNodeType::SINK)
-    {
-        return false;
-    }
-    
-    this->type = type;
-    return true;
-}
