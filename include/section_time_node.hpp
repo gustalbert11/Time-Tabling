@@ -1,3 +1,5 @@
+#pragma once
+
 #include "section_demand_node.hpp"
 
 class SectionTimeNode : public FlowNode 

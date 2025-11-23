@@ -1,3 +1,5 @@
+#pragma once
+
 #include "professor_time_node.hpp"
 #include "section_time_node.hpp"
 #include <graphalgorithms.hpp>
@@ -31,21 +33,3 @@ protected:
 
 extern FlowNetwork *fn_ptr_instance;
 extern FlowNetwork &fn_instance;
-
-// class FlowNetwork
-// {
-// public:
-//     uint get_section_demand_nodes_count() const;
-//     uint get_professor_time_nodes_count() const;
-//     uint get_section_time_nodes_count() const;
-
-//     bool add_node(const FlowNode &node);
-
-// private:
-//     Designar::Digraph<FlowNode, uint> network;
-//     uint num_section_demand_nodes;
-//     uint num_professor_time_nodes;
-//     uint num_section_time_nodes;
-
-//     void create_nodes();
-// };

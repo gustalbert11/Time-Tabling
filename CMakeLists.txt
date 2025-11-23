@@ -27,11 +27,11 @@ set(PROJECT_SOURCES
         professorform.cpp
         professorform.h
         professorform.ui
-        src/data_manager.cpp
+        src/preference.cpp
         src/professor.cpp
         src/course.cpp
         src/section.cpp
-        src/preference.cpp
+        src/data_manager.cpp
         src/flow_node.cpp
         src/section_demand_node.cpp
         src/professor_time_node.cpp
@@ -77,6 +77,40 @@ target_link_libraries(TimeTabling PRIVATE
     Designar                             
 )
 # --- FIN: Enlazar DeSiGNAR y Headers del Proyecto ---
+
+# --- Test para FlowNetwork ---
+add_executable(flow_network_test
+    test_flow_network.cpp
+    src/flow_network.cpp
+    src/data_manager.cpp
+    src/professor.cpp
+    src/course.cpp
+    src/section.cpp
+    src/preference.cpp           # <--- ¡ESTO FALTABA! (Soluciona el error)
+    
+    # También añade estos si tus nodos tienen implementación en .cpp
+    src/flow_node.cpp
+    src/section_demand_node.cpp
+    src/professor_time_node.cpp
+    src/section_time_node.cpp
+)
+
+# Asegúrate de mantener los enlaces correctos que configuramos antes:
+target_link_directories(flow_network_test PRIVATE 
+    ${DESIGNAR_PATH}/lib
+)
+
+target_link_libraries(flow_network_test PRIVATE 
+    Qt${QT_VERSION_MAJOR}::Core
+    Designar
+)
+
+target_include_directories(flow_network_test PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include 
+    ${DESIGNAR_PATH}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+# --- Fin test para FlowNetwork ---
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

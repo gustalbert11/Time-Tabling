@@ -17,19 +17,19 @@ inline std::string flow_node_type_to_string(FlowNodeType type)
     switch (type)
     {
         case FlowNodeType::SOURCE: 
-            return "MONDAY";
+            return "SOURCE";
 
         case FlowNodeType::SECTION_DEMAND: 
-            return "TUESDAY";
+            return "SECTION DEMAND";
 
         case FlowNodeType::PROFESSOR_TIME: 
-            return "WEDNESDAY";
+            return "PROFESSOR TIME";
 
         case FlowNodeType::SECTION_TIME: 
-            return "THURSDAY";
+            return "SECTION TIME";
 
         case FlowNodeType::SINK: 
-            return "FRIDAY";
+            return "SINK";
 
         default: 
             return "NO SPECIFIED";

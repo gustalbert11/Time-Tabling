@@ -1,3 +1,5 @@
+#pragma once
+
 #include "flow_node.hpp"
 #include "section.hpp"
 

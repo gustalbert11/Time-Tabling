@@ -1,9 +1,9 @@
 #pragma once
 
 #include <singleton.hpp>
-#include "../include/professor.hpp"
-#include "../include/course.hpp"
-#include "../include/section.hpp"
+#include "professor.hpp"
+#include "course.hpp"
+#include "section.hpp"
 #include <unordered_map>
 
 class QJsonObject;

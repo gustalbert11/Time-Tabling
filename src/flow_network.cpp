@@ -100,6 +100,26 @@ void FlowNetwork::create_nodes()
                 // Aquí es buen lugar para guardar el índice/nodo en
                 // un mapa auxiliar si luego lo necesitas para crear aristas.
             }
+
+            for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
+            {
+                uint start_hour = h;
+                uint end_hour   = h + 2;
+
+                std::string node_id =
+                    prof_id + "_D" + std::to_string(d) +
+                    "_H" + std::to_string(start_hour) +
+                    "-"  + std::to_string(end_hour);
+
+                auto pt_node = std::make_shared<ProfessorTimeNode>(
+                    node_id, professor, day, start_hour, end_hour
+                );   
+
+                add_node(pt_node);
+
+                // Aquí es buen lugar para guardar el índice/nodo en
+                // un mapa auxiliar si luego lo necesitas para crear aristas.
+            }
         }
     }
 
@@ -108,11 +128,13 @@ void FlowNetwork::create_nodes()
         auto section = pair.second.get();     
         auto sec_id = section->get_id();
 
-        for (uint h = MIN_START_HOUR; h <= MAX_END_HOUR - 2; h += 2)
-        {
-            uint start_hour = h;
-            uint end_hour   = h + 2;
+        auto num_weekly_hours = section->get_course()->get_num_weekly_hours();
 
+        for (uint i = 0; i + 2 <= num_weekly_hours; i += 2)
+        {
+            uint start_hour = i;
+            uint end_hour = i + 2;
+            
             std::string demand_id =
                 sec_id + "_DEMAND_" +
                 std::to_string(start_hour) + "-" + std::to_string(end_hour);
@@ -122,12 +144,35 @@ void FlowNetwork::create_nodes()
             );   
 
             add_node(demand_node);
+        }
 
-            for (int d = static_cast<int>(Days::MONDAY);
-                 d <= static_cast<int>(Days::FRIDAY);
-                 ++d)
+        for (int d = static_cast<int>(Days::MONDAY);
+             d <= static_cast<int>(Days::FRIDAY);
+             ++d)
+        {
+            Days day = static_cast<Days>(d);
+
+            for (uint h = MIN_START_HOUR; h <= MAX_END_HOUR - 2; h += 2)
             {
-                Days day = static_cast<Days>(d);
+                uint start_hour = h;
+                uint end_hour   = h + 2;
+
+                std::string time_id =
+                    sec_id + "_TIME_D" + std::to_string(d) +
+                    "_H" + std::to_string(start_hour) +
+                    "-"  + std::to_string(end_hour);
+
+                auto st_node = std::make_shared<SectionTimeNode>(
+                    time_id, section, day, start_hour, end_hour
+                );   
+
+                add_node(st_node);
+            }
+
+            for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
+            {
+                uint start_hour = h;
+                uint end_hour   = h + 2;
 
                 std::string time_id =
                     sec_id + "_TIME_D" + std::to_string(d) +
