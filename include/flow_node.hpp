@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphalgorithms.hpp>
+#include <string>
 
 enum class FlowNodeType 
 {
