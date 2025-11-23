@@ -362,6 +362,11 @@ void DataManager::clear_all_data()
     // num_courses = 0;
 }
 
+void DataManager::remove_professor(std::string id)
+{
+    professors.erase(id);
+}
+
 std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& pref_obj)
 {
     auto preference = std::make_unique<Preference>();

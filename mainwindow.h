@@ -3,6 +3,9 @@
 
 #include "courseform.h"
 #include "sectionwindow.h"
+#include <QTableWidget>
+#include <QMessageBox>
+#include "../include/data_manager.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -42,6 +45,8 @@ private slots:
     void open_course_form();
 
     void open_section_form();
+
+    void onItemClicked(QTableWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

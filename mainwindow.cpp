@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
 
+    connect(ui->tableInfo, &QTableWidget::itemClicked, this, &MainWindow::onItemClicked);
+
     connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
 }
 
@@ -255,4 +257,21 @@ void MainWindow::on_course_window_closed()
 void MainWindow::on_section_window_closed()
 {
     section_window = nullptr;
+}
+
+void MainWindow::onItemClicked(QTableWidgetItem *item)
+{
+    QMessageBox::StandardButton respuesta = QMessageBox::question(
+        this,
+        "Confirmar eliminación",
+        "¿Estás seguro de que deseas eliminar este elemento?",
+        QMessageBox::Yes | QMessageBox::No
+        );
+
+
+    if(item->text().contains(QString("PROF")) && respuesta == QMessageBox::Yes)
+    {
+        dm_instance.remove_professor(item->text().toStdString());
+    }
+    update_table();
 }

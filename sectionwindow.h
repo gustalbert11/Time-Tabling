@@ -2,7 +2,7 @@
 #define SECTIONWINDOW_H
 
 #include <QMainWindow>
-#include "forminsertprof.h"
+#include "professorform.h"
 
 namespace Ui {
 class SectionWindow;
