@@ -1,19 +1,20 @@
 #include "../include/section_demand_node.hpp"
 
-SectionDemandNode::SectionDemandNode(std::string id, Section* section, uint start_hour, uint end_hour)
+SectionDemandNode::SectionDemandNode(std::string id, Section* section, uint hour_index)
 : FlowNode(id, FlowNodeType::SECTION_DEMAND),
-  section(section)
+  section(section),
+  hour_index(hour_index)
 {
-    set_hour(start_hour, end_hour);
+
 }
 
 Section* SectionDemandNode::get_section() const
 {
     return section;
 }
-const std::pair<uint, uint>& SectionDemandNode::get_hour() const
+uint SectionDemandNode::get_hour_index() const
 {
-    return hour;
+    return hour_index;
 }
 
 bool SectionDemandNode::set_section(Section* section)
@@ -25,23 +26,8 @@ bool SectionDemandNode::set_section(Section* section)
     this->section = section;
     return true;
 }
-bool SectionDemandNode::set_hour(const uint &start, const uint &end)
+bool SectionDemandNode::set_hour_index(const uint& hour_index)
 {
-    if (start >= end ||
-        end > MAX_DAILY_HOURS)
-    {
-        return false;
-    }
-    
-    auto hours_interval = std::make_pair(start, end);
-    if (section->get_time_slots().none([hours_interval](auto pair)
-    {
-        return pair.second == hours_interval;
-    }))
-    {
-        return false;
-    }
-
-    this->hour = hours_interval;
+    this->hour_index = hour_index;
     return true;
 }

@@ -9,14 +9,14 @@ public:
 
     Section* get_section() const;
     const Days &get_day() const;
-    const std::pair<uint, uint> &get_hour() const;
+    const std::pair<uint, uint> &get_hour_interval() const;
 
     bool set_section(Section* section);
     bool set_day(const Days &day);
-    bool set_hour(const uint &start_hour, const uint &end_hour);
+    bool set_hour_interval(const uint &start_hour, const uint &end_hour);
 
 private:
     Section* section;
     Days day;
-    std::pair<uint, uint> hour;
+    std::pair<uint, uint> hour_interval;
 };

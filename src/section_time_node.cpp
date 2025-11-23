@@ -4,7 +4,7 @@ SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uin
 : FlowNode(id, FlowNodeType::SECTION_TIME),
   section(section), day(day)
 {
-    set_hour(start_hour, end_hour);
+    set_hour_interval(start_hour, end_hour);
 }
 
 Section* SectionTimeNode::get_section() const
@@ -15,9 +15,9 @@ const Days& SectionTimeNode::get_day() const
 {
     return day;
 }
-const std::pair<uint, uint>& SectionTimeNode::get_hour() const
+const std::pair<uint, uint>& SectionTimeNode::get_hour_interval() const
 {
-    return hour;
+    return hour_interval;
 }
 
 bool SectionTimeNode::set_section(Section* section)
@@ -41,7 +41,7 @@ bool SectionTimeNode::set_day(const Days &day)
     this->day = day;
     return true;
 }
-bool SectionTimeNode::set_hour(const uint &start_hour, const uint &end_hour)
+bool SectionTimeNode::set_hour_interval(const uint &start_hour, const uint &end_hour)
 {
     if (start_hour >= end_hour ||
         end_hour > MAX_DAILY_HOURS)
@@ -49,6 +49,6 @@ bool SectionTimeNode::set_hour(const uint &start_hour, const uint &end_hour)
         return false;
     }
 
-    this->hour = std::make_pair(start_hour, end_hour);
+    this->hour_interval = std::make_pair(start_hour, end_hour);
     return true;
 }

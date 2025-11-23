@@ -165,15 +165,14 @@ void FlowNetwork::create_nodes()
 
         for (uint i = 0; i + 2 <= num_weekly_hours; i += 2)
         {
-            uint start_hour = i;
-            uint end_hour = i + 2;
+            uint hour_index = i + 2;
             
             std::string demand_id =
                 sec_id + "_DEMAND_" +
-                std::to_string(start_hour) + "-" + std::to_string(end_hour);
+                std::to_string(hour_index);
 
             auto demand_node = std::make_shared<SectionDemandNode>(
-                demand_id, section, start_hour, end_hour
+                demand_id, section, hour_index
             );   
 
             add_node(demand_node);
@@ -223,6 +222,8 @@ void FlowNetwork::create_nodes()
 }
 void FlowNetwork::create_arcs()
 {
+    network.reset_counters();
+    
     auto it = graph_node_map.find("SOURCE");
     if (it == graph_node_map.end()) 
     {
@@ -233,6 +234,18 @@ void FlowNetwork::create_arcs()
     for (auto demand_node : section_demand_nodes)
     {
         network.insert_arc(src, demand_node, static_cast<uint>(1));
+        ++demand_node->counter();
+
+        // auto info = demand_node->get_info();
+        // auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(info);
+        // if (!sect_demand)
+        // {
+        //     continue;
+        // }
+        
+        // auto section = sect_demand->get_section();
+        // auto sect_prof = section->get_professor();
+
     }
 
     // más arcos a crear...

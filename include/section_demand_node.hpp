@@ -6,15 +6,15 @@
 class SectionDemandNode : public FlowNode 
 {
 public:
-    SectionDemandNode(std::string id, Section* section, uint start_hour, uint end_hour);
+    SectionDemandNode(std::string id, Section* section, uint hour_index);
 
     Section* get_section() const;
-    const std::pair<uint, uint> &get_hour() const;
+    uint get_hour_index() const;
 
     bool set_section(Section* section);
-    bool set_hour(const uint &start, const uint &end);
+    bool set_hour_index(const uint& hour_index);
 
 private:
     Section* section;
-    std::pair<uint, uint> hour;
+    uint hour_index;
 };
