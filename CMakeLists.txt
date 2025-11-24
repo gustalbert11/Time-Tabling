@@ -45,6 +45,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         professorform.h professorform.cpp professorform.ui
         courseform.h courseform.cpp courseform.ui
+        sectionwindow.h sectionwindow.cpp sectionwindow.ui
+
+
     )
 else()
     if(ANDROID)
