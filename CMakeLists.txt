@@ -77,17 +77,44 @@ set(PROJECT_SOURCES
     courseform.h
     courseform.ui
 
+<<<<<<< HEAD
+=======
+    sectionwindow.cpp
+    sectionwindow.h
+    sectionwindow.ui
+
+    
+>>>>>>> manuel
     src/data_manager.cpp
     src/professor.cpp
     src/course.cpp
     src/section.cpp
     src/preference.cpp
 
+<<<<<<< HEAD
+=======
+    
+    src/flow_node.cpp
+    src/section_demand_node.cpp
+    src/professor_time_node.cpp
+    src/section_time_node.cpp
+    src/flow_network.cpp
+
+    
+>>>>>>> manuel
     include/data_manager.hpp
     include/professor.hpp
     include/course.hpp
     include/section.hpp
     include/preference.hpp
+<<<<<<< HEAD
+=======
+    include/flow_node.hpp
+    include/section_demand_node.hpp
+    include/professor_time_node.hpp
+    include/section_time_node.hpp
+    include/flow_network.hpp
+>>>>>>> manuel
 )
 
 # -------------------------------------------------------------

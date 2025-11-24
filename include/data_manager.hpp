@@ -1,9 +1,9 @@
 #pragma once
 
 #include <singleton.hpp>
-#include "../include/professor.hpp"
-#include "../include/course.hpp"
-#include "../include/section.hpp"
+#include "professor.hpp"
+#include "course.hpp"
+#include "section.hpp"
 #include <unordered_map>
 
 class QJsonObject;
@@ -35,10 +35,12 @@ public:
     bool import_from_json(const std::string& filename);
     //bool export_to_json(const std::string& filename) const;
     
+    void remove_professor(std::string id);
+    void remove_course(std::string id);
     void clear_all_data();
 
 protected:
-    DataManager() {}
+    DataManager();
     std::unordered_map<std::string, std::unique_ptr<Professor>> professors;
     std::unordered_map<std::string, std::unique_ptr<Course>> courses;
     std::unordered_map<std::string, std::unique_ptr<Section>> sections;

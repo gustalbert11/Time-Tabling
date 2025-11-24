@@ -4,7 +4,7 @@ ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days 
 : FlowNode(id, FlowNodeType::PROFESSOR_TIME),
   professor(professor), day(day)
 {
-    set_hour(start_hour, end_hour);
+    set_hour_interval(start_hour, end_hour);
 }
 
 Professor* ProfessorTimeNode::get_professor() const
@@ -15,9 +15,9 @@ const Days& ProfessorTimeNode::get_day() const
 {
     return day;
 }
-const std::pair<uint, uint>& ProfessorTimeNode::get_hour() const
+const std::pair<uint, uint>& ProfessorTimeNode::get_hour_interval() const
 {
-    return hour;
+    return hour_interval;
 }
 
 bool ProfessorTimeNode::set_professor(Professor* professor)
@@ -41,7 +41,7 @@ bool ProfessorTimeNode::set_day(const Days &day)
     this->day = day;
     return true;
 }
-bool ProfessorTimeNode::set_hour(const uint &start_hour, const uint &end_hour)
+bool ProfessorTimeNode::set_hour_interval(const uint &start_hour, const uint &end_hour)
 {
     if (start_hour >= end_hour ||
         end_hour > MAX_DAILY_HOURS)
@@ -49,6 +49,6 @@ bool ProfessorTimeNode::set_hour(const uint &start_hour, const uint &end_hour)
         return false;
     }
 
-    this->hour = std::make_pair(start_hour, end_hour);
+    this->hour_interval = std::make_pair(start_hour, end_hour);
     return true;
 }

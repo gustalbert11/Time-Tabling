@@ -100,106 +100,6 @@ bool DataManager::add_section(std::unique_ptr<Section> section)
     return true;
 }
 
-bool DataManager::import_professors_from_csv(const std::string& filename)
-{
-    std::ifstream file(filename);
-    if (!file.is_open())
-    {
-        return false;
-    }
-
-    std::string line;
-
-    if (!std::getline(file, line))
-    {
-        return false;
-    }
-
-    while (std::getline(file, line))
-    {
-        if (line.empty())
-        {
-            continue;
-        }
-
-        std::stringstream ss(line);
-        std::string name_str, num_sec_str, max_daily_str, max_consec_str;
-
-        std::getline(ss, name_str, ';');
-        std::getline(ss, num_sec_str, ';');
-        std::getline(ss, max_daily_str, ';');
-        std::getline(ss, max_consec_str, ';');
-
-        if (name_str.empty())
-        {
-            continue;
-        }
-
-        auto prof = std::make_unique<Professor>();
-        prof->set_name(name_str);
-        prof->set_num_sections(static_cast<uint>(std::stoul(num_sec_str)));
-        prof->set_max_daily_hours(static_cast<uint>(std::stoul(max_daily_str)));
-        prof->set_max_consecutive_hours(static_cast<uint>(std::stoul(max_consec_str)));
-
-        add_professor(std::move(prof));
-    }
-
-    file.close();
-    return true;
-}
-
-bool DataManager::import_courses_from_csv(const std::string& filename)
-{
-    std::ifstream file(filename);
-    if (!file.is_open())
-    {
-        return false;
-    }
-
-    std::string line;
-
-    if (!std::getline(file, line))
-    {
-        return false;
-    }
-
-    while (std::getline(file, line))
-    {
-        if (line.empty())
-        {
-            continue;
-        }
-
-        std::stringstream ss(line);
-        std::string name_str, level_str, credits_str, num_sec_str, weekly_str, max_daily_str;
-
-        std::getline(ss, name_str, ';');
-        std::getline(ss, level_str, ';');
-        std::getline(ss, credits_str, ';');
-        std::getline(ss, num_sec_str, ';');
-        std::getline(ss, weekly_str, ';');
-        std::getline(ss, max_daily_str, ';');
-
-        if (name_str.empty())
-        {
-            continue;
-        }
-
-        auto course = std::make_unique<Course>();
-        course->set_name(name_str);
-        course->set_level(static_cast<uint>(std::stoul(level_str)));
-        course->set_num_credits(static_cast<uint>(std::stoul(credits_str)));
-        course->set_num_sections(static_cast<uint>(std::stoul(num_sec_str)));
-        course->set_num_weekly_hours(static_cast<uint>(std::stoul(weekly_str)));
-        course->set_max_daily_hours(static_cast<uint>(std::stoul(max_daily_str)));
-
-        add_course(std::move(course));
-    }
-
-    file.close();
-    return true;
-}
-
 bool DataManager::import_from_json(const std::string &filename)
 {
     QFile file(QString::fromStdString(filename));
@@ -362,6 +262,11 @@ void DataManager::clear_all_data()
     // num_courses = 0;
 }
 
+DataManager::DataManager()
+{
+
+}
+
 std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& pref_obj)
 {
     auto preference = std::make_unique<Preference>();
@@ -435,4 +340,14 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
     }
     
     return preference;
+}
+
+void DataManager::remove_professor(std::string id)
+{
+    professors.erase(id);
+}
+
+void DataManager::remove_course(std::string id)
+{
+    courses.erase(id);
 }
