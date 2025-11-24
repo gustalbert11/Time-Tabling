@@ -341,3 +341,13 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
     
     return preference;
 }
+
+void DataManager::remove_professor(std::string id)
+{
+    professors.erase(id);
+}
+
+void DataManager::remove_course(std::string id)
+{
+    courses.erase(id);
+}
