@@ -10,7 +10,7 @@ class FlowNetwork : public Designar::Singleton<FlowNetwork>
     friend class Designar::Singleton<FlowNetwork>;
 
 public:
-    using NetworkType = Designar::Digraph<std::shared_ptr<FlowNode>, uint>;
+    using NetworkType = Designar::Digraph<std::shared_ptr<FlowNode>, std::pair<uint, uint>>;
 
     void init();
     
@@ -32,6 +32,7 @@ protected:
 
     using GraphNode = NetworkType::Node;
     std::unordered_map<std::string, GraphNode*> graph_node_map;
+    //std::unordered_map<std::pair<Days, std::pair<uint, uint>>, Section*> assigned_time_slots;
     std::vector<GraphNode*> section_demand_nodes;
     std::vector<GraphNode*> professor_time_nodes;
     std::vector<GraphNode*> section_time_nodes;

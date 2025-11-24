@@ -96,7 +96,11 @@ void SectionWindow::processForm()
     prof->add_section(section.get());
     course->add_section(section.get());
 
-    qDebug() << "\nProfesor: "<<prof->get_name() << "Seccion: "<<course->get_name()<<"\n";
+    qDebug() << "\nProfesor: "
+         << QString::fromStdString(prof->get_name())
+         << " Seccion: "
+         << QString::fromStdString(course->get_name())
+         << "\n";
     dm_instance.add_section(std::move(section));
 
     this->close();

@@ -226,16 +226,19 @@ void FlowNetwork::create_arcs()
 {
     network.reset_counters();
     
-    auto it = graph_node_map.find("SOURCE");
-    if (it == graph_node_map.end()) 
+    auto source_it = graph_node_map.find("SOURCE");
+    auto sink_it = graph_node_map.find("SINK");
+    if (source_it == graph_node_map.end() || sink_it == graph_node_map.end()) 
     {
         return;
     }
-    GraphNode* src = it->second;
+    
+    GraphNode* src = source_it->second;
+    GraphNode* sink = sink_it->second;
 
     for (auto demand_node : section_demand_nodes)
     {
-        network.insert_arc(src, demand_node, static_cast<uint>(1));
+        network.insert_arc(src, demand_node, std::make_pair(static_cast<uint>(1), 0));
         ++demand_node->counter();
 
         auto sect_demand_node_info = demand_node->get_info();
@@ -263,13 +266,155 @@ void FlowNetwork::create_arcs()
                 continue;
             }
             
-            
+
         }
         
     }
 
     // más arcos a crear...
 }
+// void FlowNetwork::create_arcs()
+// {
+//     network.reset_counters();
+    
+//     auto source_it = graph_node_map.find("SOURCE");
+//     auto sink_it = graph_node_map.find("SINK");
+//     if (source_it == graph_node_map.end() || sink_it == graph_node_map.end()) 
+//     {
+//         return;
+//     }
+    
+//     GraphNode* src = source_it->second;
+//     GraphNode* sink = sink_it->second;
+
+//     for (auto demand_node : section_demand_nodes)
+//     {
+//         network.insert_arc(src, demand_node, std::make_pair(static_cast<uint>(1), 0));
+        
+//         auto sect_demand_node_info = demand_node->get_info();
+//         auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(sect_demand_node_info);
+//         if (!sect_demand) 
+//         {
+//             continue;
+//         }
+        
+//         auto section = sect_demand->get_section();
+//         auto sect_prof = section->get_professor();
+        
+//         for (auto prof_time_node : professor_time_nodes)
+//         {
+//             auto prof_time_node_info = prof_time_node->get_info();
+//             auto prof_time = std::dynamic_pointer_cast<ProfessorTimeNode>(prof_time_node_info);
+//             if (!prof_time) 
+//             {
+//                 continue;
+//             }
+
+//             if (prof_time->get_professor()->get_id() != sect_prof->get_id())
+//             {
+//                 continue;
+//             }
+
+//             uint cost = 100;
+            
+//             const Preference* pref = sect_prof->get_preference();
+//             PreferenceType type = pref ? pref->get_type() : PreferenceType::NO_PREFERENCE;
+
+//             bool matches_preference = false;
+
+//             if (type == PreferenceType::NO_PREFERENCE)
+//             {
+//                 matches_preference = true;
+//             }
+//             else
+//             {
+//                 bool day_ok = true;
+//                 if (type == PreferenceType::DAYS || 
+//                     type == PreferenceType::DAYS_HOURS)
+//                 {
+//                     const auto& pref_days = pref->get_days();
+//                     for(size_t i = 0; i < pref_days.size(); ++i) 
+//                     {
+//                         if (pref_days[i] == prof_time->get_day()) 
+//                         {
+//                             day_ok = true; 
+//                             break; 
+//                         } 
+//                         else 
+//                         { 
+//                             day_ok = false; 
+//                         }
+//                     }
+//                 }
+
+//                 bool hour_ok = true;
+//                 if (type == PreferenceType::HOURS || 
+//                     type == PreferenceType::DAYS_HOURS)
+//                 {
+//                     const auto& pref_hours = pref->get_hours();
+//                     hour_ok = false; 
+//                     auto node_start = prof_time->get_hour_interval().first;
+//                     auto node_end = prof_time->get_hour_interval().second;
+
+//                     for(size_t i = 0; i < pref_hours.size(); ++i) 
+//                     {
+//                         if (node_start >= pref_hours[i].first && node_end <= pref_hours[i].second) 
+//                         {
+//                             hour_ok = true;
+//                             break;
+//                         }
+//                     }
+//                 }
+                
+//                 matches_preference = day_ok && hour_ok;
+//             }
+
+//             if (matches_preference) 
+//             {
+//                 cost = 1; 
+//             } 
+//             else 
+//             {
+//                 cost = 1000;
+//             }
+
+//             network.insert_arc(demand_node, prof_time_node, std::make_pair(static_cast<uint>(1), cost));
+//         }
+//     }
+
+//     for (auto prof_time_node : professor_time_nodes)
+//     {
+//         auto pt_info = std::dynamic_pointer_cast<ProfessorTimeNode>(prof_time_node->get_info());
+//         if (!pt_info) 
+//         {
+//             continue;
+//         }
+
+//         for (auto section_time_node : section_time_nodes)
+//         {
+//             auto st_info = std::dynamic_pointer_cast<SectionTimeNode>(section_time_node->get_info());
+//             if (!st_info) 
+//             {
+//                 continue;
+//             }
+
+//             if (pt_info->get_day() == st_info->get_day() && 
+//                 pt_info->get_hour_interval() == st_info->get_hour_interval())
+//             {
+//                 if (st_info->get_section()->get_professor()->get_id() == pt_info->get_professor()->get_id())
+//                 {
+//                     network.insert_arc(prof_time_node, section_time_node, std::make_pair(static_cast<uint>(1), 0));
+//                 }
+//             }
+//         }
+//     }
+    
+//     // --- 4. Conexión SECTION_TIME -> SINK (O LEVEL_NODE) ---
+//     // AQUÍ es donde solucionas la colisión de niveles.
+//     // Si conectas directo al Sink, colisionarán.
+    
+//     // ... Implementación futura de LevelNodes ...
+// }
 void FlowNetwork::create_network()
 {
     num_section_demand_nodes = 0;
