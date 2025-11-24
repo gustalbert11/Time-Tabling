@@ -1,9 +1,10 @@
 #include "../include/section_time_node.hpp"
 
 SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uint start_hour, uint end_hour)
-: FlowNode(id, FlowNodeType::SECTION_TIME),
-  section(section), day(day)
+: FlowNode(id, FlowNodeType::SECTION_TIME)
 {
+    set_section(section);
+    set_day(day);
     set_hour_interval(start_hour, end_hour);
 }
 

@@ -11,11 +11,10 @@ Section::Section()
 }
 Section::Section(const Section& other)
 : id(other.id),
-  professor(other.professor),
-  course(other.course),
   time_slots(other.time_slots)
 {
-
+    set_professor(other.professor);
+    set_course(other.course);
 }
 
 const std::string& Section::get_id() const 

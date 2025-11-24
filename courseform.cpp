@@ -21,7 +21,7 @@ CourseForm::CourseForm(QWidget *parent)
 
     labels.push_back(new QLabel("Nivel de la materia", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[0]->setRange(1, MAX_NUM_LEVEL);
+    spinboxes[0]->setRange(1, MAX_NUM_LEVELS);
 
     labels.push_back(new QLabel("Numero de UC", this));
     spinboxes.push_back(new QSpinBox(this));

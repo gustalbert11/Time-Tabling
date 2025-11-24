@@ -1,11 +1,10 @@
 #include "../include/section_demand_node.hpp"
 
 SectionDemandNode::SectionDemandNode(std::string id, Section* section, uint hour_index)
-: FlowNode(id, FlowNodeType::SECTION_DEMAND),
-  section(section),
-  hour_index(hour_index)
+: FlowNode(id, FlowNodeType::SECTION_DEMAND)
 {
-
+    set_section(section);
+    set_hour_index(hour_index);
 }
 
 Section* SectionDemandNode::get_section() const

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "settings.hpp"
 
 enum class FlowNodeType 
 {
@@ -9,6 +9,7 @@ enum class FlowNodeType
     SECTION_DEMAND,
     PROFESSOR_TIME,
     SECTION_TIME,
+    LEVEL_TIME,
     SINK
 };
 
@@ -27,6 +28,9 @@ inline std::string flow_node_type_to_string(FlowNodeType type)
 
         case FlowNodeType::SECTION_TIME: 
             return "SECTION TIME";
+
+        case FlowNodeType::LEVEL_TIME:
+            return "LEVEL TIME";
 
         case FlowNodeType::SINK: 
             return "SINK";
@@ -54,6 +58,10 @@ inline FlowNodeType string_to_flow_node_type(const std::string& str)
     {
         return FlowNodeType::SECTION_TIME;
     }
+    else if (str == "LEVEL TIME")
+    {
+        return FlowNodeType::LEVEL_TIME;
+    }
     else if (str == "SINK") 
     {
         return FlowNodeType::SINK;
@@ -72,10 +80,13 @@ public:
 
     virtual ~FlowNode() = default;
 
-    const std::string &get_id() const;
-    const FlowNodeType &get_type() const;
+    std::string get_id() const;
+    FlowNodeType get_type() const;
 
 private:
     std::string id;
     FlowNodeType type;
+
+    bool set_id(const std::string &id);
+    bool set_type(const FlowNodeType &type);
 };

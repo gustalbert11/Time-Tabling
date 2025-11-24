@@ -4,7 +4,7 @@ uint Course::num_courses = 0;
 
 Course::Course()
 : name(""),
-  level(MAX_NUM_LEVEL),
+  level(MAX_NUM_LEVELS),
   num_credits(MAX_NUM_CREDITS),
   num_sections(COURSE_MAX_NUM_SECTIONS),
   sections(COURSE_MAX_NUM_SECTIONS),
@@ -15,16 +15,15 @@ Course::Course()
 }
 
 Course::Course(const Course& other)
-: id(other.id), 
-  name(other.name),
-  level(other.level),
-  num_credits(other.num_credits),
-  sections(other.sections),
-  num_sections(other.num_sections),
-  num_weekly_hours(other.num_weekly_hours),
-  max_daily_hours(other.max_daily_hours)
+: id(id),
+  sections(other.sections)
 {
-
+    set_name(other.name);
+    set_level(other.level);
+    set_num_credits(other.num_credits);
+    set_num_sections(other.num_sections);
+    set_num_weekly_hours(other.num_weekly_hours);
+    set_max_daily_hours(other.max_daily_hours);
 }
 
 const std::string& Course::get_id() const 
@@ -72,7 +71,7 @@ bool Course::set_name(const std::string &name)
 bool Course::set_level(const uint &level)
 {
     if (level < 1 || 
-        level > MAX_NUM_LEVEL)
+        level > MAX_NUM_LEVELS)
     {
         return false;
     }

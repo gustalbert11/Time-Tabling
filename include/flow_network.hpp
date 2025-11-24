@@ -32,10 +32,11 @@ protected:
 
     using GraphNode = NetworkType::Node;
     std::unordered_map<std::string, GraphNode*> graph_node_map;
-    //std::unordered_map<std::pair<Days, std::pair<uint, uint>>, Section*> assigned_time_slots;
     std::vector<GraphNode*> section_demand_nodes;
     std::vector<GraphNode*> professor_time_nodes;
     std::vector<GraphNode*> section_time_nodes;
+
+    std::unordered_map<Professor*, std::unordered_map<Days, uint>> professor_daily_hours;
 
     void create_nodes();
     void create_arcs();

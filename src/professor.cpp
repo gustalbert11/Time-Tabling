@@ -14,14 +14,13 @@ Professor::Professor()
 }
 Professor::Professor(const Professor& other)
 : id(other.id),
-  name(other.name),
-  num_sections(other.num_sections),
-  sections(other.sections),
-  max_daily_hours(other.max_daily_hours),
-  max_consecutive_hours(other.max_consecutive_hours)
-  //preference(other.preference ? std::make_unique<Preference>(*other.preference) : nullptr)
+  sections(other.sections)
 {
-
+    set_name(other.name);
+    set_num_sections(other.num_sections);
+    set_max_daily_hours(other.max_daily_hours);
+    set_max_consecutive_hours(other.max_consecutive_hours);
+    //set_preference(std::make_unique<Preference>(*other.preference));
 }
 
 const std::string& Professor::get_id() const 

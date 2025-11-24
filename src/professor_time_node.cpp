@@ -1,9 +1,10 @@
 #include "../include/professor_time_node.hpp"
 
 ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days day, uint start_hour, uint end_hour)
-: FlowNode(id, FlowNodeType::PROFESSOR_TIME),
-  professor(professor), day(day)
+: FlowNode(id, FlowNodeType::PROFESSOR_TIME)
 {
+    set_professor(professor);
+    set_day(day);
     set_hour_interval(start_hour, end_hour);
 }
 
