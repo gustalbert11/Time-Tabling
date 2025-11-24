@@ -33,6 +33,8 @@ protected:
     using GraphNode = NetworkType::Node;
     std::unordered_map<std::string, GraphNode*> graph_node_map;
     std::vector<GraphNode*> section_demand_nodes;
+    std::vector<GraphNode*> professor_time_nodes;
+    std::vector<GraphNode*> section_time_nodes;
 
     void create_nodes();
     void create_arcs();

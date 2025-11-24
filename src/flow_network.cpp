@@ -79,10 +79,12 @@ bool FlowNetwork::add_node(const std::shared_ptr<FlowNode> &node)
         break;
 
     case FlowNodeType::PROFESSOR_TIME:
+        professor_time_nodes.push_back(graph_node);
         ++num_professor_time_nodes;
         break;
 
     case FlowNodeType::SECTION_TIME:
+        section_time_nodes.push_back(graph_node);
         ++num_section_time_nodes;
         break;
 
@@ -137,22 +139,22 @@ void FlowNetwork::create_nodes()
                 // un mapa auxiliar si luego lo necesitas para crear aristas.
             }
 
-            for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
-            {
-                uint start_hour = h;
-                uint end_hour   = h + 2;
+            // for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
+            // {
+            //     uint start_hour = h;
+            //     uint end_hour   = h + 2;
 
-                std::string node_id =
-                    prof_id + "_D" + std::to_string(d) +
-                    "_H" + std::to_string(start_hour) +
-                    "-"  + std::to_string(end_hour);
+            //     std::string node_id =
+            //         prof_id + "_D" + std::to_string(d) +
+            //         "_H" + std::to_string(start_hour) +
+            //         "-"  + std::to_string(end_hour);
 
-                auto pt_node = std::make_shared<ProfessorTimeNode>(
-                    node_id, professor, day, start_hour, end_hour
-                );   
+            //     auto pt_node = std::make_shared<ProfessorTimeNode>(
+            //         node_id, professor, day, start_hour, end_hour
+            //     );   
 
-                add_node(pt_node);
-            }
+            //     add_node(pt_node);
+            // }
         }
     }
 
@@ -201,22 +203,22 @@ void FlowNetwork::create_nodes()
                 add_node(st_node);
             }
 
-            for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
-            {
-                uint start_hour = h;
-                uint end_hour   = h + 2;
+            // for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
+            // {
+            //     uint start_hour = h;
+            //     uint end_hour   = h + 2;
 
-                std::string time_id =
-                    sec_id + "_TIME_D" + std::to_string(d) +
-                    "_H" + std::to_string(start_hour) +
-                    "-"  + std::to_string(end_hour);
+            //     std::string time_id =
+            //         sec_id + "_TIME_D" + std::to_string(d) +
+            //         "_H" + std::to_string(start_hour) +
+            //         "-"  + std::to_string(end_hour);
 
-                auto st_node = std::make_shared<SectionTimeNode>(
-                    time_id, section, day, start_hour, end_hour
-                );   
+            //     auto st_node = std::make_shared<SectionTimeNode>(
+            //         time_id, section, day, start_hour, end_hour
+            //     );   
 
-                add_node(st_node);
-            }
+            //     add_node(st_node);
+            // }
         }
     }
 }
@@ -236,16 +238,34 @@ void FlowNetwork::create_arcs()
         network.insert_arc(src, demand_node, static_cast<uint>(1));
         ++demand_node->counter();
 
-        // auto info = demand_node->get_info();
-        // auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(info);
-        // if (!sect_demand)
-        // {
-        //     continue;
-        // }
+        auto sect_demand_node_info = demand_node->get_info();
+        auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(sect_demand_node_info);
+        if (!sect_demand)
+        {
+            continue;
+        }
         
-        // auto section = sect_demand->get_section();
-        // auto sect_prof = section->get_professor();
+        auto section = sect_demand->get_section();
+        auto sect_prof = section->get_professor();
+        auto max_daily_hours = sect_prof->get_max_daily_hours();
+        auto max_consecutive_hours = sect_prof->get_max_consecutive_hours();
 
+        for (auto prof_time_node : professor_time_nodes)
+        {
+            auto prof_time_node_info = prof_time_node->get_info();
+            auto prof_time = std::dynamic_pointer_cast<ProfessorTimeNode>(prof_time_node_info);
+            if (!prof_time)
+            {
+                continue;
+            }
+            if (prof_time->get_professor() != sect_prof)
+            {
+                continue;
+            }
+            
+            
+        }
+        
     }
 
     // más arcos a crear...
