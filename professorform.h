@@ -13,7 +13,7 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
-#include "../include/data_manager.hpp"
+#include "data_manager.hpp"
 
 namespace Ui {
 class ProfessorForm;
