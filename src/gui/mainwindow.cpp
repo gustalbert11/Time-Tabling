@@ -40,9 +40,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
 
+    connect(ui->tableInfo, &QTableWidget::itemClicked, this, &MainWindow::onItemClicked);
 
-    
-
+    connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
 }
 
 MainWindow::~MainWindow()
@@ -151,12 +151,13 @@ void MainWindow::show_courses()
     {
         const auto &p = pair.second.get();
 
-        ui->tableInfo->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(p->get_name())));
-        ui->tableInfo->setItem(row, 1, new QTableWidgetItem(QString::number(p->get_level())));
-        ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::number(p->get_num_credits())));
-        ui->tableInfo->setItem(row, 3, new QTableWidgetItem(QString::number(p->get_num_sections())));
-        ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::number(p->get_num_weekly_hours())));
-        ui->tableInfo->setItem(row, 5, new QTableWidgetItem(QString::number(p->get_max_daily_hours())));
+        ui->tableInfo->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(p->get_id())));
+        ui->tableInfo->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->get_name())));
+        ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::number(p->get_level())));
+        ui->tableInfo->setItem(row, 3, new QTableWidgetItem(QString::number(p->get_num_credits())));
+        ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::number(p->get_num_sections())));
+        ui->tableInfo->setItem(row, 5, new QTableWidgetItem(QString::number(p->get_num_weekly_hours())));
+        ui->tableInfo->setItem(row, 6, new QTableWidgetItem(QString::number(p->get_max_daily_hours())));
         row++;
     }
 }
@@ -174,7 +175,7 @@ void MainWindow::update_table()
         ui->ShowInfoButton->setText("Mostrar Profesores");
         ui->tableInfo->setColumnCount(6);
         ui->tableInfo->setHorizontalHeaderLabels(
-        {"Nombre", "Semestre", "U.C", "Secciones","Horas Semanales","Max Horas Diarias"}
+        {"ID","Nombre", "Semestre", "U.C", "Secciones","Horas Semanales","Max Horas Diarias"}
         );
         ui->tableInfo->setColumnWidth(0, 180);
         ui->tableInfo->setColumnWidth(1, 180);
@@ -182,6 +183,7 @@ void MainWindow::update_table()
         ui->tableInfo->setColumnWidth(3, 180);
         ui->tableInfo->setColumnWidth(4, 180);
         ui->tableInfo->setColumnWidth(5, 180);
+        ui->tableInfo->setColumnWidth(6, 180);
 
         show_courses();
         
@@ -229,6 +231,24 @@ void MainWindow::open_course_form()
     }
 }
 
+void MainWindow::open_section_form()
+{
+    if (!section_window)
+    {
+        section_window = new SectionWindow();
+        section_window->setAttribute(Qt::WA_DeleteOnClose);
+
+        connect(section_window, &SectionWindow::destroyed, this, &MainWindow::on_section_window_closed);
+
+        section_window->show();
+    }
+    else
+    {
+        section_window->raise();
+        section_window->activateWindow();
+    }
+}
+
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
@@ -236,3 +256,31 @@ void MainWindow::on_course_window_closed()
     update_table();
 }
 
+void MainWindow::on_section_window_closed()
+{
+    section_window = nullptr;
+}
+
+void MainWindow::onItemClicked(QTableWidgetItem *item)
+{
+    QMessageBox::StandardButton respuesta = QMessageBox::question(
+        this,
+        "Confirmar eliminación",
+        "¿Estás seguro de que deseas eliminar este elemento?",
+        QMessageBox::Yes | QMessageBox::No
+        );
+
+
+    if(item->text().contains(QString("PROF")) && respuesta == QMessageBox::Yes)
+    {
+        dm_instance.remove_professor(item->text().toStdString());
+    }
+
+    if(item->text().contains(QString("COURSE")) && respuesta == QMessageBox::Yes)
+    {
+        dm_instance.remove_course(item->text().toStdString());
+    }
+
+    showing_professors = !showing_professors;
+    update_table();
+}

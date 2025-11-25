@@ -16,7 +16,7 @@ public:
     const Designar::ArraySet<Section*> &get_sections() const;
     const uint &get_max_daily_hours() const;
     const uint &get_max_consecutive_hours() const;
-    const Preference* get_preference() const;
+    Preference* get_preference() const;
 
     bool set_name(const std::string &name);
     bool set_num_sections(const uint &num_sections);

@@ -36,6 +36,7 @@ bool Preference::set_type(const PreferenceType &type)
     this->type = type;
     return true;
 }
+
 bool Preference::add_day(const Days &day)
 {
     if (day < Days::MONDAY || 
@@ -45,20 +46,21 @@ bool Preference::add_day(const Days &day)
     {
         return false;
     }
+    
     time_slots.first.append(day);
     return true;
 }
-bool Preference::add_hour(const uint &start, const uint &end)
+bool Preference::add_hour(const uint &start_hour, const uint &end_hour)
 {
-    if (start >= end || 
-        end > MAX_DAILY_HOURS ||
+    if (start_hour >= end_hour ||
+        end_hour > MAX_DAILY_HOURS ||
         type != HOURS ||
         type != DAYS_HOURS)
     {
         return false;
-    }
+    }  
 
-    auto hours_interval = std::make_pair(start, end);
+    auto hours_interval = std::make_pair(start_hour, end_hour);
     if (time_slots.second.contains(hours_interval))
     {
         return false;

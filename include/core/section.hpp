@@ -14,20 +14,18 @@ public:
     const std::string &get_id() const;
     Professor* get_professor() const;
     Course* get_course() const;
-    const Designar::ArraySet<Days> &get_days() const;
-    const Designar::ArraySet<std::pair<uint, uint>> &get_hours() const;
+    const Designar::ArraySet<std::pair<Days, std::pair<uint, uint>>> &get_time_slots() const;
 
     bool set_professor(Professor* professor);
     bool set_course(Course* course);
-    
-    bool add_day(const Days &day);
-    bool add_hour(const uint &start, const uint &end);
+
+    bool add_time_slot(const Days& day, const uint &start_hour, const uint &end_hour);
 
 private:
     std::string id;
     Professor* professor;
     Course* course;
-    std::pair<Designar::ArraySet<Days>, Designar::ArraySet<std::pair<uint, uint>>> time_slots;
+    Designar::ArraySet<std::pair<Days, std::pair<uint, uint>>> time_slots;
 
     static uint num_sections;
 

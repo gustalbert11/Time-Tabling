@@ -1,5 +1,5 @@
-#include "forminsertprof.h"
-#include "ui_forminsertprof.h"
+#include "professorform.h"
+#include "ui_professorform.h"
 
 ProfessorForm::ProfessorForm(QWidget *parent)
     : QMainWindow(parent)
@@ -25,7 +25,7 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     label3 = new QLabel("Maximo de horas diarias:", this);
     spinbox2 = new QSpinBox(this);
-    spinbox2->setRange(2,PROF_MAX_DAILY_HOURS);
+    spinbox2->setRange(2,MAX_DAILY_HOURS);
 
     label4 = new QLabel("Maximo de horas consecutivas:", this);
     spinbox3 = new QSpinBox(this);
@@ -53,9 +53,9 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     label7 = new QLabel("Hora de Incio - Hora final (Formato 24h)");
     spinbox4 = new QSpinBox(this);
-    spinbox4->setRange(7,17);
+    spinbox4->setRange(MIN_START_HOUR, MAX_END_HOUR - 2);
     spinbox5 = new QSpinBox(this);
-    spinbox5->setRange(8,18);
+    spinbox5->setRange(MIN_START_HOUR + 2, MAX_END_HOUR);
 
     // Crear layout para cada campo
     QHBoxLayout *layout1 = new QHBoxLayout();

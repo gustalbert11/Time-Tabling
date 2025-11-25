@@ -1,7 +1,7 @@
 #ifndef COURSEFORM_H
 #define COURSEFORM_H
 
-#include "forminsertprof.h"
+#include "professorform.h"
 
 namespace Ui {
 class CourseForm;

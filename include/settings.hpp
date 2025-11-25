@@ -65,11 +65,12 @@ inline Days string_to_day(const std::string& str)
 }
 
 const uint MAX_NUM_DAYS = 5;
-const uint MAX_NUM_LEVEL = 10;
+const uint MAX_NUM_LEVELS = 10;
 const uint MAX_NUM_CREDITS = 6;
 const uint PROF_MAX_NUM_SECTIONS = 5;
 const uint COURSE_MAX_NUM_SECTIONS = 8;
-const uint MAX_CONSECUTIVE_HOURS = 2;
-const uint MAX_DAILY_HOURS = 7;
-const uint PROF_MAX_DAILY_HOURS = 6;
+const uint MAX_CONSECUTIVE_HOURS = 4;
+const uint MIN_START_HOUR = 8;
+const uint MAX_END_HOUR = 18;
+const uint MAX_DAILY_HOURS = 6;
 const uint MAX_WEEKLY_HOURS = 10;

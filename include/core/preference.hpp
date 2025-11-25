@@ -62,7 +62,7 @@ public:
     bool set_type(const PreferenceType &type);
     
     bool add_day(const Days &day);
-    bool add_hour(const uint &start, const uint &end);
+    bool add_hour(const uint &start_hour, const uint &end_hour);
 
 private:
     std::string description;

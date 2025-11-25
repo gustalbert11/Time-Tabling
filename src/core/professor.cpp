@@ -6,7 +6,7 @@ Professor::Professor()
 : name(""),
   num_sections(PROF_MAX_NUM_SECTIONS),
   sections(PROF_MAX_NUM_SECTIONS),
-  max_daily_hours(PROF_MAX_DAILY_HOURS),
+  max_daily_hours(MAX_DAILY_HOURS),
   max_consecutive_hours(MAX_CONSECUTIVE_HOURS),
   preference(nullptr)
 {
@@ -14,14 +14,13 @@ Professor::Professor()
 }
 Professor::Professor(const Professor& other)
 : id(other.id),
-  name(other.name),
-  num_sections(other.num_sections),
-  sections(other.sections),
-  max_daily_hours(other.max_daily_hours),
-  max_consecutive_hours(other.max_consecutive_hours)
-  //preference(other.preference ? std::make_unique<Preference>(*other.preference) : nullptr)
+  sections(other.sections)
 {
-
+    set_name(other.name);
+    set_num_sections(other.num_sections);
+    set_max_daily_hours(other.max_daily_hours);
+    set_max_consecutive_hours(other.max_consecutive_hours);
+    //set_preference(std::make_unique<Preference>(*other.preference));
 }
 
 const std::string& Professor::get_id() const 
@@ -48,7 +47,7 @@ const uint& Professor::get_max_consecutive_hours() const
 { 
     return max_consecutive_hours; 
 }
-const Preference* Professor::get_preference() const 
+Preference* Professor::get_preference() const 
 { 
     return preference.get(); 
 }
@@ -75,7 +74,7 @@ bool Professor::set_num_sections(const uint &num_sections)
 bool Professor::set_max_daily_hours(const uint &max_daily_hours)
 {
     if (max_daily_hours < 2 || 
-        max_daily_hours > PROF_MAX_DAILY_HOURS)
+        max_daily_hours >MAX_DAILY_HOURS)
     {
         return false;
     }
