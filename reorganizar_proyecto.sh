@@ -81,4 +81,8 @@ mv main.cpp src/ 2>/dev/null
 echo "🧹 Limpiando directorios vacíos..."
 find . -type d -empty -delete
 
+<<<<<<< HEAD
 echo "✅ Reorganización completada con éxito!"
+=======
+echo "✅ Reorganización completada con éxito!"
+>>>>>>> e101d6e (generator schedule)

@@ -2,6 +2,8 @@
 #include <queue>
 #include <functional>
 #include <limits>
+#include <unordered_set>
+#include <tuple>
 
 #include "professor_time_node.hpp"
 #include "section_time_node.hpp"
@@ -44,9 +46,7 @@ public:
     uint get_professor_time_nodes_count() const;
     uint get_section_time_nodes_count() const;
     uint get_arcs_count() const;
-    uint calculate_preference_cost(Professor* professor, Days day, uint start_hour, uint end_hour);
-    uint calculate_level_collision_cost(Section* current_section, Days day, uint start_hour, uint end_hour);
-
+    
     bool add_node(const std::shared_ptr<FlowNode> &node);
 
     bool solve_min_cost_max_flow();
@@ -59,6 +59,9 @@ public:
     void extract_schedule();
     void print_schedule() const;
     void debug_preferences_loading();
+
+
+    uint calculate_preference_cost(Professor* professor, Days day, uint start_hour, uint end_hour);
 
 protected:
     FlowNetwork();
@@ -100,7 +103,6 @@ protected:
     void analyze_preference_compliance();
     
     // Variables de solución
-    std::map<std::tuple<uint, Days, uint, uint>, std::vector<std::string>> level_assignments;
     uint total_flow;
     uint total_cost;
     std::vector<ScheduleEntry> final_schedule;
