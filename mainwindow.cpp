@@ -6,8 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-   
+    
     ui->setupUi(this);
+    setWindowTitle("Time Tabling");  
     ui->insertCourseButton->hide();
     ui->ShowInfoButton->setText("Mostrar Materias");
     ui->tableInfo->setColumnCount(7);
