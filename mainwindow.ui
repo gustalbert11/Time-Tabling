@@ -95,6 +95,13 @@
          </layout>
         </item>
         <item>
+         <widget class="QPushButton" name="scheduleButton">
+          <property name="text">
+           <string>Generar Horario</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="ShowInfoButton">
           <property name="text">
            <string>PushButton</string>

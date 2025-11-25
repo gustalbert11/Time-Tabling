@@ -1,6 +1,7 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tableInfo, &QTableWidget::itemClicked, this, &MainWindow::onItemClicked);
 
     connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
+
+    connect(ui->scheduleButton, &QPushButton::clicked, this, &MainWindow::create_schedule);
 }
 
 MainWindow::~MainWindow()
@@ -50,17 +53,37 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::create_schedule()
+{
+    fn_instance.init();
+    if (fn_instance.solve_min_cost_max_flow())
+    {
+        auto sch = fn_instance.get_final_schedule();
+
+        for(auto sc: sch)
+        {
+            std::cout << sc.professor_name<<"\n";
+            std::cout << sc.course_name<<"\n";
+            std::cout << sc.day<<"\n";
+            std::cout << sc.start_hour<<"\n";
+            std::cout << sc.end_hour<<"\n";
+            std::cout << sc.cost<<"\n";
+        }
+    }
+}
+
 void MainWindow::avanzar_ventana()
 {
-    ui->stackedWidget->setCurrentIndex(1);
-
+    int it = ui->stackedWidget->currentIndex();
+    ui->stackedWidget->setCurrentIndex(it + 1);
     dm_instance.clear_all_data();
 
 }
 
 void MainWindow::volver_ventana()
 {
-    ui->stackedWidget->setCurrentIndex(0);
+    int it = ui->stackedWidget->currentIndex();
+    ui->stackedWidget->setCurrentIndex(it - 1);
 }
 
 void MainWindow::import_json()
@@ -263,22 +286,38 @@ void MainWindow::on_section_window_closed()
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
 {
-    QMessageBox::StandardButton respuesta = QMessageBox::question(
-        this,
-        "Confirmar eliminación",
-        "¿Estás seguro de que deseas eliminar este elemento?",
-        QMessageBox::Yes | QMessageBox::No
-        );
-
-
-    if(item->text().contains(QString("PROF")) && respuesta == QMessageBox::Yes)
+    if(item->text().contains(QString("PROF")))
     {
-        dm_instance.remove_professor(item->text().toStdString());
+        QMessageBox::StandardButton respuesta = QMessageBox::question
+            (
+            this,
+            "Confirmar eliminación",
+            "¿Estás seguro de que deseas eliminar este elemento?",
+            QMessageBox::Yes | QMessageBox::No
+            );
+
+        if(respuesta == QMessageBox::Yes)
+        {
+            dm_instance.remove_professor(item->text().toStdString());
+        }
     }
 
-    if(item->text().contains(QString("COURSE")) && respuesta == QMessageBox::Yes)
+    if(item->text().contains(QString("COURSE")))
     {
-        dm_instance.remove_course(item->text().toStdString());
+        QMessageBox::StandardButton respuesta = QMessageBox::question
+            (
+            this,
+            "Confirmar eliminación",
+            "¿Estás seguro de que deseas eliminar este elemento?",
+            QMessageBox::Yes | QMessageBox::No
+            );
+
+        if(respuesta == QMessageBox::Yes)
+        {
+
+            dm_instance.remove_course(item->text().toStdString());
+
+        }
     }
 
     showing_professors = !showing_professors;

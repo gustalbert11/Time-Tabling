@@ -5,6 +5,7 @@
 #include "sectionwindow.h"
 #include <QTableWidget>
 #include <QMessageBox>
+#include "../include/flow_network.hpp"
 #include "../include/data_manager.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -47,6 +48,8 @@ private slots:
     void open_section_form();
 
     void onItemClicked(QTableWidgetItem *item);
+
+    void create_schedule();
 
 private:
     Ui::MainWindow *ui;
