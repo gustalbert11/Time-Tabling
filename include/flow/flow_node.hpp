@@ -9,7 +9,6 @@ enum class FlowNodeType
     SECTION_DEMAND,
     PROFESSOR_TIME,
     SECTION_TIME,
-    LEVEL_TIME,
     SINK
 };
 
@@ -28,9 +27,6 @@ inline std::string flow_node_type_to_string(FlowNodeType type)
 
         case FlowNodeType::SECTION_TIME: 
             return "SECTION TIME";
-
-        case FlowNodeType::LEVEL_TIME:
-            return "LEVEL TIME";
 
         case FlowNodeType::SINK: 
             return "SINK";
@@ -58,10 +54,7 @@ inline FlowNodeType string_to_flow_node_type(const std::string& str)
     {
         return FlowNodeType::SECTION_TIME;
     }
-    else if (str == "LEVEL TIME")
-    {
-        return FlowNodeType::LEVEL_TIME;
-    }
+   
     else if (str == "SINK") 
     {
         return FlowNodeType::SINK;

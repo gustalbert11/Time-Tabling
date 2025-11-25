@@ -1,6 +1,7 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"  
+#include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tableInfo, &QTableWidget::itemClicked, this, &MainWindow::onItemClicked);
 
     connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
+
+    connect(ui->scheduleButton, &QPushButton::clicked, this, &MainWindow::create_schedule);
 }
 
 MainWindow::~MainWindow()
@@ -51,17 +54,68 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::create_schedule()
+{
+    std::cout << "🧪 EJECUTANDO PRUEBA DE DEPURACIÓN" << std::endl;
+    std::cout << "=================================" << std::endl;
+
+    // 1. Verificar carga de datos
+    fn_instance.debug_preferences_loading();
+
+    // 2. Inicializar red
+    fn_instance.init();
+
+    // 3. Ejecutar algoritmo
+    if (fn_instance.solve_min_cost_max_flow()) {
+        std::cout << "✅ Algoritmo completado" << std::endl;
+
+        // Mostrar resultados detallados
+        auto schedule = fn_instance.get_final_schedule();
+        for (const auto& entry : schedule) {
+            std::cout << "\n📅 ASIGNACIÓN FINAL:" << std::endl;
+            std::cout << "   Profesor: " << entry.professor_name << std::endl;
+            std::cout << "   Materia: " << entry.course_name << std::endl;
+            std::cout << "   Día: " << day_to_string(entry.day) << std::endl;
+            std::cout << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00" << std::endl;
+            std::cout << "   Costo: " << entry.cost << std::endl;
+
+            // Verificar manualmente
+            auto professor = dm_instance.get_professor(entry.professor_id);
+            if (professor && professor->get_preference()) {
+                auto pref = professor->get_preference();
+                bool day_ok = pref->get_days().contains(entry.day);
+                bool hour_ok = false;
+                for (const auto& hour_range : pref->get_hours()) {
+                    if (entry.start_hour >= hour_range.first && entry.end_hour <= hour_range.second) {
+                        hour_ok = true;
+                        break;
+                    }
+                }
+
+                if (day_ok && hour_ok) {
+                    std::cout << "   🎉 CUMPLE todas las preferencias" << std::endl;
+                } else {
+                    std::cout << "   ❌ NO cumple preferencias:" << std::endl;
+                    if (!day_ok) std::cout << "      - Día incorrecto" << std::endl;
+                    if (!hour_ok) std::cout << "      - Horario incorrecto" << std::endl;
+                }
+            }
+        }
+    }
+}
+
 void MainWindow::avanzar_ventana()
 {
-    ui->stackedWidget->setCurrentIndex(1);
-
+    int it = ui->stackedWidget->currentIndex();
+    ui->stackedWidget->setCurrentIndex(it + 1);
     dm_instance.clear_all_data();
 
 }
 
 void MainWindow::volver_ventana()
 {
-    ui->stackedWidget->setCurrentIndex(0);
+    int it = ui->stackedWidget->currentIndex();
+    ui->stackedWidget->setCurrentIndex(it - 1);
 }
 
 void MainWindow::import_json()
@@ -264,22 +318,38 @@ void MainWindow::on_section_window_closed()
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
 {
-    QMessageBox::StandardButton respuesta = QMessageBox::question(
-        this,
-        "Confirmar eliminación",
-        "¿Estás seguro de que deseas eliminar este elemento?",
-        QMessageBox::Yes | QMessageBox::No
-        );
-
-
-    if(item->text().contains(QString("PROF")) && respuesta == QMessageBox::Yes)
+    if(item->text().contains(QString("PROF")))
     {
-        dm_instance.remove_professor(item->text().toStdString());
+        QMessageBox::StandardButton respuesta = QMessageBox::question
+            (
+            this,
+            "Confirmar eliminación",
+            "¿Estás seguro de que deseas eliminar este elemento?",
+            QMessageBox::Yes | QMessageBox::No
+            );
+
+        if(respuesta == QMessageBox::Yes)
+        {
+            dm_instance.remove_professor(item->text().toStdString());
+        }
     }
 
-    if(item->text().contains(QString("COURSE")) && respuesta == QMessageBox::Yes)
+    if(item->text().contains(QString("COURSE")))
     {
-        dm_instance.remove_course(item->text().toStdString());
+        QMessageBox::StandardButton respuesta = QMessageBox::question
+            (
+            this,
+            "Confirmar eliminación",
+            "¿Estás seguro de que deseas eliminar este elemento?",
+            QMessageBox::Yes | QMessageBox::No
+            );
+
+        if(respuesta == QMessageBox::Yes)
+        {
+
+            dm_instance.remove_course(item->text().toStdString());
+
+        }
     }
 
     showing_professors = !showing_professors;

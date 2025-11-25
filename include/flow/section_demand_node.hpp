@@ -1,6 +1,6 @@
 #pragma once
 
-#include "flow_node.hpp"
+#include "flow/flow_node.hpp"
 #include "core/section.hpp"
 
 class SectionDemandNode : public FlowNode 

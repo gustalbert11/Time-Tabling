@@ -11,7 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Qt debe buscar los archivos .ui en esta carpeta
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/ui")
 
 
@@ -93,7 +92,6 @@ set(SOURCES_CORE
 set(SOURCES_FLOW
     src/flow/flow_node.cpp
     src/flow/flow_network.cpp
-    src/flow/level_time_node.cpp
     src/flow/section_demand_node.cpp
     src/flow/professor_time_node.cpp
     src/flow/section_time_node.cpp
@@ -107,7 +105,6 @@ set(HEADERS_PUBLIC
     include/core/preference.hpp
     include/flow/flow_node.hpp
     include/flow/flow_network.hpp
-    include/flow/level_time_node.hpp
     include/flow/section_demand_node.hpp
     include/flow/professor_time_node.hpp
     include/flow/section_time_node.hpp

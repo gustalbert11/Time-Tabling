@@ -216,7 +216,7 @@ void ProfessorForm::processForm()
     {
         if(checkBoxes[i]->isChecked())
         {
-            pref->add_day(static_cast<Days>(i));
+            pref->add_day(static_cast<Days>(i + 1));
         }
     }
 
