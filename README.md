@@ -1,45 +1,99 @@
 # Timetabling
 
-These instructions will guide you through compiling and running the TimeTabling project on a Linux environment.
+#  **Time-Tabling Installation and Compilation Guide**
+
+This tutorial will guide you through the steps to **install all the necessary dependencies** and **compile** the **Time-Tabling** project from scratch on **Ubuntu** or **Debian**.
 
 ---
 
-## 📋 Requirements
+##  **1. Prerequisites**
 
-Before you begin, please ensure you have the following dependencies installed and configured:
+### **Install Build Essentials**
 
-* **CMake** (Version 3.16 or higher)
-* **Qt 6** (Development libraries)
-* **DeSiGNAR** (The project's dependency library. You can find its repository [here](https://github.com/R3mmurd/DeSiGNAR)).
+First, you need to install the essential build tools on your system, such as the `g++` compiler, `make`, and other utilities required to compile the project.
 
----
+Run the following command in your terminal:
 
-## 🚀 Compiling and Running
+```bash
+sudo apt update
+sudo apt install -y build-essential cmake git
+```
+What does build-essential include?
 
-The project uses CMake, making the compilation process straightforward.
+This package installs:
 
-### 1. Check DeSiGNAR Path
+g++: The C++ compiler (version 11 or higher in Ubuntu 22.04).
 
-This project links to DeSiGNAR using a path variable. Open the main `CMakeLists.txt` file and ensure the `DESIGNAR_PATH` variable points to the correct location of the DeSiGNAR library on your system:
+make: A tool to automate the build process.
 
-```cmake
-# Verify this path is correct for your machine
-set(DESIGNAR_PATH /path/to/your/DeSiGNAR)
+cmake: The build system we use for this project.
+
+git: A tool for managing source code.
+
+Install Qt6
+
+Next, you need to install Qt6, which is the graphical user interface library used in this project.
+
+Run the following command to install Qt6:
+
+```bash
+sudo apt install -y qt6-base-dev qt6-base-dev-tools
+```
+This will install the main Qt6 modules.
+
+ 2. Download the Project Code
+Download a ZIP of the correct branch
+Once the dependencies are installed, the next step is to obtain the source code for the project. To do this, you can download the project as a ZIP from the GitHub repository.
+
+Visit the repository on GitHub by clicking [here](https://github.com/gustalbert11/Time-Tabling)
+
+Click on "Code" and select "Download ZIP".
+
+Download the ZIP file and extract it in your working directory.
+
+Alternative: If you prefer using Git, you can clone the repository with the following command:
+
+```bash
+git clone -b main --single-branch https://github.com/username/Time-Tabling.git
+```
+ 3. Create a Build Folder
+Inside the directory where you downloaded the project, create a build folder. This is important to keep the build files separate from the source code.
+
+Run:
+
+```bash
+cd Time-Tabling 
+mkdir build
+cd build
 ```
 
-### 2. Build the Project
-From the root of the project directory, create and navigate into a build directory, configure the project with CMake, and compile using make:
+ 4. Configure the Project with CMake
+Inside the build folder, run the following command to configure the project with CMake:
 
-```shell
-$ mkdir build
-$ cd build
-$ cmake .. 
-$ make
+```bash
+cmake ..
 ```
+This command will do the following:
 
-### 3. Run the Application
-After a successful compilation, the executable (named TimeTabling) will be located in the build directory.
+Look for Qt6 and other necessary dependencies.
 
-```shell
-$ ./TimeTabling
+Prepare the project for compilation in the build folder.
+
+ 5. Compile the Project
+Once the project is configured, you can compile it using make.
+
+Run:
+
+```bash
+make -j$(nproc)
+```
+The -j$(nproc) parameter tells make to use all available CPU cores to speed up the compilation.
+
+ 6. Run the Project
+Finally, after the project has been successfully compiled, you can run it.
+
+To run the project, simply execute:
+
+```bash
+./TimeTabling
 ```
