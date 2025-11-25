@@ -1,4 +1,4 @@
-#include "../include/professor.hpp"
+#include "core/professor.hpp"
 
 uint Professor::num_professors = 0;
 

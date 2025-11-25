@@ -11,6 +11,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/ui")
+
+
 # -------------------------------------------------------------
 # Qt
 # -------------------------------------------------------------
@@ -18,7 +22,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
 
 # -------------------------------------------------------------
-# Descargar y compilar Designar
+# Descargar / Compilar Designar
 # -------------------------------------------------------------
 include(ExternalProject)
 
@@ -35,7 +39,7 @@ ExternalProject_Add(
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     BUILD_ALWAYS OFF
     UPDATE_COMMAND ""
-    INSTALL_COMMAND ""  
+    INSTALL_COMMAND ""
 )
 
 file(MAKE_DIRECTORY "${DESIGNAR_INSTALL_DIR}/include")
@@ -61,51 +65,50 @@ set_target_properties(Designar PROPERTIES
 add_dependencies(Designar Designar_CopyFiles)
 
 # -------------------------------------------------------------
-# Archivos del proyecto
+# Archivos del proyecto reorganizados
 # -------------------------------------------------------------
-set(PROJECT_SOURCES
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
 
-    professorform.cpp
-    professorform.h
-    professorform.ui
+set(SOURCES_GUI
+    src/gui/mainwindow.cpp
+    src/gui/professorform.cpp
+    src/gui/courseform.cpp
+    src/gui/sectionwindow.cpp
+)
 
-    courseform.cpp
-    courseform.h
-    courseform.ui
+set(UI_FILES
+    ui/mainwindow.ui
+    ui/professorform.ui
+    ui/courseform.ui
+    ui/sectionwindow.ui
+)
 
-    sectionwindow.cpp
-    sectionwindow.h
-    sectionwindow.ui
+set(SOURCES_CORE
+    src/core/data_manager.cpp
+    src/core/course.cpp
+    src/core/professor.cpp
+    src/core/section.cpp
+    src/core/preference.cpp
+)
 
-    
-    src/data_manager.cpp
-    src/professor.cpp
-    src/course.cpp
-    src/section.cpp
-    src/preference.cpp
+set(SOURCES_FLOW
+    src/flow/flow_node.cpp
+    src/flow/flow_network.cpp
+    src/flow/section_demand_node.cpp
+    src/flow/professor_time_node.cpp
+    src/flow/section_time_node.cpp
+)
 
-    
-    src/flow_node.cpp
-    src/section_demand_node.cpp
-    src/professor_time_node.cpp
-    src/section_time_node.cpp
-    src/flow_network.cpp
-
-    
-    include/data_manager.hpp
-    include/professor.hpp
-    include/course.hpp
-    include/section.hpp
-    include/preference.hpp
-    include/flow_node.hpp
-    include/section_demand_node.hpp
-    include/professor_time_node.hpp
-    include/section_time_node.hpp
-    include/flow_network.hpp
+set(HEADERS_PUBLIC
+    include/core/data_manager.hpp
+    include/core/course.hpp
+    include/core/professor.hpp
+    include/core/section.hpp
+    include/core/preference.hpp
+    include/flow/flow_node.hpp
+    include/flow/flow_network.hpp
+    include/flow/section_demand_node.hpp
+    include/flow/professor_time_node.hpp
+    include/flow/section_time_node.hpp
 )
 
 # -------------------------------------------------------------
@@ -114,32 +117,41 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(TimeTabling
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+        src/main.cpp
+        ${SOURCES_GUI}
+        ${SOURCES_CORE}
+        ${SOURCES_FLOW}
+        ${UI_FILES}
+        ${HEADERS_PUBLIC}
     )
 else()
     add_executable(TimeTabling
-        ${PROJECT_SOURCES}
+        src/main.cpp
+        ${SOURCES_GUI}
+        ${SOURCES_CORE}
+        ${SOURCES_FLOW}
+        ${UI_FILES}
+        ${HEADERS_PUBLIC}
     )
 endif()
 
 add_dependencies(TimeTabling Designar)
 
 # -------------------------------------------------------------
-# Enlazar librerías
+# INCLUDES
 # -------------------------------------------------------------
-target_link_libraries(TimeTabling PRIVATE 
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Designar
-)
-
-# ✨ AGREGAR TU CARPETA include/ PARA QUE FUNCIONE AUTOGEN
 target_include_directories(TimeTabling PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
 # -------------------------------------------------------------
-# Configuración extra
+# Enlazar librerías
 # -------------------------------------------------------------
+target_link_libraries(TimeTabling PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Designar
+)
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(TimeTabling)
 endif()

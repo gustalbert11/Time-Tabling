@@ -1,4 +1,4 @@
-#include "../include/professor_time_node.hpp"
+#include "flow/professor_time_node.hpp"
 
 ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days day, uint start_hour, uint end_hour)
 : FlowNode(id, FlowNodeType::PROFESSOR_TIME),

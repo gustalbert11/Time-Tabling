@@ -1,6 +1,6 @@
 #include "sectionwindow.h"
 #include "ui_sectionwindow.h"
-#include "../include/data_manager.hpp"
+#include "core/data_manager.hpp"
 #include <QDebug>
 
 SectionWindow::SectionWindow(QWidget *parent)

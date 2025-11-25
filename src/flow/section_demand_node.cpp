@@ -1,4 +1,4 @@
-#include "../include/section_demand_node.hpp"
+#include "flow/section_demand_node.hpp"
 
 SectionDemandNode::SectionDemandNode(std::string id, Section* section, uint hour_index)
 : FlowNode(id, FlowNodeType::SECTION_DEMAND),

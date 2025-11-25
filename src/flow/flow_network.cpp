@@ -1,4 +1,4 @@
-#include "../include/flow_network.hpp"
+#include "flow/flow_network.hpp"
 
 FlowNetwork *fn_ptr_instance = FlowNetwork::get_ptr_instance();
 FlowNetwork &fn_instance = FlowNetwork::get_instance();

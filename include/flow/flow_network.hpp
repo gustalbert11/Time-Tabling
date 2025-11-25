@@ -6,7 +6,7 @@
 #include "professor_time_node.hpp"
 #include "section_time_node.hpp"
 #include <graphalgorithms.hpp>
-#include "data_manager.hpp"
+#include "core/data_manager.hpp"
 
 // En flow_network.hpp - modificar ArcData
 struct ArcData 
