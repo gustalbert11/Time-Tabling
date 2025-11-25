@@ -58,6 +58,7 @@ public:
     
     void extract_schedule();
     void print_schedule() const;
+    void debug_preferences_loading();
 
 protected:
     FlowNetwork();
@@ -95,6 +96,8 @@ protected:
 
     void update_flows_and_residuals(const std::vector<GraphNode*>& path, 
                                            uint flow, ResidualGraph& residual_graph);
+
+    void analyze_preference_compliance();
     
     // Variables de solución
     std::map<std::tuple<uint, Days, uint, uint>, std::vector<std::string>> level_assignments;
