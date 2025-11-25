@@ -47,7 +47,7 @@ const uint& Professor::get_max_consecutive_hours() const
 { 
     return max_consecutive_hours; 
 }
-const Preference* Professor::get_preference() const 
+Preference* Professor::get_preference() const 
 { 
     return preference.get(); 
 }

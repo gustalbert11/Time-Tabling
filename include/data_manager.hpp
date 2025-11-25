@@ -28,10 +28,6 @@ public:
     bool add_course(std::unique_ptr<Course> course);
     bool add_section(std::unique_ptr<Section> section);
     
-    bool import_professors_from_csv(const std::string& filename);
-    bool import_courses_from_csv(const std::string& filename);
-    //bool import_sections_from_csv(const std::string& file_name);
-    //bool export_to_csv(const std::string& filename) const;
     bool import_from_json(const std::string& filename);
     //bool export_to_json(const std::string& filename) const;
     

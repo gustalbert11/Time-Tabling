@@ -39,9 +39,6 @@ protected:
     std::vector<GraphNode*> section_time_nodes;
     std::vector<GraphNode*> level_time_nodes;
 
-    std::unordered_map<Professor*, std::unordered_map<Days, uint>> professor_daily_hours;
-    std::unordered_map<Professor*, std::unordered_map<Days, uint>> professor_consecutive_hours;
-
     void create_nodes();
     void create_arcs();
     void create_network();

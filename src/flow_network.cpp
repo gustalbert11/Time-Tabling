@@ -75,63 +75,6 @@ FlowNetwork::FlowNetwork()
     
 }
 
-uint calculate_preference_penalty(Professor* professor, const std::shared_ptr<ProfessorTimeNode>& prof_time) 
-{
-    const Preference* pref = professor->get_preference();
-    if (!pref || 
-        pref->get_type() == PreferenceType::NO_PREFERENCE) 
-    {
-        return 0;
-    }
-    
-    auto day = prof_time->get_day();
-    auto hour_interval = prof_time->get_hour_interval();
-    uint penalty = 0;
-    
-    if (pref->get_type() == PreferenceType::DAYS || 
-        pref->get_type() == PreferenceType::DAYS_HOURS) 
-    {
-        auto preferred_days = pref->get_days();
-        bool day_match = false;
-        
-        for (const auto& preferred_day : preferred_days) 
-        {
-            if (preferred_day == day) 
-            {
-                day_match = true;
-                break;
-            }
-        }
-        if (!day_match) 
-        {
-            penalty += 100;
-        }
-    }
-    
-    if (pref->get_type() == PreferenceType::HOURS || 
-        pref->get_type() == PreferenceType::DAYS_HOURS) 
-    {
-        auto preferred_hours = pref->get_hours();
-        bool hour_match = false;
-
-        for (const auto& preferred_hour : preferred_hours) 
-        {
-            if (hour_interval.first >= preferred_hour.first && 
-                hour_interval.second <= preferred_hour.second) 
-            {
-                hour_match = true;
-                break;
-            }
-        }
-        if (!hour_match) 
-        {
-            penalty += 100;
-        }
-    }
-    
-    return penalty;
-}
-
 uint calculate_preference_penalty(Professor* professor, Days day, uint start_hour, uint end_hour) 
 {
     auto pref = professor->get_preference();
@@ -206,8 +149,6 @@ void FlowNetwork::create_nodes()
         {
             Days day = static_cast<Days>(d);
 
-            //professor_daily_hours[professor][day] = 0;
-
             for (uint h = MIN_START_HOUR; h <= MAX_END_HOUR - 2; h += 2)
             {
                 uint start_hour = h;
@@ -223,9 +164,6 @@ void FlowNetwork::create_nodes()
                 );   
 
                 add_node(pt_node);
-
-                // Aquí es buen lugar para guardar el índice/nodo en
-                // un mapa auxiliar si luego lo necesitas para crear aristas.
             }
 
             // for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
@@ -354,146 +292,6 @@ void FlowNetwork::create_nodes()
     }
     
 }
-// void FlowNetwork::create_arcs()
-// {
-//     network.reset_counters();
-    
-//     auto source_it = graph_node_map.find("SOURCE");
-//     auto sink_it = graph_node_map.find("SINK");
-//     if (source_it == graph_node_map.end() || sink_it == graph_node_map.end()) 
-//     {
-//         return;
-//     }
-    
-//     GraphNode* src = source_it->second;
-//     GraphNode* sink = sink_it->second;
-
-//     for (auto demand_node : section_demand_nodes)
-//     {
-//         network.insert_arc(src, demand_node, std::make_pair(static_cast<uint>(1), 0));
-//         ++demand_node->counter();
-
-//         auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(demand_node->get_info());
-//         if (!sect_demand)
-//         {
-//             continue;
-//         }
-        
-//         auto section = sect_demand->get_section();
-//         auto sect_prof = section->get_professor();
-
-//         for (auto prof_time_node : professor_time_nodes)
-//         {
-//             auto prof_time = std::dynamic_pointer_cast<ProfessorTimeNode>(prof_time_node->get_info());
-//             if (!prof_time)
-//             {
-//                 continue;
-//             }
-//             if (prof_time->get_professor() != sect_prof)
-//             {
-//                 continue;
-//             }
-
-//             // uint penalty = 0;
-//             // if (prof_time_node->counter() > 0)
-//             // {
-//             //     penalty = 1000 * prof_time_node->counter();
-//             // }
-            
-//             auto day = prof_time->get_day();
-//             auto current_daily_hours = professor_daily_hours[sect_prof][day];
-//             auto max_daily_hours = sect_prof->get_max_daily_hours();
-
-//             uint daily_hours_penalty = 0;
-//             if (current_daily_hours + 2 > max_daily_hours) 
-//             {
-//                 daily_hours_penalty = 1000 * (current_daily_hours + 2 - max_daily_hours);
-//             }
-            
-//             auto preference_penalty = calculate_preference_penalty(sect_prof, prof_time);
-            
-//             //auto total_cost = daily_hours_penalty + preference_penalty + penalty;
-//             auto total_cost = daily_hours_penalty + preference_penalty;
-            
-//             network.insert_arc(demand_node, prof_time_node, std::make_pair(static_cast<uint>(1), total_cost));
-//             ++prof_time_node->counter();
-
-//             professor_daily_hours[sect_prof][day] += 2;
-//         }
-        
-//     }
-
-//     for (auto prof_time_node : professor_time_nodes)
-//     {
-//         auto pt_info = std::dynamic_pointer_cast<ProfessorTimeNode>(prof_time_node->get_info());
-//         if (!pt_info)
-//         {
-//             continue;
-//         }
-
-//         for (auto section_time_node : section_time_nodes)
-//         {
-//             auto st_info = std::dynamic_pointer_cast<SectionTimeNode>(section_time_node->get_info());
-//             if (!st_info) 
-//             {
-//                 continue;
-//             }
-//             if (st_info->get_section()->get_professor()->get_id() != pt_info->get_professor()->get_id() ||
-//                 pt_info->get_day() != st_info->get_day() || 
-//                 pt_info->get_hour_interval() != st_info->get_hour_interval())
-//             {
-//                 continue;
-//             }
-            
-//             network.insert_arc(prof_time_node, section_time_node, std::make_pair(static_cast<uint>(1), 0));
-//             ++section_time_node->counter();
-//         }
-//     }
-
-//     for (auto section_time_node : section_time_nodes)
-//     {
-//         auto st_info = std::dynamic_pointer_cast<SectionTimeNode>(section_time_node->get_info());
-//         if (!st_info) 
-//         {
-//             continue;
-//         }
-
-//         for (auto level_time_node : level_time_nodes)
-//         {
-//             auto lt_info = std::dynamic_pointer_cast<LevelTimeNode>(level_time_node->get_info());
-//             if (!lt_info) 
-//             {
-//                 continue;
-//             }
-//             if (lt_info->get_level() != st_info->get_section()->get_course()->get_level() ||
-//                 lt_info->get_day() != st_info->get_day() ||
-//                 lt_info->get_hour_interval() != st_info->get_hour_interval())
-//             {
-//                 continue;
-//             }
-            
-//             uint penalty = 0;
-//             if (level_time_node->counter() > 0)
-//             {
-//                 penalty = 1000 * level_time_node->counter();
-//             }
-
-//             network.insert_arc(section_time_node, level_time_node, std::make_pair(static_cast<uint>(1), penalty));
-//             ++level_time_node->counter();
-//         }
-//     }
-
-//     for (auto level_time_node : level_time_nodes)
-//     {
-//         if (level_time_node->counter() == 0)
-//         {
-//             continue;
-//         }
-        
-//         network.insert_arc(level_time_node, sink, std::make_pair(static_cast<uint>(1), 0));
-//     }
-// }
-
 void FlowNetwork::create_arcs()
 {
     auto source_it = graph_node_map.find("SOURCE");
@@ -505,9 +303,6 @@ void FlowNetwork::create_arcs()
     GraphNode* src = source_it->second;
     GraphNode* sink = sink_it->second;
 
-    // Mapa auxiliar para búsqueda rápida de nodos de tiempo existentes
-    // (Asumo que ya los creaste todos en create_nodes y están en graph_node_map)
-
     // 1. ITERAMOS SOBRE LAS DEMANDAS (LAS CLASES A ASIGNAR)
     for (auto demand_graph_node : section_demand_nodes)
     {
@@ -515,7 +310,6 @@ void FlowNetwork::create_arcs()
         // Capacidad 2: Porque dividiremos el flujo en dos ramas (Profe y Nivel)
         network.insert_arc(src, demand_graph_node, std::make_pair(static_cast<uint>(2), 0));
         
-        // Obtenemos la información de la demanda
         auto sect_demand = std::dynamic_pointer_cast<SectionDemandNode>(demand_graph_node->get_info());
         if (!sect_demand) 
         {
@@ -537,7 +331,6 @@ void FlowNetwork::create_arcs()
                 continue; 
             }
 
-            // Datos del intervalo de tiempo actual
             auto day = st_info->get_day();
             auto interval = st_info->get_hour_interval();
             auto start_h = interval.first;
@@ -547,10 +340,8 @@ void FlowNetwork::create_arcs()
             // Capacidad 2: Pasan las dos unidades de flujo.
             // Costo: Aquí aplicamos la penalización por preferencia del profesor.
             
-            // Nota: Necesitarás adaptar tu función calculate_preference_penalty para que acepte (Professor, Day, start, end)
-            // O crear un objeto temporal, pero idealmente pásale los datos directos.
-            uint cost = 0; // Placeholder, implementa tu lógica de preferencias aquí.
-            uint cost = calculate_preference_penalty(professor, day, start_h, end_h); 
+            uint cost = 0;
+            cost = calculate_preference_penalty(professor, day, start_h, end_h); 
             
             network.insert_arc(demand_graph_node, sec_time_graph_node, std::make_pair(static_cast<uint>(2), cost));
 
@@ -606,7 +397,6 @@ void FlowNetwork::create_arcs()
         network.insert_arc(level_time_node, sink, std::make_pair(static_cast<uint>(max_simultaneous_classes_per_level), 0));
     }
 }
-
 void FlowNetwork::create_network()
 {
     num_section_demand_nodes = 0;
