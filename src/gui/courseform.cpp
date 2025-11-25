@@ -1,5 +1,5 @@
 #include "courseform.h"
-#include "ui_courseform.h"
+#include "ui_courseform.h" 
 #include <QString>
 
 CourseForm::CourseForm(QWidget *parent)
