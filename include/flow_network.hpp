@@ -2,6 +2,7 @@
 
 #include "professor_time_node.hpp"
 #include "section_time_node.hpp"
+#include "level_time_node.hpp"
 #include <graphalgorithms.hpp>
 #include "data_manager.hpp"
 
@@ -28,6 +29,7 @@ protected:
     uint num_section_demand_nodes;
     uint num_professor_time_nodes;
     uint num_section_time_nodes;
+    uint num_level_time_nodes;
     bool is_initialized;
 
     using GraphNode = NetworkType::Node;
@@ -35,8 +37,10 @@ protected:
     std::vector<GraphNode*> section_demand_nodes;
     std::vector<GraphNode*> professor_time_nodes;
     std::vector<GraphNode*> section_time_nodes;
+    std::vector<GraphNode*> level_time_nodes;
 
     std::unordered_map<Professor*, std::unordered_map<Days, uint>> professor_daily_hours;
+    std::unordered_map<Professor*, std::unordered_map<Days, uint>> professor_consecutive_hours;
 
     void create_nodes();
     void create_arcs();

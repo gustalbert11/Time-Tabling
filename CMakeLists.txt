@@ -93,6 +93,7 @@ set(PROJECT_SOURCES
     src/section_demand_node.cpp
     src/professor_time_node.cpp
     src/section_time_node.cpp
+    src/level_time_node.cpp
     src/flow_network.cpp
 
     
@@ -105,6 +106,7 @@ set(PROJECT_SOURCES
     include/section_demand_node.hpp
     include/professor_time_node.hpp
     include/section_time_node.hpp
+    include/level_time_node.hpp
     include/flow_network.hpp
 )
 
