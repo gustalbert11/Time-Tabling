@@ -1,4 +1,4 @@
-#include "../include/flow_node.hpp"
+#include "flow/flow_node.hpp"
 
 FlowNode::FlowNode(std::string id, FlowNodeType type)  
 {

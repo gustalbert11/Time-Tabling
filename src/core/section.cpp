@@ -1,4 +1,4 @@
-#include "../include/section.hpp"
+#include "core/section.hpp"
 
 uint Section::num_sections = 0;
 

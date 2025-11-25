@@ -1,4 +1,4 @@
-#include "../include/level_time_node.hpp"
+#include "flow/level_time_node.hpp"
 
 LevelTimeNode::LevelTimeNode(std::string id, uint level, Days day, uint start_hour, uint end_hour)
 : FlowNode(id, FlowNodeType::LEVEL_TIME)

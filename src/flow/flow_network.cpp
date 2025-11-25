@@ -1,4 +1,4 @@
-#include "../include/flow_network.hpp"
+#include "flow/flow_network.hpp"
 
 FlowNetwork *fn_ptr_instance = FlowNetwork::get_ptr_instance();
 FlowNetwork &fn_instance = FlowNetwork::get_instance();
@@ -152,7 +152,27 @@ void FlowNetwork::create_nodes()
             for (uint h = MIN_START_HOUR; h <= MAX_END_HOUR - 2; h += 2)
             {
                 uint start_hour = h;
-                uint end_hour = h + 2;
+                uint end_hour   = h + 2;
+
+                std::string node_id =
+                    prof_id + "_D" + std::to_string(d) +
+                    "_H" + std::to_string(start_hour) +
+                    "-"  + std::to_string(end_hour);
+
+                auto pt_node = std::make_shared<ProfessorTimeNode>(
+                    node_id, professor, day, start_hour, end_hour
+                );   
+
+                add_node(pt_node);
+
+                // Aquí es buen lugar para guardar el índice/nodo en
+                // un mapa auxiliar si luego lo necesitas para crear aristas.
+            }
+
+            for (uint h = MIN_START_HOUR + 1; h <= MAX_END_HOUR - 3; h += 2)
+            {
+                uint start_hour = h;
+                uint end_hour   = h + 2;
 
                 std::string node_id =
                     prof_id + "_D" + std::to_string(d) +

@@ -4,7 +4,7 @@
 #include "section_time_node.hpp"
 #include "level_time_node.hpp"
 #include <graphalgorithms.hpp>
-#include "data_manager.hpp"
+#include "core/data_manager.hpp"
 
 class FlowNetwork : public Designar::Singleton<FlowNetwork>
 {

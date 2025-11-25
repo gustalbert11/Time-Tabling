@@ -1,4 +1,4 @@
-#include "../include/section_time_node.hpp"
+#include "flow/section_time_node.hpp"
 
 SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uint start_hour, uint end_hour)
 : FlowNode(id, FlowNodeType::SECTION_TIME)

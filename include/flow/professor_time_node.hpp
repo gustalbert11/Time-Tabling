@@ -1,7 +1,7 @@
 #pragma once
 
 #include "flow_node.hpp"
-#include "professor.hpp"
+#include "core/professor.hpp"
 
 class ProfessorTimeNode : public FlowNode 
 {

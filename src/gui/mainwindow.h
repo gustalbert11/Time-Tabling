@@ -5,7 +5,7 @@
 #include "sectionwindow.h"
 #include <QTableWidget>
 #include <QMessageBox>
-#include "../include/data_manager.hpp"
+#include "core/data_manager.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

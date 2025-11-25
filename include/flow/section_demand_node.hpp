@@ -1,7 +1,7 @@
 #pragma once
 
 #include "flow_node.hpp"
-#include "section.hpp"
+#include "core/section.hpp"
 
 class SectionDemandNode : public FlowNode 
 {

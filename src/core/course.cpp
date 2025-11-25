@@ -1,4 +1,4 @@
-#include "../include/course.hpp"
+#include "core/course.hpp"
 
 uint Course::num_courses = 0;
 
