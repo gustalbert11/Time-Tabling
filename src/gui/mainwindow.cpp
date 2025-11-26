@@ -61,10 +61,7 @@ void MainWindow::create_schedule()
     out << "🧪 EJECUTANDO PRUEBA DE DEPURACIÓN\n";
     out << "=================================\n";
 
-    // 1. Verificar carga de datos
-    fn_instance.debug_preferences_loading(); // (esto aún imprime en consola)
-
-    // 2. Inicializar red
+    // Inicializar red
     fn_instance.init();
 
     // 3. Ejecutar algoritmo
@@ -78,7 +75,7 @@ void MainWindow::create_schedule()
             out << "   Materia: " << entry.course_name << "\n";
             out << "   Día: " << day_to_string(entry.day) << "\n";
             out << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00\n";
-            out << "   Costo: " << entry.cost << "\n";
+           
 
             auto professor = dm_instance.get_professor(entry.professor_id);
             if (professor && professor->get_preference()) {
@@ -93,13 +90,7 @@ void MainWindow::create_schedule()
                     }
                 }
 
-                if (day_ok && hour_ok) {
-                    out << "   🎉 CUMPLE todas las preferencias\n";
-                } else {
-                    out << "   ❌ NO cumple preferencias:\n";
-                    if (!day_ok)  out << "      - Día incorrecto\n";
-                    if (!hour_ok) out << "      - Horario incorrecto\n";
-                }
+            
             }
         }
     }
@@ -112,7 +103,6 @@ void MainWindow::avanzar_ventana()
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it + 1);
     dm_instance.clear_all_data();
-
 }
 
 void MainWindow::volver_ventana()
@@ -321,7 +311,7 @@ void MainWindow::on_section_window_closed()
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
 {
-    if(item->text().contains(QString("PROF")))
+    if(item->text().contains(QString("PROF")) && dm_instance.get_professor(item->text().toStdString()))
     {
         QMessageBox::StandardButton respuesta = QMessageBox::question
             (
@@ -337,7 +327,7 @@ void MainWindow::onItemClicked(QTableWidgetItem *item)
         }
     }
 
-    if(item->text().contains(QString("COURSE")))
+    if(item->text().contains(QString("COURSE")) && dm_instance.get_course(item->text().toStdString()))
     {
         QMessageBox::StandardButton respuesta = QMessageBox::question
             (

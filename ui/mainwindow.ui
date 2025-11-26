@@ -161,7 +161,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_2">
           <property name="text">
-           <string>PushButton</string>
+           <string>Ventana de horario</string>
           </property>
          </widget>
         </item>
