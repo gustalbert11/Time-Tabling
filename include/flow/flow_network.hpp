@@ -10,7 +10,9 @@
 #include <graphalgorithms.hpp>
 #include "core/data_manager.hpp"
 
-// En flow_network.hpp - modificar ArcData
+const uint COLLISION_PENALTY = 1000;  
+const uint PREFERENCE_PENALTY = 50;    
+
 struct ArcData 
 {
     uint capacity;
@@ -30,7 +32,7 @@ struct ScheduleEntry
     Days day;
     uint start_hour;
     uint end_hour;
-    uint cost;  // Para ver qué tan "buena" es esta asignación
+    uint cost;
 };
 
 class FlowNetwork : public Designar::Singleton<FlowNetwork>
@@ -57,11 +59,11 @@ public:
     uint get_total_cost() const;
     
     void extract_schedule();
-    void print_schedule() const;
-    void debug_preferences_loading();
 
 
-    uint calculate_preference_cost(Professor* professor, Days day, uint start_hour, uint end_hour);
+    uint calculate_preference_cost(Professor* professor, Days day, uint start_hour, uint end_hour, Section* current_section = nullptr);
+    uint calculate_collision_penalty(Section* current_section, Days day,uint start_hour, uint end_hour);
+    bool time_overlap(uint start1, uint end1, uint start2, uint end2);
 
 protected:
     FlowNetwork();
@@ -85,7 +87,7 @@ protected:
         GraphNode* target;
         uint capacity;
         uint cost;
-        int reverse_index; // Índice al arco reverso
+        int reverse_index; 
     };
     using ResidualGraph = std::unordered_map<GraphNode*, std::vector<ResidualArc>>;
     
@@ -100,7 +102,6 @@ protected:
     void update_flows_and_residuals(const std::vector<GraphNode*>& path, 
                                            uint flow, ResidualGraph& residual_graph);
 
-    void analyze_preference_compliance();
     
     // Variables de solución
     uint total_flow;

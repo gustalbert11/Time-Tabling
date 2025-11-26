@@ -2,13 +2,13 @@
 
 #include <string>
 
-enum class FlowNodeType 
-{
+enum class FlowNodeType {
     NO_SPECIFIED,
     SOURCE,
-    SECTION_DEMAND,
+    SECTION_DEMAND, 
     PROFESSOR_TIME,
     SECTION_TIME,
+    LEVEL_TIME_SLOT, 
     SINK
 };
 
