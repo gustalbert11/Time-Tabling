@@ -21,7 +21,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -129,13 +129,6 @@
          <widget class="QPushButton" name="importButton">
           <property name="text">
            <string>Importar Archivo</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="avPag2Button">
-          <property name="text">
-           <string>Avanzar</string>
           </property>
          </widget>
         </item>

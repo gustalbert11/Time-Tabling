@@ -46,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
 
     connect(ui->scheduleButton, &QPushButton::clicked, this, &MainWindow::create_schedule);
-
-    connect(ui->avPag2Button, &QPushButton::clicked, this, &MainWindow::avanzar_ventana);
 }
 
 MainWindow::~MainWindow()
