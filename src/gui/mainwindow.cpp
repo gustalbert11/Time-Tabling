@@ -56,35 +56,36 @@ MainWindow::~MainWindow()
 
 void MainWindow::create_schedule()
 {
-    std::cout << "🧪 EJECUTANDO PRUEBA DE DEPURACIÓN" << std::endl;
-    std::cout << "=================================" << std::endl;
+    std::ofstream out("resultado_schedule.txt");  // 📄 archivo de salida
+
+    out << "🧪 EJECUTANDO PRUEBA DE DEPURACIÓN\n";
+    out << "=================================\n";
 
     // 1. Verificar carga de datos
-    fn_instance.debug_preferences_loading();
+    fn_instance.debug_preferences_loading(); // (esto aún imprime en consola)
 
     // 2. Inicializar red
     fn_instance.init();
 
     // 3. Ejecutar algoritmo
     if (fn_instance.solve_min_cost_max_flow()) {
-        std::cout << "✅ Algoritmo completado" << std::endl;
+        out << "✅ Algoritmo completado\n";
 
-        // Mostrar resultados detallados
         auto schedule = fn_instance.get_final_schedule();
         for (const auto& entry : schedule) {
-            std::cout << "\n📅 ASIGNACIÓN FINAL:" << std::endl;
-            std::cout << "   Profesor: " << entry.professor_name << std::endl;
-            std::cout << "   Materia: " << entry.course_name << std::endl;
-            std::cout << "   Día: " << day_to_string(entry.day) << std::endl;
-            std::cout << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00" << std::endl;
-            std::cout << "   Costo: " << entry.cost << std::endl;
+            out << "\n📅 ASIGNACIÓN FINAL:\n";
+            out << "   Profesor: " << entry.professor_name << "\n";
+            out << "   Materia: " << entry.course_name << "\n";
+            out << "   Día: " << day_to_string(entry.day) << "\n";
+            out << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00\n";
+            out << "   Costo: " << entry.cost << "\n";
 
-            // Verificar manualmente
             auto professor = dm_instance.get_professor(entry.professor_id);
             if (professor && professor->get_preference()) {
                 auto pref = professor->get_preference();
                 bool day_ok = pref->get_days().contains(entry.day);
                 bool hour_ok = false;
+
                 for (const auto& hour_range : pref->get_hours()) {
                     if (entry.start_hour >= hour_range.first && entry.end_hour <= hour_range.second) {
                         hour_ok = true;
@@ -93,15 +94,17 @@ void MainWindow::create_schedule()
                 }
 
                 if (day_ok && hour_ok) {
-                    std::cout << "   🎉 CUMPLE todas las preferencias" << std::endl;
+                    out << "   🎉 CUMPLE todas las preferencias\n";
                 } else {
-                    std::cout << "   ❌ NO cumple preferencias:" << std::endl;
-                    if (!day_ok) std::cout << "      - Día incorrecto" << std::endl;
-                    if (!hour_ok) std::cout << "      - Horario incorrecto" << std::endl;
+                    out << "   ❌ NO cumple preferencias:\n";
+                    if (!day_ok)  out << "      - Día incorrecto\n";
+                    if (!hour_ok) out << "      - Horario incorrecto\n";
                 }
             }
         }
     }
+
+    out.close(); // opcional, se cierra solo
 }
 
 void MainWindow::avanzar_ventana()
