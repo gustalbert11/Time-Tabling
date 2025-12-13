@@ -91,10 +91,10 @@ set(SOURCES_CORE
 
 set(SOURCES_FLOW
     src/flow/flow_node.cpp
-    src/flow/flow_network.cpp
     src/flow/section_demand_node.cpp
     src/flow/professor_time_node.cpp
     src/flow/section_time_node.cpp
+    src/flow/flow_network.cpp
 )
 
 set(HEADERS_PUBLIC
@@ -104,10 +104,10 @@ set(HEADERS_PUBLIC
     include/core/section.hpp
     include/core/preference.hpp
     include/flow/flow_node.hpp
-    include/flow/flow_network.hpp
     include/flow/section_demand_node.hpp
     include/flow/professor_time_node.hpp
     include/flow/section_time_node.hpp
+    include/flow/flow_network.hpp
 )
 
 # -------------------------------------------------------------

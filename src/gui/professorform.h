@@ -31,10 +31,15 @@ private slots:
     void onSubmit();
     void onFieldReturnPressed();
     void combox1_current_text_changed();
+    void start_hour_spin_box_changed();
+    void end_hour_spin_box_changed();
+
 private:
-    void processForm();
-    void setupConnections();
     Professor* prof;
+    std::vector<QLineEdit*> line_edits;
+    std::vector<QLabel*> labels;
+    std::vector<QSpinBox*> spin_boxes;
+    std::vector<QCheckBox*> checkBoxes;
 
     QLineEdit *lineEdit1;
 
@@ -60,11 +65,14 @@ private:
     QComboBox *combox1;
 
 
-    std::vector<QCheckBox*> checkBoxes;
+    
 
     QPushButton *submitButton;
 
     Ui::ProfessorForm *ui;
+
+    void processForm();
+    void setupConnections();
 };
 
 #endif // PROFESSORFORM_H

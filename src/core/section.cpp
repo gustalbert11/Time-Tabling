@@ -16,15 +16,15 @@ Section::Section(const Section& other)
     set_course(other.course);
 }
 
-const std::string& Section::get_id() const 
+std::string Section::get_id() const 
 { 
     return id; 
 }
-Professor* Section::get_professor() const 
+const Professor* Section::get_professor() const 
 { 
     return professor; 
 }
-Course* Section::get_course() const 
+const Course* Section::get_course() const 
 { 
     return course; 
 }
@@ -56,6 +56,7 @@ bool Section::add_time_slot(const Days& day, const uint &start_hour, const uint 
 {
     if (day < Days::MONDAY || 
         day > Days::FRIDAY ||
+        start_hour < MIN_START_HOUR ||
         start_hour >= end_hour || 
         end_hour > MAX_DAILY_HOURS)
     {

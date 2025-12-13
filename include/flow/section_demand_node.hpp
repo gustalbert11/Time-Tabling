@@ -8,7 +8,7 @@ class SectionDemandNode : public FlowNode
 public:
     SectionDemandNode(std::string id, Section* section, uint hour_index);
 
-    Section* get_section() const;
+    const Section* get_section() const;
     uint get_hour_index() const;
 
     bool set_section(Section* section);

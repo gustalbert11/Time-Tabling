@@ -26,35 +26,35 @@ Course::Course(const Course& other)
     set_max_daily_hours(other.max_daily_hours);
 }
 
-const std::string& Course::get_id() const 
+std::string Course::get_id() const 
 { 
     return id; 
 }
-const std::string& Course::get_name() const 
+std::string Course::get_name() const 
 { 
     return name; 
 }
-const uint& Course::get_level() const 
+uint Course::get_level() const 
 { 
     return level; 
 }
-const uint& Course::get_num_credits() const 
+uint Course::get_num_credits() const 
 { 
     return num_credits;
 }
-const uint& Course::get_num_sections() const 
+uint Course::get_num_sections() const 
 { 
-    return num_sections; 
+    return sections.size(); 
 }
-const Designar::ArraySet<Section*>& Course::get_sections() const 
+const Designar::ArraySet<const Section*>& Course::get_sections() const 
 { 
     return sections; 
 }
-const uint& Course::get_num_weekly_hours() const 
+uint Course::get_num_weekly_hours() const 
 { 
     return num_weekly_hours; 
 }
-const uint& Course::get_max_daily_hours() const 
+uint Course::get_max_daily_hours() const 
 { 
     return max_daily_hours; 
 }
@@ -121,8 +121,7 @@ bool Course::set_max_daily_hours(const uint &max_daily_hours)
 
 bool Course::add_section(Section* section)
 {
-    if (!section || 
-        sections.size() == num_sections || 
+    if (!section ||
         sections.contains(section))
     {
         return false;
@@ -130,22 +129,6 @@ bool Course::add_section(Section* section)
     sections.append(section);
     return true;
 }
-// bool Course::remove_section(Section* section)
-// {
-//     if (section == nullptr)
-//     {
-//         return false;
-//     }
-//     for (nat_t i = 0; i < sections.size(); ++i)
-//     {
-//         if (sections.nth(i) == section)
-//         {
-//             sections.remove_pos(i);
-//             return true;
-//         }
-//     }
-//     return false;
-// }
 
 bool Course::set_id()
 {

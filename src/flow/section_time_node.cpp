@@ -5,20 +5,20 @@ SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uin
 {
     set_section(section);
     set_day(day);
-    set_hour_interval(start_hour, end_hour);
+    set_hours_interval(start_hour, end_hour);
 }
 
-Section* SectionTimeNode::get_section() const
+const Section* SectionTimeNode::get_section() const
 {
     return section;
 }
-const Days& SectionTimeNode::get_day() const
+Days SectionTimeNode::get_day() const
 {
     return day;
 }
-const std::pair<uint, uint>& SectionTimeNode::get_hour_interval() const
+std::pair<uint, uint> SectionTimeNode::get_hours_interval() const
 {
-    return hour_interval;
+    return hours_interval;
 }
 
 bool SectionTimeNode::set_section(Section* section)
@@ -42,14 +42,15 @@ bool SectionTimeNode::set_day(const Days &day)
     this->day = day;
     return true;
 }
-bool SectionTimeNode::set_hour_interval(const uint &start_hour, const uint &end_hour)
+bool SectionTimeNode::set_hours_interval(const uint &start_hour, const uint &end_hour)
 {
-    if (start_hour >= end_hour ||
+    if (start_hour < MIN_START_HOUR ||
+        start_hour >= end_hour ||
         end_hour > MAX_DAILY_HOURS)
     {
         return false;
     }
 
-    this->hour_interval = std::make_pair(start_hour, end_hour);
+    this->hours_interval = std::make_pair(start_hour, end_hour);
     return true;
 }

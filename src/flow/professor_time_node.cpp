@@ -5,20 +5,20 @@ ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days 
 {
     set_professor(professor);
     set_day(day);
-    set_hour_interval(start_hour, end_hour);
+    set_hours_interval(start_hour, end_hour);
 }
 
-Professor* ProfessorTimeNode::get_professor() const
+const Professor* ProfessorTimeNode::get_professor() const
 {
     return professor;
 }
-const Days& ProfessorTimeNode::get_day() const
+Days ProfessorTimeNode::get_day() const
 {
     return day;
 }
-const std::pair<uint, uint>& ProfessorTimeNode::get_hour_interval() const
+std::pair<uint, uint> ProfessorTimeNode::get_hours_interval() const
 {
-    return hour_interval;
+    return hours_interval;
 }
 
 bool ProfessorTimeNode::set_professor(Professor* professor)
@@ -42,14 +42,15 @@ bool ProfessorTimeNode::set_day(const Days &day)
     this->day = day;
     return true;
 }
-bool ProfessorTimeNode::set_hour_interval(const uint &start_hour, const uint &end_hour)
+bool ProfessorTimeNode::set_hours_interval(const uint &start_hour, const uint &end_hour)
 {
-    if (start_hour >= end_hour ||
+    if (start_hour < MIN_START_HOUR || 
+        start_hour >= end_hour ||
         end_hour > MAX_DAILY_HOURS)
     {
         return false;
     }
 
-    this->hour_interval = std::make_pair(start_hour, end_hour);
+    this->hours_interval = std::make_pair(start_hour, end_hour);
     return true;
 }

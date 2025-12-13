@@ -61,8 +61,8 @@ public:
     void extract_schedule();
 
 
-    uint calculate_preference_cost(Professor* professor, Days day, uint start_hour, uint end_hour, Section* current_section = nullptr);
-    uint calculate_collision_penalty(Section* current_section, Days day,uint start_hour, uint end_hour);
+    uint calculate_preference_cost(const Professor* professor, Days day, uint start_hour, uint end_hour, const Section* current_section = nullptr);
+    uint calculate_collision_penalty(const Section* current_section, Days day,uint start_hour, uint end_hour);
     bool time_overlap(uint start1, uint end1, uint start2, uint end2);
 
 protected:

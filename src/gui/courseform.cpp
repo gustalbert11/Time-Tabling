@@ -27,17 +27,19 @@ CourseForm::CourseForm(QWidget *parent)
     spinboxes.push_back(new QSpinBox(this));
     spinboxes[1]->setRange(1, MAX_NUM_CREDITS);
 
-    labels.push_back(new QLabel("Numero de secciones", this));
-    spinboxes.push_back(new QSpinBox(this));
-    spinboxes[2]->setRange(1, COURSE_MAX_NUM_SECTIONS);
+    // labels.push_back(new QLabel("Numero de secciones", this));
+    // spinboxes.push_back(new QSpinBox(this));
+    // spinboxes[2]->setRange(1, COURSE_MAX_NUM_SECTIONS);
 
     labels.push_back(new QLabel("Horas semanales", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[3]->setRange(4, MAX_WEEKLY_HOURS);
+    spinboxes[2]->setRange(4, MAX_WEEKLY_HOURS);
+    spinboxes[2]->setSingleStep(2);
 
     labels.push_back(new QLabel("Horas maximas diarias", this));
     spinboxes.push_back(new QSpinBox(this));
-    spinboxes[4]->setRange(2, MAX_DAILY_HOURS);
+    spinboxes[3]->setRange(2, MAX_DAILY_HOURS);
+    spinboxes[3]->setSingleStep(2);
 
     std::vector<QHBoxLayout*> layouts;
     layouts.push_back(new QHBoxLayout());
@@ -96,13 +98,13 @@ void CourseForm::processForm()
     uint data3 = static_cast<uint>(spinboxes[1]->value());
     cours->set_num_credits(data3);
 
-    uint data4 = static_cast<uint>(spinboxes[2]->value());
-    cours->set_num_sections(data4);
+    // uint data4 = static_cast<uint>(spinboxes[2]->value());
+    // cours->set_num_sections(data4);
 
-    uint data5 = static_cast<uint>(spinboxes[3]->value());
+    uint data5 = static_cast<uint>(spinboxes[2]->value());
     cours->set_num_weekly_hours(data5);
 
-    uint data6 = static_cast<uint>(spinboxes[4]->value());
+    uint data6 = static_cast<uint>(spinboxes[3]->value());
     cours->set_max_daily_hours(data6);
 
     if (data1.isEmpty())

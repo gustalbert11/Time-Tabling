@@ -10,13 +10,13 @@ public:
     Professor();
     Professor(const Professor&);
 
-    const std::string &get_id() const;
-    const std::string &get_name() const;
-    const uint &get_num_sections() const;
-    const Designar::ArraySet<Section*> &get_sections() const;
-    const uint &get_max_daily_hours() const;
-    const uint &get_max_consecutive_hours() const;
-    Preference* get_preference() const;
+    std::string get_id() const;
+    std::string get_name() const;
+    uint get_num_sections() const;
+    const Designar::ArraySet<const Section*> &get_sections() const;
+    uint get_max_daily_hours() const;
+    uint get_max_consecutive_hours() const;
+    const Preference *get_preference() const;
 
     bool set_name(const std::string &name);
     bool set_num_sections(const uint &num_sections);
@@ -30,7 +30,7 @@ private:
     std::string id;
     std::string name;
     uint num_sections;
-    Designar::ArraySet<Section*> sections;
+    Designar::ArraySet<const Section*> sections;
     uint max_daily_hours;
     uint max_consecutive_hours;
     std::unique_ptr<Preference> preference;

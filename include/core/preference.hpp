@@ -53,8 +53,8 @@ public:
     Preference(const Preference&) = default;
     Preference(Preference&&) = default;
 
-    const std::string &get_description() const;
-    const PreferenceType &get_type() const;
+    std::string get_description() const;
+    PreferenceType get_type() const;
     const Designar::ArraySet<Days> &get_days() const;
     const Designar::ArraySet<std::pair<uint, uint>> &get_hours() const;
 

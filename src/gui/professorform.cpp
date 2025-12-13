@@ -16,12 +16,12 @@ ProfessorForm::ProfessorForm(QWidget *parent)
     this->setMinimumSize(600, 300);
 
     // Crear los campos de entrada y etiquetas
-    label1 = new QLabel("Nombre del Profesor:", this);
+    label1 = new QLabel("Nombre: ", this);
     lineEdit1 = new QLineEdit(this);
 
-    label2 = new QLabel("Numero de Secciones:", this);
-    spinbox1 = new QSpinBox(this);
-    spinbox1->setRange(1,PROF_MAX_NUM_SECTIONS);
+    // label2 = new QLabel("Numero de Secciones:", this);
+    // spinbox1 = new QSpinBox(this);
+    // spinbox1->setRange(1,PROF_MAX_NUM_SECTIONS);
 
     label3 = new QLabel("Maximo de horas diarias:", this);
     spinbox2 = new QSpinBox(this);
@@ -31,7 +31,7 @@ ProfessorForm::ProfessorForm(QWidget *parent)
     spinbox3 = new QSpinBox(this);
     spinbox3->setRange(2,MAX_CONSECUTIVE_HOURS);
 
-    labelp = new QLabel("PREFERENCIAS\n", this);
+    labelp = new QLabel("Preferencias\n", this);
 
     label5 = new QLabel("Descripcion:", this);
     lineEdit5 = new QLineEdit(this);
@@ -51,7 +51,7 @@ ProfessorForm::ProfessorForm(QWidget *parent)
     checkBoxes.push_back(new QCheckBox("THURSDAY",this));
     checkBoxes.push_back(new QCheckBox("FRIDAY",this));
 
-    label7 = new QLabel("Hora de Incio - Hora final (Formato 24h)");
+    label7 = new QLabel("Hora de Inicio - Hora Final (Formato 24h)");
     spinbox4 = new QSpinBox(this);
     spinbox4->setRange(MIN_START_HOUR, MAX_END_HOUR - 2);
     spinbox5 = new QSpinBox(this);
@@ -62,9 +62,9 @@ ProfessorForm::ProfessorForm(QWidget *parent)
     layout1->addWidget(label1);
     layout1->addWidget(lineEdit1);
 
-    QHBoxLayout *layout2 = new QHBoxLayout();
-    layout2->addWidget(label2);
-    layout2->addWidget(spinbox1);
+    // QHBoxLayout *layout2 = new QHBoxLayout();
+    // layout2->addWidget(label2);
+    // layout2->addWidget(spinbox1);
 
     QHBoxLayout *layout3 = new QHBoxLayout();
     layout3->addWidget(label3);
@@ -109,7 +109,7 @@ ProfessorForm::ProfessorForm(QWidget *parent)
 
     // Agregar los layouts al layout principal
     mainLayout->addLayout(layout1);
-    mainLayout->addLayout(layout2);
+    //mainLayout->addLayout(layout2);
     mainLayout->addLayout(layout3);
     mainLayout->addLayout(layout4);
     mainLayout->addLayout(layoutp);
@@ -132,11 +132,10 @@ void ProfessorForm::setupConnections()
 {
     // Conectar Enter en cada campo
     connect(lineEdit1, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
-    //connect(spinbox1, &QSpinBox::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
-    //connect(lineEdit3, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
-    //connect(lineEdit4, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
     connect(lineEdit5, &QLineEdit::returnPressed, this, &ProfessorForm::onFieldReturnPressed);
     connect(combox1, &QComboBox::currentTextChanged, this, &ProfessorForm::combox1_current_text_changed);
+    connect(spinbox4, QOverload<int>::of(&QSpinBox::valueChanged), this, &ProfessorForm::start_hour_spin_box_changed);
+    connect(spinbox5, QOverload<int>::of(&QSpinBox::valueChanged), this, &ProfessorForm::end_hour_spin_box_changed);
 
     connect(submitButton, &QPushButton::clicked, this, &ProfessorForm::onSubmit);
     submitButton->setDefault(true);
@@ -182,6 +181,28 @@ void ProfessorForm::combox1_current_text_changed()
     }
 }
 
+void ProfessorForm::start_hour_spin_box_changed()
+{
+    int start_hour = spinbox4->value();
+    int min_end_hour = start_hour + 2;
+    spinbox5->setMinimum(min_end_hour);
+    if (spinbox5->value() < min_end_hour) 
+    {
+        spinbox5->setValue(min_end_hour);
+    }
+}
+
+void ProfessorForm::end_hour_spin_box_changed()
+{
+    int end_hour = spinbox5->value();
+    int max_start_hour = end_hour - 2;
+    spinbox4->setMaximum(max_start_hour);
+    if (spinbox4->value() > max_start_hour) 
+    {
+        spinbox4->setValue(max_start_hour);
+    }
+}
+
 void ProfessorForm::onSubmit()
 {
     processForm();
@@ -195,8 +216,8 @@ void ProfessorForm::processForm()
     QString data1 = lineEdit1->text();
     prof->set_name(data1.toStdString());
 
-    uint data2 = static_cast<uint>(spinbox1->value());
-    prof->set_num_sections(data2);
+    // uint data2 = static_cast<uint>(spinbox1->value());
+    // prof->set_num_sections(data2);
 
     uint data3 = static_cast<uint>(spinbox2->value());
     prof->set_max_daily_hours(data3);

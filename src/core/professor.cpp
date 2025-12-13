@@ -23,31 +23,31 @@ Professor::Professor(const Professor& other)
     //set_preference(std::make_unique<Preference>(*other.preference));
 }
 
-const std::string& Professor::get_id() const 
+std::string Professor::get_id() const 
 { 
     return id; 
 }
-const std::string& Professor::get_name() const 
+std::string Professor::get_name() const 
 { 
     return name; 
 }
-const uint& Professor::get_num_sections() const 
+uint Professor::get_num_sections() const 
 { 
-    return num_sections; 
+    return sections.size(); 
 }
-const Designar::ArraySet<Section*>& Professor::get_sections() const 
+const Designar::ArraySet<const Section*>& Professor::get_sections() const 
 { 
     return sections; 
 }
-const uint& Professor::get_max_daily_hours() const 
+uint Professor::get_max_daily_hours() const 
 { 
     return max_daily_hours; 
 }
-const uint& Professor::get_max_consecutive_hours() const 
+uint Professor::get_max_consecutive_hours() const 
 { 
     return max_consecutive_hours; 
 }
-Preference* Professor::get_preference() const 
+const Preference* Professor::get_preference() const 
 { 
     return preference.get(); 
 }
@@ -105,8 +105,7 @@ bool Professor::set_preference(std::unique_ptr<Preference> preference)
 
 bool Professor::add_section(Section* section)
 {
-    if (!section || 
-        sections.size() == num_sections || 
+    if (!section ||
         sections.contains(section))
     {
         return false;

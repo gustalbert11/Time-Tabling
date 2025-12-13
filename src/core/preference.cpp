@@ -1,10 +1,10 @@
 #include "core/preference.hpp"
 
-const std::string& Preference::get_description() const 
+std::string Preference::get_description() const 
 { 
     return description; 
 }
-const PreferenceType& Preference::get_type() const 
+PreferenceType Preference::get_type() const 
 { 
     return type; 
 }
@@ -37,15 +37,13 @@ bool Preference::set_type(const PreferenceType &type)
     return true;
 }
 
-// En preference.cpp - verificar implementaciones
 bool Preference::add_day(const Days &day)
 {
-    if (day < Days::MONDAY || day > Days::FRIDAY) {
-        return false;
-    }
-    
-    // CORREGIR: La condición estaba incorrecta
-    if (type != DAYS && type != DAYS_HOURS) {
+    if (day < Days::MONDAY || 
+        day > Days::FRIDAY ||
+        (type != DAYS && 
+        type != DAYS_HOURS)) 
+    {
         return false;
     }
     
@@ -55,17 +53,18 @@ bool Preference::add_day(const Days &day)
 
 bool Preference::add_hour(const uint &start_hour, const uint &end_hour)
 {
-    if (start_hour >= end_hour || end_hour > MAX_END_HOUR) {
-        return false;
-    }
-    
-    // CORREGIR: La condición estaba incorrecta  
-    if (type != HOURS && type != DAYS_HOURS) {
+    if (start_hour < MIN_START_HOUR ||
+        start_hour >= end_hour || 
+        end_hour > MAX_END_HOUR ||
+        (type != HOURS && 
+        type != DAYS_HOURS)) 
+    {
         return false;
     }
 
     auto hours_interval = std::make_pair(start_hour, end_hour);
-    if (time_slots.second.contains(hours_interval)) {
+    if (time_slots.second.contains(hours_interval)) 
+    {
         return false;
     }
     

@@ -1,5 +1,5 @@
 #include "flow/flow_network.hpp"
-#include <unordered_set>
+
 FlowNetwork *fn_ptr_instance = FlowNetwork::get_ptr_instance();
 FlowNetwork &fn_instance = FlowNetwork::get_instance();
 
@@ -170,7 +170,7 @@ void FlowNetwork::create_nodes()
                                       "_D" + std::to_string(day_int) +
                                       "_H" + std::to_string(start_hour) + "-" + std::to_string(end_hour);
 
-                auto level_node = std::make_shared<FlowNode>(node_id, FlowNodeType::LEVEL_TIME_SLOT);
+                auto level_node = std::make_shared<FlowNode>(node_id, FlowNodeType::LEVEL_TIME);
                 add_node(level_node);
             }
         }
@@ -224,11 +224,11 @@ void FlowNetwork::create_arcs()
         if (!demand_info)
             continue;
 
-        Section *section = demand_info->get_section();
+        auto section = demand_info->get_section();
         if (!section)
             continue;
 
-        Professor *professor = section->get_professor();
+        auto professor = section->get_professor();
         if (!professor)
             continue;
 
@@ -275,9 +275,9 @@ void FlowNetwork::create_arcs()
             if (!prof_time_info)
                 continue;
 
-            Professor *professor = prof_time_info->get_professor();
+            auto professor = prof_time_info->get_professor();
             Days prof_day = prof_time_info->get_day();
-            auto prof_hours = prof_time_info->get_hour_interval();
+            auto prof_hours = prof_time_info->get_hours_interval();
 
 
             for (const auto &sect_pair : section_time_nodes)
@@ -288,13 +288,13 @@ void FlowNetwork::create_arcs()
                     if (!sect_time_info)
                         continue;
 
-                    Section *section = sect_time_info->get_section();
+                    auto section = sect_time_info->get_section();
                     if (!section)
                         continue;
 
                     
                     if (sect_time_info->get_day() == prof_day &&
-                        sect_time_info->get_hour_interval() == prof_hours &&
+                        sect_time_info->get_hours_interval() == prof_hours &&
                         section->get_professor() == professor)
                     {
                         uint cost = calculate_preference_cost(
@@ -324,7 +324,7 @@ void FlowNetwork::create_arcs()
         auto course = section->get_course();
         uint level = course->get_level();
         Days day = sect_time->get_day();
-        auto hours = sect_time->get_hour_interval();
+        auto hours = sect_time->get_hours_interval();
 
         std::string level_node_id = "LEVEL_" + std::to_string(level) +
                                     "_D" + std::to_string(static_cast<int>(day)) +
@@ -343,7 +343,7 @@ void FlowNetwork::create_arcs()
     for (const auto &pair : graph_node_map)
     {
         auto node_info = pair.second->get_info();
-        if (!node_info || node_info->get_type() != FlowNodeType::LEVEL_TIME_SLOT)
+        if (!node_info || node_info->get_type() != FlowNodeType::LEVEL_TIME)
             continue;
 
         network.insert_arc(pair.second, sink, ArcData(1, 0));
@@ -361,7 +361,7 @@ void FlowNetwork::create_network()
     create_arcs();
 }
 
-uint FlowNetwork::calculate_preference_cost(Professor *professor, Days day, uint start_hour, uint end_hour, Section *current_section)
+uint FlowNetwork::calculate_preference_cost(const Professor *professor, Days day, uint start_hour, uint end_hour, const Section *current_section)
 {
     uint cost = 0;
 
@@ -415,14 +415,14 @@ uint FlowNetwork::calculate_preference_cost(Professor *professor, Days day, uint
     return cost;
 }
 
-uint FlowNetwork::calculate_collision_penalty(Section *current_section, Days day, uint start_hour, uint end_hour)
+uint FlowNetwork::calculate_collision_penalty(const Section *current_section, Days day, uint start_hour, uint end_hour)
 {
     if (!current_section || !current_section->get_course())
     {
         return 0;
     }
 
-    Course *current_course = current_section->get_course();
+    auto current_course = current_section->get_course();
     uint current_level = current_course->get_level();
     uint collision_count = 0;
 
@@ -436,7 +436,7 @@ uint FlowNetwork::calculate_collision_penalty(Section *current_section, Days day
             continue;
         }
 
-        Course *other_course = other_section->get_course();
+        auto other_course = other_section->get_course();
 
        
         if (other_course->get_level() != current_level)
@@ -719,8 +719,8 @@ void FlowNetwork::extract_schedule()
                     entry.course_name = sect_time->get_section()->get_course()->get_name();
                     entry.section_id = sect_time->get_section()->get_id();
                     entry.day = prof_time->get_day();
-                    entry.start_hour = prof_time->get_hour_interval().first;
-                    entry.end_hour = prof_time->get_hour_interval().second;
+                    entry.start_hour = prof_time->get_hours_interval().first;
+                    entry.end_hour = prof_time->get_hours_interval().second;
                     entry.cost = arc->get_info().cost;
                     
                     final_schedule.push_back(entry);
