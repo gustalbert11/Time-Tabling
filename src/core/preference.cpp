@@ -1,5 +1,12 @@
 #include "core/preference.hpp"
 
+Preference::Preference(const std::string& description,
+                       const PreferenceType& type)
+{
+    set_description(description);
+    set_type(type);
+}
+
 std::string Preference::get_description() const 
 { 
     return description; 
@@ -46,7 +53,6 @@ bool Preference::add_day(const Days &day)
     {
         return false;
     }
-    
     time_slots.first.append(day);
     return true;
 }

@@ -2,11 +2,12 @@
 
 uint Section::num_sections = 0;
 
-Section::Section()
-: professor(nullptr),
-  course(nullptr)
+Section::Section(Professor *professor,
+                Course *course)
 {
     set_id();
+    set_professor(professor);
+    set_course(course);
 }
 Section::Section(const Section& other)
 : id(other.id),

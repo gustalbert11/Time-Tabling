@@ -7,7 +7,11 @@ class Section;
 class Course
 {
 public:
-    Course();
+    Course(const std::string& name = "",
+           const uint& level = MAX_NUM_LEVELS,
+           const uint& num_credits = MAX_NUM_CREDITS,
+           const uint& num_weekly_hours = MAX_WEEKLY_HOURS,
+           const uint& max_daily_hours = MAX_DAILY_HOURS);
     Course(const Course&);
 
     std::string get_id() const;

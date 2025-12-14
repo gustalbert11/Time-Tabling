@@ -2,18 +2,19 @@
 
 uint Course::num_courses = 0;
 
-Course::Course()
-: name(""),
-  level(MAX_NUM_LEVELS),
-  num_credits(MAX_NUM_CREDITS),
-  num_sections(COURSE_MAX_NUM_SECTIONS),
-  sections(COURSE_MAX_NUM_SECTIONS),
-  num_weekly_hours(MAX_WEEKLY_HOURS),
-  max_daily_hours(MAX_DAILY_HOURS)
+Course::Course(const std::string& name,
+                 const uint& level,
+                 const uint& num_credits,
+                 const uint& num_weekly_hours,
+                 const uint& max_daily_hours)
 {
     set_id();
+    set_name(name);
+    set_level(level);
+    set_num_credits(num_credits);
+    set_num_weekly_hours(num_weekly_hours);
+    set_max_daily_hours(max_daily_hours);
 }
-
 Course::Course(const Course& other)
 : id(id),
   sections(other.sections)
@@ -122,7 +123,8 @@ bool Course::set_max_daily_hours(const uint &max_daily_hours)
 bool Course::add_section(Section* section)
 {
     if (!section ||
-        sections.contains(section))
+        sections.contains(section) ||
+        sections.size() >= COURSE_MAX_NUM_SECTIONS)
     {
         return false;
     }

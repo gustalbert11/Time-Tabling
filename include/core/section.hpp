@@ -8,7 +8,8 @@ class Course;
 class Section
 {
 public:
-    Section();
+    Section(Professor *professor = nullptr,
+            Course *course = nullptr);
     Section(const Section&);
 
     std::string get_id() const;

@@ -6,6 +6,7 @@
 #include "section.hpp"
 #include <unordered_map>
 
+class QString;
 class QJsonObject;
 
 class DataManager : public Designar::Singleton<DataManager>
@@ -27,12 +28,23 @@ public:
     bool add_professor(std::unique_ptr<Professor> professor);   
     bool add_course(std::unique_ptr<Course> course);
     bool add_section(std::unique_ptr<Section> section);
+
+    void remove_professor(std::string id);
+    void remove_course(std::string id);
+    void remove_section(std::string id);
+
+    bool import_professors_from_csv(const std::string& filename, bool update_existing = false);
+    bool export_professors_to_csv(const std::string& filename) const;
+
+    bool import_courses_from_csv(const std::string& filename, bool update_existing = false);
+    bool export_courses_to_csv(const std::string& filename) const;
+
+    bool import_sections_from_csv(const std::string& filename, bool update_existing = false);
+    bool export_sections_to_csv(const std::string& filename) const;
     
     bool import_from_json(const std::string& filename);
     //bool export_to_json(const std::string& filename) const;
     
-    void remove_professor(std::string id);
-    void remove_course(std::string id);
     void clear_all_data();
 
 protected:
@@ -42,6 +54,12 @@ protected:
     std::unordered_map<std::string, std::unique_ptr<Section>> sections;
 
 private:
+    std::string days_to_string(const Designar::ArraySet<Days>& days) const;
+    Designar::ArraySet<Days> string_to_days(const QString& str) const;
+    
+    std::string hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>>& intervals) const;
+    Designar::ArraySet<std::pair<uint, uint>> string_to_hours_interval(const QString& str) const;
+
     std::unique_ptr<Preference> process_preference_from_json(const QJsonObject& prefObj);
 };
 

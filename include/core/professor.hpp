@@ -7,7 +7,10 @@ class Section;
 class Professor
 {
 public:
-    Professor();
+    Professor(const std::string& name = "",
+              const uint& max_daily_hours = MAX_DAILY_HOURS,
+              const uint& max_consecutive_hours = MAX_CONSECUTIVE_HOURS,
+              std::unique_ptr<Preference> preference = nullptr);
     Professor(const Professor&);
 
     std::string get_id() const;

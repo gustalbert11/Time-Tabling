@@ -82,11 +82,11 @@ set(UI_FILES
 )
 
 set(SOURCES_CORE
-    src/core/data_manager.cpp
-    src/core/course.cpp
-    src/core/professor.cpp
-    src/core/section.cpp
     src/core/preference.cpp
+    src/core/professor.cpp
+    src/core/course.cpp
+    src/core/section.cpp
+    src/core/data_manager.cpp
 )
 
 set(SOURCES_FLOW
@@ -98,11 +98,11 @@ set(SOURCES_FLOW
 )
 
 set(HEADERS_PUBLIC
-    include/core/data_manager.hpp
-    include/core/course.hpp
-    include/core/professor.hpp
-    include/core/section.hpp
     include/core/preference.hpp
+    include/core/professor.hpp
+    include/core/course.hpp
+    include/core/section.hpp
+    include/core/data_manager.hpp
     include/flow/flow_node.hpp
     include/flow/section_demand_node.hpp
     include/flow/professor_time_node.hpp

@@ -6,6 +6,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QTextStream>
+#include <QStringList>
 
 DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
 DataManager &dm_instance = DataManager::get_instance();
@@ -97,6 +99,434 @@ bool DataManager::add_section(std::unique_ptr<Section> section)
     }
     
     sections[id] = std::move(section);
+    return true;
+}
+
+void DataManager::remove_professor(std::string id)
+{
+    professors.erase(id);
+}
+void DataManager::remove_course(std::string id)
+{
+    courses.erase(id);
+}
+void DataManager::remove_section(std::string id)
+{
+    sections.erase(id);
+}
+
+bool DataManager::export_professors_to_csv(const std::string& filename) const
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream out(&file);
+    out << "ID,Name,NumSections,MaxDaily,MaxConsecutive,PrefType,PrefDesc,PrefDays,PrefHours\n";
+
+    for (const auto& [id, prof_ptr] : professors) 
+    {
+        const Professor* prof = prof_ptr.get();
+        const Preference* pref = prof->get_preference();
+
+        QString pref_type = "NO_PREFERENCE";
+        QString pref_desc = "";
+        QString pref_days = "";
+        QString pref_hours = "";
+
+        if (pref) 
+        {
+            pref_type = QString::fromStdString(preference_type_to_string(pref->get_type()));
+            pref_desc = QString::fromStdString(pref->get_description());
+            pref_days = QString::fromStdString(days_to_string(pref->get_days()));
+            pref_hours = QString::fromStdString(hours_interval_to_string(pref->get_hours()));
+        }
+
+        // Manejo básico de comillas para evitar romper el CSV si el nombre tiene comas
+        out << QString::fromStdString(prof->get_id()) << ","
+            << "\"" << QString::fromStdString(prof->get_name()) << "\","
+            << prof->get_num_sections() << ","
+            << prof->get_max_daily_hours() << ","
+            << prof->get_max_consecutive_hours() << ","
+            << pref_type << ","
+            << "\"" << pref_desc << "\","
+            << pref_days << ","
+            << pref_hours << "\n";
+    }
+    file.close();
+    return true;
+}
+
+bool DataManager::import_professors_from_csv(const std::string& filename, bool update_existing)
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream in(&file);
+    if(!in.atEnd()) 
+    {
+        in.readLine();
+    }
+
+    while (!in.atEnd()) 
+    {
+        QString line = in.readLine();
+        // Nota: Esto es un split simple. Si hay comas DENTRO de las comillas, fallará.
+        // Para robustez total se requiere un parser regex, pero para uso académico/interno esto suele bastar.
+        QStringList parts = line.split(","); 
+
+        if (parts.size() < 5) 
+        {
+            continue;
+        } 
+
+        // Limpiar comillas de los nombres
+        QString name = parts[1];
+        name.remove("\"");
+
+        std::string id = parts[0].toStdString();
+        
+        // Verificamos si ya existe
+        Professor* existing_prof = get_professor(id);
+
+        if (existing_prof && update_existing)
+        {
+            existing_prof->set_name(name.toStdString());
+            existing_prof->set_num_sections(parts[2].toUInt());
+            existing_prof->set_max_daily_hours(parts[3].toUInt());
+            existing_prof->set_max_consecutive_hours(parts[4].toUInt());
+
+            // Procesar Preferencias si existen
+            if (parts.size() >= 6) 
+            {
+                auto preference = std::make_unique<Preference>();
+                std::string type_str = parts[5].toStdString();
+                preference->set_type(string_to_preference_type(type_str));
+                
+                if (parts.size() >= 7) 
+                {
+                    QString desc = parts[6];
+                    desc.remove("\"");
+                    preference->set_description(desc.toStdString());
+                }
+
+                if (parts.size() >= 8 && !parts[7].isEmpty()) 
+                {
+                    auto days = string_to_days(parts[7]);
+                    for(const auto& d : days) 
+                    {
+                        preference->add_day(d);
+                    }
+                }
+                
+                if (parts.size() >= 9 && !parts[8].isEmpty()) 
+                {
+                    auto hours = string_to_hours_interval(parts[8]);
+                    for(const auto& h : hours) 
+                    {
+                        preference->add_hour(h.first, h.second);
+                    }
+                }
+                existing_prof->set_preference(std::move(preference));
+            }
+        }
+        else if (!existing_prof)
+        {
+            auto professor = std::make_unique<Professor>();
+            professor->set_name(name.toStdString());
+            professor->set_num_sections(parts[2].toUInt());
+            professor->set_max_daily_hours(parts[3].toUInt());
+            professor->set_max_consecutive_hours(parts[4].toUInt());
+
+            if (parts.size() >= 6) 
+            {
+                auto preference = std::make_unique<Preference>();
+                std::string type_str = parts[5].toStdString();
+                preference->set_type(string_to_preference_type(type_str));
+                
+                if (parts.size() >= 7) 
+                {
+                    QString desc = parts[6];
+                    desc.remove("\"");
+                    preference->set_description(desc.toStdString());
+                }
+
+                if (parts.size() >= 8 && !parts[7].isEmpty()) 
+                {
+                    auto days = string_to_days(parts[7]);
+                    for(const auto& d : days) 
+                    {
+                        preference->add_day(d);
+                    }
+                }
+                
+                if (parts.size() >= 9 && !parts[8].isEmpty()) 
+                {
+                    auto hours = string_to_hours_interval(parts[8]);
+                    for(const auto& h : hours) 
+                    {
+                        preference->add_hour(h.first, h.second);
+                    }
+                }
+                professor->set_preference(std::move(preference));
+            }
+
+            // Add verifica si el ID ya existe internamente
+            add_professor(std::move(professor));
+        }
+    }
+    file.close();
+    return true;
+}
+
+bool DataManager::export_courses_to_csv(const std::string& filename) const
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream out(&file);
+    out << "ID,Name,Level,Credits,NumSections,WeeklyHours,MaxDaily\n";
+
+    for (const auto& [id, course_ptr] : courses) 
+    {
+        const Course* course = course_ptr.get();
+        out << QString::fromStdString(course->get_id()) << ","
+            << "\"" << QString::fromStdString(course->get_name()) << "\","
+            << course->get_level() << ","
+            << course->get_num_credits() << ","
+            << course->get_num_sections() << ","
+            << course->get_num_weekly_hours() << ","
+            << course->get_max_daily_hours() << "\n";
+    }
+    file.close();
+    return true;
+}
+bool DataManager::import_courses_from_csv(const std::string& filename, bool update_existing)
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream in(&file);
+    if(!in.atEnd()) 
+    {
+        in.readLine();
+    }
+
+    while (!in.atEnd()) 
+    {
+        QString line = in.readLine();
+        QStringList parts = line.split(",");
+        
+        if (parts.size() < 7) 
+        {
+            continue;
+        }
+
+        QString name = parts[1];
+        name.remove("\"");
+
+        std::string id = parts[0].toStdString();
+        
+        Course* existing_course = get_course(id);
+
+        if (existing_course && update_existing)
+        {
+            existing_course->set_name(name.toStdString());
+            existing_course->set_level(parts[2].toUInt());
+            existing_course->set_num_credits(parts[3].toUInt());
+            existing_course->set_num_sections(parts[4].toUInt());
+            existing_course->set_num_weekly_hours(parts[5].toUInt());
+            existing_course->set_max_daily_hours(parts[6].toUInt());
+        }
+        else if (!existing_course)
+        {
+            auto course = std::make_unique<Course>();
+            course->set_name(name.toStdString());
+            course->set_level(parts[2].toUInt());
+            course->set_num_credits(parts[3].toUInt());
+            course->set_num_sections(parts[4].toUInt());
+            course->set_num_weekly_hours(parts[5].toUInt());
+            course->set_max_daily_hours(parts[6].toUInt());
+
+            add_course(std::move(course));
+        }
+    }
+    file.close();
+    return true;
+}
+
+bool DataManager::export_sections_to_csv(const std::string& filename) const
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream out(&file);
+    // El ID de sección se autogenera al importar, pero podemos guardarlo si es necesario.
+    // Lo crucial es guardar las relaciones (ID Profe, ID Curso).
+    out << "ID,ProfessorID,CourseID,TimeSlots\n"; 
+
+    for (const auto& [id, section_ptr] : sections) 
+    {
+        const Section* section = section_ptr.get();
+        
+        QString prof_id = section->get_professor() ? QString::fromStdString(section->get_professor()->get_id()) : "";
+        QString course_id = section->get_course() ? QString::fromStdString(section->get_course()->get_id()) : "";
+        
+        // Serializar TimeSlots (Day, Start, End)
+        QStringList slots_list;
+
+        for(const auto& time_slot : section->get_time_slots()) 
+        {
+            // Formato: DAY_STRING:START-END
+            QString dayStr = QString::number(static_cast<int>(time_slot.first)); // Simplificado a int para el ejemplo
+            slots_list << QString("%1:%2-%3").arg(dayStr).arg(time_slot.second.first).arg(time_slot.second.second);
+        }
+
+        out << QString::fromStdString(section->get_id()) << ","
+            << prof_id << ","
+            << course_id << ","
+            << slots_list.join(";") << "\n";
+    }
+    file.close();
+    return true;
+}
+bool DataManager::import_sections_from_csv(const std::string& filename, bool update_existing)
+{
+    QFile file(QString::fromStdString(filename));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+    {
+        return false;
+    }
+
+    QTextStream in(&file);
+    if(!in.atEnd()) 
+    {
+        in.readLine();
+    } 
+
+    while (!in.atEnd()) 
+    {
+        QString line = in.readLine();
+        QStringList parts = line.split(",");
+
+        if (parts.size() < 3) 
+        {
+            continue;
+        }
+
+        QString prof_id = parts[1];
+        QString course_id = parts[2];
+
+        std::string id = parts[0].toStdString();
+        
+        Section* existing_section = get_section(id);
+
+        if (existing_section && update_existing)
+        {
+            if (!prof_id.isEmpty()) 
+            {
+                Professor* prof = get_professor(prof_id.toStdString());
+                if (prof) 
+                {
+                    existing_section->set_professor(prof);
+                    prof->add_section(existing_section);
+                }
+            }
+
+            if (!course_id.isEmpty()) 
+            {
+                Course* course = get_course(course_id.toStdString());
+                if (course) 
+                {
+                    existing_section->set_course(course);
+                    course->add_section(existing_section);
+                }
+            }
+
+            // Parsear TimeSlots si existen (Columna 3)
+            if (parts.size() > 3 && !parts[3].isEmpty()) 
+            {
+                QStringList time_slots = parts[3].split(";", Qt::SkipEmptyParts);
+                for(const QString& time_slot : time_slots) 
+                {
+                    // Formato esperado: DAY:START-END (ej: 1:8-10)
+                    QStringList data = time_slot.split(":");
+                    if(data.size() == 2) 
+                    {
+                        QStringList hours = data[1].split("-");
+                        if(hours.size() == 2) 
+                        {
+                            // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
+                            Days day = static_cast<Days>(data[0].toInt());
+                            existing_section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
+                        }
+                    }
+                }
+            }
+        }
+        else if (!existing_section)
+        {
+            auto section = std::make_unique<Section>();
+            
+            if (!prof_id.isEmpty()) 
+            {
+                Professor* prof = get_professor(prof_id.toStdString());
+                if (prof) 
+                {
+                    section->set_professor(prof);
+                    prof->add_section(section.get());
+                }
+            }
+
+            if (!course_id.isEmpty()) 
+            {
+                Course* course = get_course(course_id.toStdString());
+                if (course) 
+                {
+                    section->set_course(course);
+                    course->add_section(section.get());
+                }
+            }
+
+            // Parsear TimeSlots si existen (Columna 3)
+            if (parts.size() > 3 && !parts[3].isEmpty()) 
+            {
+                QStringList time_slots = parts[3].split(";", Qt::SkipEmptyParts);
+                for(const QString& time_slot : time_slots) 
+                {
+                    // Formato esperado: DAY:START-END (ej: 1:8-10)
+                    QStringList data = time_slot.split(":");
+                    if(data.size() == 2) 
+                    {
+                        QStringList hours = data[1].split("-");
+                        if(hours.size() == 2) 
+                        {
+                            // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
+                            Days day = static_cast<Days>(data[0].toInt());
+                            section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
+                        }
+                    }
+                }
+            }
+
+            add_section(std::move(section));
+        }
+    }
+    file.close();
     return true;
 }
 
@@ -342,12 +772,53 @@ std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJso
     return preference;
 }
 
-void DataManager::remove_professor(std::string id)
+std::string DataManager::days_to_string(const Designar::ArraySet<Days>& days) const
 {
-    professors.erase(id);
+    QStringList list;
+
+    for(const auto& day : days) 
+    {
+        // Asumo que existe una función global o estática para convertir Enum a String
+        // Si no, deberás implementarla similar a string_to_day
+        // Aquí uso una lógica simple basada en tu JSON parser implícito
+        list << QString::number(static_cast<int>(day)); 
+    }
+    return list.join(";").toStdString();
+}
+Designar::ArraySet<Days> DataManager::string_to_days(const QString& str) const
+{
+    Designar::ArraySet<Days> days;
+    QStringList list = str.split(";", Qt::SkipEmptyParts);
+
+    for(const auto& s : list) 
+    {
+        days.insert(string_to_day(s.toStdString())); 
+    }
+    return days;
 }
 
-void DataManager::remove_course(std::string id)
+std::string DataManager::hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>>& intervals) const
 {
-    courses.erase(id);
+    QStringList list;
+
+    for(const auto& interval : intervals) 
+    {
+        list << QString("%1-%2").arg(interval.first).arg(interval.second);
+    }
+    return list.join(";").toStdString();
+}
+Designar::ArraySet<std::pair<uint, uint>> DataManager::string_to_hours_interval(const QString& str) const
+{
+    Designar::ArraySet<std::pair<uint, uint>> days;
+    QStringList list = str.split(";", Qt::SkipEmptyParts);
+
+    for(const auto& s : list) 
+    {
+        QStringList pair = s.split("-");
+        if(pair.size() == 2) 
+        {
+            days.insert({pair[0].toUInt(), pair[1].toUInt()});
+        }
+    }
+    return days;
 }

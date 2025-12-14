@@ -2,15 +2,16 @@
 
 uint Professor::num_professors = 0;
 
-Professor::Professor()
-: name(""),
-  num_sections(PROF_MAX_NUM_SECTIONS),
-  sections(PROF_MAX_NUM_SECTIONS),
-  max_daily_hours(MAX_DAILY_HOURS),
-  max_consecutive_hours(MAX_CONSECUTIVE_HOURS),
-  preference(nullptr)
+Professor::Professor(const std::string& name,
+                     const uint& max_daily_hours,
+                     const uint& max_consecutive_hours,
+                     std::unique_ptr<Preference> preference)
 {
     set_id();
+    set_name(name);
+    set_max_daily_hours(max_daily_hours);
+    set_max_consecutive_hours(max_consecutive_hours);
+    set_preference(std::move(preference));
 }
 Professor::Professor(const Professor& other)
 : id(other.id),
@@ -98,7 +99,6 @@ bool Professor::set_preference(std::unique_ptr<Preference> preference)
     {
         return false;
     }
-    
     this->preference = std::move(preference);
     return true;
 }
@@ -106,7 +106,8 @@ bool Professor::set_preference(std::unique_ptr<Preference> preference)
 bool Professor::add_section(Section* section)
 {
     if (!section ||
-        sections.contains(section))
+        sections.contains(section) ||
+        sections.size() >= PROF_MAX_NUM_SECTIONS)
     {
         return false;
     }

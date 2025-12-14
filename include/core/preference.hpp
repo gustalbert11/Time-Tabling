@@ -49,7 +49,8 @@ inline PreferenceType string_to_preference_type(const std::string& str)
 class Preference
 {
 public:
-    Preference() = default;
+    Preference(const std::string& description = "NO PREFERENCE",
+               const PreferenceType& type = NO_PREFERENCE);
     Preference(const Preference&) = default;
     Preference(Preference&&) = default;
 
