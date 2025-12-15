@@ -5,8 +5,9 @@
 #include "sectionwindow.h"
 #include <QTableWidget>
 #include <QMessageBox>
+// [cite_start]#include <QMenu> //[cite: 1] Necesario para el menú desplegable
+#include <QMenu>
 #include "flow/flow_network.hpp"
-#include "core/data_manager.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,28 +25,25 @@ public:
 
 private slots:
     void avanzar_ventana();  // Cambia el nombre del slot
-
     void volver_ventana();
 
     void import_json();
+    void import_professors_csv();
+    void import_courses_csv();
+    void import_sections_csv();
 
     void show_professors();
-
-    void open_prof_form();
-
-    void on_course_window_closed();
-
-    void on_professor_window_closed();
-
-    void on_section_window_closed();
-
     void show_courses();
-
+    
     void update_table();
 
+    void open_prof_form();
     void open_course_form();
-
     void open_section_form();
+
+    void on_professor_window_closed();
+    void on_course_window_closed();
+    void on_section_window_closed();
 
     void onItemClicked(QTableWidgetItem *item);
 
@@ -57,5 +55,7 @@ private:
     CourseForm* course_form = nullptr;
     SectionWindow* section_window = nullptr;
     bool showing_professors = true;
+
+    QMenu *import_menu = nullptr;
 };
 #endif // MAINWINDOW_H

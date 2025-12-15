@@ -22,7 +22,7 @@ Course::Course(const Course& other)
     set_name(other.name);
     set_level(other.level);
     set_num_credits(other.num_credits);
-    set_num_sections(other.num_sections);
+    //set_num_sections(other.num_sections);
     set_num_weekly_hours(other.num_weekly_hours);
     set_max_daily_hours(other.max_daily_hours);
 }
@@ -44,8 +44,9 @@ uint Course::get_num_credits() const
     return num_credits;
 }
 uint Course::get_num_sections() const 
-{ 
-    return sections.size(); 
+{  
+    //return num_sections;
+    return sections.size();
 }
 const Designar::ArraySet<const Section*>& Course::get_sections() const 
 { 
@@ -89,16 +90,16 @@ bool Course::set_num_credits(const uint &num_credits)
     this->num_credits = num_credits;
     return true;
 }
-bool Course::set_num_sections(const uint &num_sections)
-{
-    if (num_sections < 1 || 
-        num_sections > COURSE_MAX_NUM_SECTIONS)
-    {
-        return false;
-    }
-    this->num_sections = num_sections;
-    return true;
-}
+// bool Course::set_num_sections(const uint &num_sections)
+// {
+//     if (num_sections < 1 || 
+//         num_sections > COURSE_MAX_NUM_SECTIONS)
+//     {
+//         return false;
+//     }
+//     this->num_sections = num_sections;
+//     return true;
+// }
 bool Course::set_num_weekly_hours(const uint &num_weekly_hours)
 {
     if (num_weekly_hours < 4 || 

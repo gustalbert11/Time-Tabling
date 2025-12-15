@@ -22,7 +22,7 @@ public:
     const Preference *get_preference() const;
 
     bool set_name(const std::string &name);
-    bool set_num_sections(const uint &num_sections);
+    //bool set_num_sections(const uint &num_sections);
     bool set_max_daily_hours(const uint &max_daily_hours);
     bool set_max_consecutive_hours(const uint &max_consecutive_hours);
     bool set_preference(std::unique_ptr<Preference> preference);
@@ -32,7 +32,7 @@ public:
 private:
     std::string id;
     std::string name;
-    uint num_sections;
+    //uint num_sections;
     Designar::ArraySet<const Section*> sections;
     uint max_daily_hours;
     uint max_consecutive_hours;

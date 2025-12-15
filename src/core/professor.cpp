@@ -18,7 +18,7 @@ Professor::Professor(const Professor& other)
   sections(other.sections)
 {
     set_name(other.name);
-    set_num_sections(other.num_sections);
+    //set_num_sections(other.num_sections);
     set_max_daily_hours(other.max_daily_hours);
     set_max_consecutive_hours(other.max_consecutive_hours);
     //set_preference(std::make_unique<Preference>(*other.preference));
@@ -33,8 +33,9 @@ std::string Professor::get_name() const
     return name; 
 }
 uint Professor::get_num_sections() const 
-{ 
-    return sections.size(); 
+{  
+    //return num_sections;
+    return sections.size();
 }
 const Designar::ArraySet<const Section*>& Professor::get_sections() const 
 { 
@@ -62,16 +63,16 @@ bool Professor::set_name(const std::string &name)
     this->name = name;
     return true;
 }
-bool Professor::set_num_sections(const uint &num_sections)
-{
-    if (num_sections < 1 || 
-        num_sections > PROF_MAX_NUM_SECTIONS)
-    {
-        return false;
-    }
-    this->num_sections = num_sections;
-    return true;
-}
+// bool Professor::set_num_sections(const uint &num_sections)
+// {
+//     if (num_sections < 1 || 
+//         num_sections > PROF_MAX_NUM_SECTIONS)
+//     {
+//         return false;
+//     }
+//     this->num_sections = num_sections;
+//     return true;
+// }
 bool Professor::set_max_daily_hours(const uint &max_daily_hours)
 {
     if (max_daily_hours < 2 || 
