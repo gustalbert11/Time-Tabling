@@ -43,7 +43,7 @@ public:
     bool export_sections_to_csv(const std::string& filename) const;
     
     bool import_from_json(const std::string& filename);
-    //bool export_to_json(const std::string& filename) const;
+    bool export_to_json(const std::string& filename) const;
     
     void clear_all_data();
 
@@ -60,7 +60,7 @@ private:
     std::string hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>>& intervals) const;
     Designar::ArraySet<std::pair<uint, uint>> string_to_hours_interval(const QString& str) const;
 
-    std::unique_ptr<Preference> process_preference_from_json(const QJsonObject& prefObj);
+    std::unique_ptr<Preference> process_preference_from_json(const QJsonObject& pref_obj);
 };
 
 extern DataManager *dm_ptr_instance;
