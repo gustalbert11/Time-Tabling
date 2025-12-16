@@ -7,7 +7,7 @@ class SectionTimeNode : public FlowNode
 public:
     SectionTimeNode(std::string id, Section* section, Days day, uint start_hour, uint end_hour);
 
-    const Section* get_section() const;
+    Section* get_section() const;
     Days get_day() const;
     std::pair<uint, uint> get_hours_interval() const;
 

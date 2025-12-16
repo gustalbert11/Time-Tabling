@@ -8,7 +8,7 @@ SectionTimeNode::SectionTimeNode(std::string id, Section* section, Days day, uin
     set_hours_interval(start_hour, end_hour);
 }
 
-const Section* SectionTimeNode::get_section() const
+Section* SectionTimeNode::get_section() const
 {
     return section;
 }

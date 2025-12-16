@@ -8,7 +8,7 @@ ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days 
     set_hours_interval(start_hour, end_hour);
 }
 
-const Professor* ProfessorTimeNode::get_professor() const
+Professor* ProfessorTimeNode::get_professor() const
 {
     return professor;
 }

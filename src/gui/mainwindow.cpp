@@ -40,9 +40,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget->setCurrentIndex(0);
 
     // CONEXIÓN MANUAL
-    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::avanzar_ventana);
+    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::go_to_next_window);
 
-    connect(ui->backButton, &QPushButton::clicked, this, &MainWindow::volver_ventana);
+    connect(ui->backButton, &QPushButton::clicked, this, &MainWindow::go_to_previous_window);
 
     //connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::import_json);
 
@@ -129,14 +129,14 @@ void MainWindow::create_schedule()
     out.close(); // opcional, se cierra solo
 }
 
-void MainWindow::avanzar_ventana()
+void MainWindow::go_to_next_window()
 {
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it + 1);
     dm_instance.clear_all_data();
 }
 
-void MainWindow::volver_ventana()
+void MainWindow::go_to_previous_window()
 {
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it - 1);
@@ -244,7 +244,7 @@ void MainWindow::import_json()
         return;
     }
 
-    bool ok = dm_instance.import_from_json(filename.toStdString());
+    bool ok = dm_instance.import_from_json(filename.toStdString(), true);
 
     if (ok) 
     {

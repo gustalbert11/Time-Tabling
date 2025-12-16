@@ -37,7 +37,7 @@ uint Professor::get_num_sections() const
     //return num_sections;
     return sections.size();
 }
-const Designar::ArraySet<const Section*>& Professor::get_sections() const 
+const Designar::ArraySet<Section*>& Professor::get_sections() const 
 { 
     return sections; 
 }

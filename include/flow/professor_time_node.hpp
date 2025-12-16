@@ -8,7 +8,7 @@ class ProfessorTimeNode : public FlowNode
 public:
     ProfessorTimeNode(std::string id, Professor* professor, Days day, uint start_hour, uint end_hour);
 
-    const Professor* get_professor() const;
+    Professor* get_professor() const;
     Days get_day() const;
     std::pair<uint, uint> get_hours_interval() const;
 

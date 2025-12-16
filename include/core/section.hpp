@@ -13,8 +13,8 @@ public:
     Section(const Section&);
 
     std::string get_id() const;
-    const Professor* get_professor() const;
-    const Course* get_course() const;
+    Professor* get_professor() const;
+    Course* get_course() const;
     const Designar::ArraySet<std::pair<Days, std::pair<uint, uint>>> &get_time_slots() const;
 
     bool set_professor(Professor* professor);

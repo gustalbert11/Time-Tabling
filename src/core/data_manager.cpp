@@ -728,7 +728,7 @@ bool DataManager::export_to_json(const std::string& filename) const
 
     return true;
 }
-bool DataManager::import_from_json(const std::string &filename)
+bool DataManager::import_from_json(const std::string &filename, bool update_existing)
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 

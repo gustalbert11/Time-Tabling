@@ -7,7 +7,7 @@ SectionDemandNode::SectionDemandNode(std::string id, Section* section, uint hour
     set_hour_index(hour_index);
 }
 
-const Section* SectionDemandNode::get_section() const
+Section* SectionDemandNode::get_section() const
 {
     return section;
 }

@@ -21,11 +21,11 @@ std::string Section::get_id() const
 { 
     return id; 
 }
-const Professor* Section::get_professor() const 
+Professor* Section::get_professor() const 
 { 
     return professor; 
 }
-const Course* Section::get_course() const 
+Course* Section::get_course() const 
 { 
     return course; 
 }

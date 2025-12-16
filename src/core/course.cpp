@@ -48,7 +48,7 @@ uint Course::get_num_sections() const
     //return num_sections;
     return sections.size();
 }
-const Designar::ArraySet<const Section*>& Course::get_sections() const 
+const Designar::ArraySet<Section*>& Course::get_sections() const 
 { 
     return sections; 
 }

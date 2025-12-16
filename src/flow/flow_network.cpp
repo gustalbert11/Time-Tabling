@@ -224,11 +224,11 @@ void FlowNetwork::create_arcs()
         if (!demand_info)
             continue;
 
-        auto section = demand_info->get_section();
+        Section *section = demand_info->get_section();
         if (!section)
             continue;
 
-        auto professor = section->get_professor();
+        Professor *professor = section->get_professor();
         if (!professor)
             continue;
 
@@ -275,7 +275,7 @@ void FlowNetwork::create_arcs()
             if (!prof_time_info)
                 continue;
 
-            auto professor = prof_time_info->get_professor();
+            Professor *professor = prof_time_info->get_professor();
             Days prof_day = prof_time_info->get_day();
             auto prof_hours = prof_time_info->get_hours_interval();
 
@@ -288,7 +288,7 @@ void FlowNetwork::create_arcs()
                     if (!sect_time_info)
                         continue;
 
-                    auto section = sect_time_info->get_section();
+                    Section *section = sect_time_info->get_section();
                     if (!section)
                         continue;
 
@@ -361,7 +361,7 @@ void FlowNetwork::create_network()
     create_arcs();
 }
 
-uint FlowNetwork::calculate_preference_cost(const Professor *professor, Days day, uint start_hour, uint end_hour, const Section *current_section)
+uint FlowNetwork::calculate_preference_cost(Professor *professor, Days day, uint start_hour, uint end_hour, Section *current_section)
 {
     uint cost = 0;
 
@@ -415,14 +415,14 @@ uint FlowNetwork::calculate_preference_cost(const Professor *professor, Days day
     return cost;
 }
 
-uint FlowNetwork::calculate_collision_penalty(const Section *current_section, Days day, uint start_hour, uint end_hour)
+uint FlowNetwork::calculate_collision_penalty(Section *current_section, Days day, uint start_hour, uint end_hour)
 {
     if (!current_section || !current_section->get_course())
     {
         return 0;
     }
 
-    auto current_course = current_section->get_course();
+    Course *current_course = current_section->get_course();
     uint current_level = current_course->get_level();
     uint collision_count = 0;
 
@@ -436,7 +436,7 @@ uint FlowNetwork::calculate_collision_penalty(const Section *current_section, Da
             continue;
         }
 
-        auto other_course = other_section->get_course();
+        Course *other_course = other_section->get_course();
 
        
         if (other_course->get_level() != current_level)

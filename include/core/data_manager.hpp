@@ -42,7 +42,7 @@ public:
     bool import_sections_from_csv(const std::string& filename, bool update_existing = false);
     bool export_sections_to_csv(const std::string& filename) const;
     
-    bool import_from_json(const std::string& filename);
+    bool import_from_json(const std::string& filename, bool update_existing = false);
     bool export_to_json(const std::string& filename) const;
     
     void clear_all_data();

@@ -24,8 +24,8 @@ public:
     ~MainWindow();
 
 private slots:
-    void avanzar_ventana();  // Cambia el nombre del slot
-    void volver_ventana();
+    void go_to_next_window();
+    void go_to_previous_window();
 
     void import_json();
     void import_professors_csv();

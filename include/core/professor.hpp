@@ -16,7 +16,7 @@ public:
     std::string get_id() const;
     std::string get_name() const;
     uint get_num_sections() const;
-    const Designar::ArraySet<const Section*> &get_sections() const;
+    const Designar::ArraySet<Section*> &get_sections() const;
     uint get_max_daily_hours() const;
     uint get_max_consecutive_hours() const;
     const Preference *get_preference() const;
@@ -33,7 +33,7 @@ private:
     std::string id;
     std::string name;
     //uint num_sections;
-    Designar::ArraySet<const Section*> sections;
+    Designar::ArraySet<Section*> sections;
     uint max_daily_hours;
     uint max_consecutive_hours;
     std::unique_ptr<Preference> preference;
