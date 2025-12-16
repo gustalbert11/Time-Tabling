@@ -7,11 +7,11 @@ class Section;
 class Course
 {
 public:
-    Course(const std::string& name = "",
-           const uint& level = MAX_NUM_LEVELS,
-           const uint& num_credits = MAX_NUM_CREDITS,
-           const uint& num_weekly_hours = MAX_WEEKLY_HOURS,
-           const uint& max_daily_hours = MAX_DAILY_HOURS);
+    Course(const std::string &name = "Course",
+           const uint &level = MAX_NUM_LEVELS,
+           const uint &num_credits = MAX_NUM_CREDITS,
+           const uint &num_weekly_hours = MAX_WEEKLY_HOURS,
+           const uint &max_daily_hours = MAX_DAILY_HOURS);
     Course(const Course&);
 
     std::string get_id() const;
@@ -30,7 +30,7 @@ public:
     bool set_num_weekly_hours(const uint &num_weekly_hours);
     bool set_max_daily_hours(const uint &max_daily_hours);
 
-    bool add_section(Section* section);
+    bool add_section(Section *section);
 
 private:
     std::string id;

@@ -1,7 +1,7 @@
 #include "core/preference.hpp"
 
-Preference::Preference(const std::string& description,
-                       const PreferenceType& type)
+Preference::Preference(const std::string &description,
+                       const PreferenceType &type)
 {
     set_description(description);
     set_type(type);

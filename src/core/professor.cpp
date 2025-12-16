@@ -2,9 +2,9 @@
 
 uint Professor::num_professors = 0;
 
-Professor::Professor(const std::string& name,
-                     const uint& max_daily_hours,
-                     const uint& max_consecutive_hours,
+Professor::Professor(const std::string &name,
+                     const uint &max_daily_hours,
+                     const uint &max_consecutive_hours,
                      std::unique_ptr<Preference> preference)
 {
     set_id();
@@ -13,7 +13,7 @@ Professor::Professor(const std::string& name,
     set_max_consecutive_hours(max_consecutive_hours);
     set_preference(std::move(preference));
 }
-Professor::Professor(const Professor& other)
+Professor::Professor(const Professor &other)
 : id(other.id),
   sections(other.sections)
 {

@@ -21,7 +21,6 @@ bool FlowNode::set_id(const std::string &id)
     {
         return false;
     }
-    
     this->id = id;
     return true;
 }
@@ -32,7 +31,6 @@ bool FlowNode::set_type(const FlowNodeType &type)
     {
         return false;
     }
-    
     this->type = type;
     return true;
 }

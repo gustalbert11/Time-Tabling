@@ -14,9 +14,9 @@ class DataManager : public Designar::Singleton<DataManager>
     friend class Designar::Singleton<DataManager>;
 
 public:
-    Professor* get_professor(const std::string& id) const;
-    Course* get_course(const std::string& id) const;
-    Section* get_section(const std::string& id) const;
+    Professor* get_professor(const std::string &id) const;
+    Course* get_course(const std::string &id) const;
+    Section* get_section(const std::string &id) const;
     size_t get_professor_count() const;
     size_t get_course_count() const;
     size_t get_section_count() const;
@@ -33,17 +33,15 @@ public:
     void remove_course(std::string id);
     void remove_section(std::string id);
 
-    bool import_professors_from_csv(const std::string& filename, bool update_existing = false);
-    bool export_professors_to_csv(const std::string& filename) const;
-
-    bool import_courses_from_csv(const std::string& filename, bool update_existing = false);
-    bool export_courses_to_csv(const std::string& filename) const;
-
-    bool import_sections_from_csv(const std::string& filename, bool update_existing = false);
-    bool export_sections_to_csv(const std::string& filename) const;
+    bool import_professors_from_csv(const std::string &filename, bool update_existing = false);
+    bool export_professors_to_csv(const std::string &filename) const;
+    bool import_courses_from_csv(const std::string &filename, bool update_existing = false);
+    bool export_courses_to_csv(const std::string &filename) const;
+    bool import_sections_from_csv(const std::string &filename, bool update_existing = false);
+    bool export_sections_to_csv(const std::string &filename) const;
     
-    bool import_from_json(const std::string& filename, bool update_existing = false);
-    bool export_to_json(const std::string& filename) const;
+    bool import_from_json(const std::string &filename, bool update_existing = false);
+    bool export_to_json(const std::string &filename) const;
     
     void clear_all_data();
 
@@ -54,13 +52,13 @@ protected:
     std::unordered_map<std::string, std::unique_ptr<Section>> sections;
 
 private:
-    std::string days_to_string(const Designar::ArraySet<Days>& days) const;
-    Designar::ArraySet<Days> string_to_days(const QString& str) const;
+    std::string days_to_string(const Designar::ArraySet<Days> &days) const;
+    Designar::ArraySet<Days> string_to_days(const QString &str) const;
     
     std::string hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>>& intervals) const;
-    Designar::ArraySet<std::pair<uint, uint>> string_to_hours_interval(const QString& str) const;
+    Designar::ArraySet<std::pair<uint, uint>> string_to_hours_interval(const QString &str) const;
 
-    std::unique_ptr<Preference> process_preference_from_json(const QJsonObject& pref_obj);
+    std::unique_ptr<Preference> process_preference_from_json(const QJsonObject &pref_obj);
 };
 
 extern DataManager *dm_ptr_instance;

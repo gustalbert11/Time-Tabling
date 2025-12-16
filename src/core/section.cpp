@@ -9,7 +9,7 @@ Section::Section(Professor *professor,
     set_professor(professor);
     set_course(course);
 }
-Section::Section(const Section& other)
+Section::Section(const Section &other)
 : id(other.id),
   time_slots(other.time_slots)
 {
@@ -34,7 +34,7 @@ Designar::ArraySet<std::pair<Days, std::pair<uint, uint>>> const &Section::get_t
     return time_slots;
 }
 
-bool Section::set_professor(Professor* professor)
+bool Section::set_professor(Professor *professor)
 {
     if (!professor)
     {
@@ -43,7 +43,7 @@ bool Section::set_professor(Professor* professor)
     this->professor = professor;
     return true;
 }
-bool Section::set_course(Course* course)
+bool Section::set_course(Course *course)
 {
     if (!course)
     {
@@ -53,13 +53,13 @@ bool Section::set_course(Course* course)
     return true;
 }
 
-bool Section::add_time_slot(const Days& day, const uint &start_hour, const uint &end_hour)
+bool Section::add_time_slot(const Days &day, const uint &start_hour, const uint &end_hour)
 {
     if (day < Days::MONDAY || 
         day > Days::FRIDAY ||
         start_hour < MIN_START_HOUR ||
         start_hour >= end_hour || 
-        end_hour > MAX_DAILY_HOURS)
+        end_hour > MAX_END_HOUR)
     {
         return false;
     }

@@ -1,6 +1,6 @@
 #include "flow/professor_time_node.hpp"
 
-ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor* professor, Days day, uint start_hour, uint end_hour)
+ProfessorTimeNode::ProfessorTimeNode(std::string id, Professor *professor, Days day, uint start_hour, uint end_hour)
 : FlowNode(id, FlowNodeType::PROFESSOR_TIME)
 {
     set_professor(professor);
@@ -21,13 +21,12 @@ std::pair<uint, uint> ProfessorTimeNode::get_hours_interval() const
     return hours_interval;
 }
 
-bool ProfessorTimeNode::set_professor(Professor* professor)
+bool ProfessorTimeNode::set_professor(Professor *professor)
 {
     if (!professor)
     {
         return false;
     }
-    
     this->professor = professor;
     return true;
 }
@@ -38,7 +37,6 @@ bool ProfessorTimeNode::set_day(const Days &day)
     {
         return false;
     }
-    
     this->day = day;
     return true;
 }
@@ -46,11 +44,10 @@ bool ProfessorTimeNode::set_hours_interval(const uint &start_hour, const uint &e
 {
     if (start_hour < MIN_START_HOUR || 
         start_hour >= end_hour ||
-        end_hour > MAX_DAILY_HOURS)
+        end_hour > MAX_END_HOUR)
     {
         return false;
     }
-
     this->hours_interval = std::make_pair(start_hour, end_hour);
     return true;
 }

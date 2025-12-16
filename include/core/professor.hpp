@@ -7,9 +7,9 @@ class Section;
 class Professor
 {
 public:
-    Professor(const std::string& name = "",
-              const uint& max_daily_hours = MAX_DAILY_HOURS,
-              const uint& max_consecutive_hours = MAX_CONSECUTIVE_HOURS,
+    Professor(const std::string &name = "Professor",
+              const uint &max_daily_hours = MAX_DAILY_HOURS,
+              const uint &max_consecutive_hours = MAX_CONSECUTIVE_HOURS,
               std::unique_ptr<Preference> preference = nullptr);
     Professor(const Professor&);
 
@@ -27,7 +27,7 @@ public:
     bool set_max_consecutive_hours(const uint &max_consecutive_hours);
     bool set_preference(std::unique_ptr<Preference> preference);
     
-    bool add_section(Section* section);
+    bool add_section(Section *section);
 
 private:
     std::string id;

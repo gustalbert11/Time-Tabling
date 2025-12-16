@@ -74,7 +74,7 @@ class FlowNode
 {
 public:
     FlowNode() = default;
-    FlowNode(const FlowNode &) = default;
+    FlowNode(const FlowNode&) = default;
 
     FlowNode(std::string id, FlowNodeType type);
 

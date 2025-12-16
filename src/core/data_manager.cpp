@@ -10,17 +10,17 @@
 DataManager *dm_ptr_instance = DataManager::get_ptr_instance();
 DataManager &dm_instance = DataManager::get_instance();
 
-Professor* DataManager::get_professor(const std::string& id) const
+Professor* DataManager::get_professor(const std::string &id) const
 {
     auto it = professors.find(id);
     return it != professors.end() ? it->second.get() : nullptr;
 }
-Course* DataManager::get_course(const std::string& id) const
+Course* DataManager::get_course(const std::string &id) const
 {
     auto it = courses.find(id);
     return it != courses.end() ? it->second.get() : nullptr;
 }
-Section* DataManager::get_section(const std::string& id) const
+Section* DataManager::get_section(const std::string &id) const
 {
     auto it = sections.find(id);
     return it != sections.end() ? it->second.get() : nullptr;
@@ -116,7 +116,7 @@ void DataManager::remove_section(std::string id)
     sections.erase(id);
 }
 
-bool DataManager::export_professors_to_csv(const std::string& filename) const
+bool DataManager::export_professors_to_csv(const std::string &filename) const
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
@@ -161,7 +161,7 @@ bool DataManager::export_professors_to_csv(const std::string& filename) const
     return true;
 }
 
-bool DataManager::import_professors_from_csv(const std::string& filename, bool update_existing)
+bool DataManager::import_professors_from_csv(const std::string &filename, bool update_existing)
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
@@ -357,7 +357,7 @@ bool DataManager::import_professors_from_csv(const std::string& filename, bool u
     return true;
 }
 
-bool DataManager::export_courses_to_csv(const std::string& filename) const
+bool DataManager::export_courses_to_csv(const std::string &filename) const
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
@@ -383,7 +383,7 @@ bool DataManager::export_courses_to_csv(const std::string& filename) const
     file.close();
     return true;
 }
-bool DataManager::import_courses_from_csv(const std::string& filename, bool update_existing)
+bool DataManager::import_courses_from_csv(const std::string &filename, bool update_existing)
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
@@ -448,7 +448,7 @@ bool DataManager::import_courses_from_csv(const std::string& filename, bool upda
     return true;
 }
 
-bool DataManager::export_sections_to_csv(const std::string& filename) const
+bool DataManager::export_sections_to_csv(const std::string &filename) const
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
@@ -486,7 +486,7 @@ bool DataManager::export_sections_to_csv(const std::string& filename) const
     file.close();
     return true;
 }
-bool DataManager::import_sections_from_csv(const std::string& filename, bool update_existing)
+bool DataManager::import_sections_from_csv(const std::string &filename, bool update_existing)
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
@@ -612,7 +612,7 @@ bool DataManager::import_sections_from_csv(const std::string& filename, bool upd
     return true;
 }
 
-bool DataManager::export_to_json(const std::string& filename) const
+bool DataManager::export_to_json(const std::string &filename) const
 {
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly)) 
@@ -906,7 +906,7 @@ DataManager::DataManager()
 
 }
 
-std::string DataManager::days_to_string(const Designar::ArraySet<Days>& days) const
+std::string DataManager::days_to_string(const Designar::ArraySet<Days> &days) const
 {
     QStringList list;
 
@@ -919,7 +919,7 @@ std::string DataManager::days_to_string(const Designar::ArraySet<Days>& days) co
     }
     return list.join(";").toStdString();
 }
-Designar::ArraySet<Days> DataManager::string_to_days(const QString& str) const
+Designar::ArraySet<Days> DataManager::string_to_days(const QString &str) const
 {
     Designar::ArraySet<Days> days;
     QStringList list = str.split(";", Qt::SkipEmptyParts);
@@ -931,7 +931,7 @@ Designar::ArraySet<Days> DataManager::string_to_days(const QString& str) const
     return days;
 }
 
-std::string DataManager::hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>>& intervals) const
+std::string DataManager::hours_interval_to_string(const Designar::ArraySet<std::pair<uint, uint>> &intervals) const
 {
     QStringList list;
 
@@ -941,7 +941,7 @@ std::string DataManager::hours_interval_to_string(const Designar::ArraySet<std::
     }
     return list.join(";").toStdString();
 }
-Designar::ArraySet<std::pair<uint, uint>> DataManager::string_to_hours_interval(const QString& str) const
+Designar::ArraySet<std::pair<uint, uint>> DataManager::string_to_hours_interval(const QString &str) const
 {
     Designar::ArraySet<std::pair<uint, uint>> days;
     QStringList list = str.split(";", Qt::SkipEmptyParts);
@@ -957,7 +957,7 @@ Designar::ArraySet<std::pair<uint, uint>> DataManager::string_to_hours_interval(
     return days;
 }
 
-std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject& pref_obj)
+std::unique_ptr<Preference> DataManager::process_preference_from_json(const QJsonObject &pref_obj)
 {
     auto preference = std::make_unique<Preference>();
         
