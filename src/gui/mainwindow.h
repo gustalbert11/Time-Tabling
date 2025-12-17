@@ -28,9 +28,13 @@ private slots:
     void go_to_previous_window();
 
     void import_json();
+    void export_json();
     void import_professors_csv();
+    void export_professors_csv();
     void import_courses_csv();
+    void export_courses_csv();
     void import_sections_csv();
+    void export_sections_csv();
 
     void show_professors();
     void show_courses();
@@ -57,5 +61,6 @@ private:
     bool showing_professors = true;
 
     QMenu *import_menu = nullptr;
+    QMenu *export_menu = nullptr;
 };
 #endif // MAINWINDOW_H

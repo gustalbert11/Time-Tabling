@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     import_menu = new QMenu(this);
     
     // 3. Añadimos las acciones al menú
-    QAction *act_json = import_menu->addAction("Importar Base de Datos (JSON)");
+    QAction *act_json = import_menu->addAction("Importar Datos (JSON)");
     import_menu->addSeparator(); // Una linea separadora visual
     QAction *act_prof = import_menu->addAction("Importar Profesores (CSV)");
     QAction *act_course = import_menu->addAction("Importar Materias (CSV)");
@@ -66,10 +66,32 @@ MainWindow::MainWindow(QWidget *parent)
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
     // (Esto depende del estilo de tu SO, pero ayuda al usuario a saber que hay opciones)
-    ui->importButton->setStyleSheet("QPushButton { text-align: left; padding-left: 10px; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
+    ui->importButton->setStyleSheet("QPushButton { text-align: center; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
 
-    // ... (Resto de conexiones existentes) ...
+    //connect(ui->exportButton, &QPushButton::clicked, this, &MainWindow::export_json);
 
+    export_menu = new QMenu(this);
+    
+    // 3. Añadimos las acciones al menú
+    QAction *act_json2 = export_menu->addAction("Exportar Datos (JSON)");
+    export_menu->addSeparator(); // Una linea separadora visual
+    QAction *act_prof2 = export_menu->addAction("Exportar Profesores (CSV)");
+    QAction *act_course2 = export_menu->addAction("Exportar Materias (CSV)");
+    QAction *act_section2 = export_menu->addAction("Exportar Secciones (CSV)");
+
+    // 4. Conectamos las acciones a los slots correspondientes
+    connect(act_json2, &QAction::triggered, this, &MainWindow::export_json);
+    connect(act_prof2, &QAction::triggered, this, &MainWindow::export_professors_csv);
+    connect(act_course2, &QAction::triggered, this, &MainWindow::export_courses_csv);
+    connect(act_section2, &QAction::triggered, this, &MainWindow::export_sections_csv);
+
+    // 5. Asignamos el menú al botón existente
+    ui->exportButton->setMenu(export_menu);
+    
+    // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
+    // (Esto depende del estilo de tu SO, pero ayuda al usuario a saber que hay opciones)
+    ui->exportButton->setStyleSheet("QPushButton { text-align: center; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
+    
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
 
     connect(ui->ShowInfoButton, &QPushButton::clicked, this, &MainWindow::update_table);
@@ -169,6 +191,28 @@ void MainWindow::import_professors_csv()
         QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de profesores.");
     }
 }
+void MainWindow::export_professors_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Profesores", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_professors_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Profesores exportados correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de profesores.");
+    }
+}
 
 void MainWindow::import_courses_csv()
 {
@@ -193,6 +237,28 @@ void MainWindow::import_courses_csv()
     else 
     {
         QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de materias.");
+    }
+}
+void MainWindow::export_courses_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Materias", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_courses_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Materias exportadas correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de materias.");
     }
 }
 
@@ -230,6 +296,29 @@ void MainWindow::import_sections_csv()
         QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de secciones.");
     }
 }
+void MainWindow::export_sections_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Secciones", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_sections_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Secciones exportadas correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de secciones.");
+    }
+}
+
 void MainWindow::import_json()
 {
     QString filename = QFileDialog::getOpenFileName(
@@ -255,6 +344,31 @@ void MainWindow::import_json()
     else 
     {
         QMessageBox::warning(this, "Error", "No se pudo procesar el archivo JSON.");
+    }
+}
+void MainWindow::export_json()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this,
+        "Guardar archivo JSON",
+        "",
+        "JSON Files (*.json)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_to_json(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "El archivo JSON fue exportado correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo JSON.");
     }
 }
 
