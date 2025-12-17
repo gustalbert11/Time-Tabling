@@ -39,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Asegurarnos de empezar siempre en la página 0 (el menú principal)
     ui->stackedWidget->setCurrentIndex(0);
 
-    // CONEXIÓN MANUAL
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::go_to_next_window);
 
     connect(ui->backButton, &QPushButton::clicked, this, &MainWindow::go_to_previous_window);
@@ -48,20 +47,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     import_menu = new QMenu(this);
     
-    // 3. Añadimos las acciones al menú
     QAction *act_json = import_menu->addAction("Importar Datos (JSON)");
-    import_menu->addSeparator(); // Una linea separadora visual
+    import_menu->addSeparator();
     QAction *act_prof = import_menu->addAction("Importar Profesores (CSV)");
     QAction *act_course = import_menu->addAction("Importar Materias (CSV)");
     QAction *act_section = import_menu->addAction("Importar Secciones (CSV)");
 
-    // 4. Conectamos las acciones a los slots correspondientes
     connect(act_json, &QAction::triggered, this, &MainWindow::import_json);
     connect(act_prof, &QAction::triggered, this, &MainWindow::import_professors_csv);
     connect(act_course, &QAction::triggered, this, &MainWindow::import_courses_csv);
     connect(act_section, &QAction::triggered, this, &MainWindow::import_sections_csv);
 
-    // 5. Asignamos el menú al botón existente
     ui->importButton->setMenu(import_menu);
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
@@ -72,20 +68,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     export_menu = new QMenu(this);
     
-    // 3. Añadimos las acciones al menú
     QAction *act_json2 = export_menu->addAction("Exportar Datos (JSON)");
-    export_menu->addSeparator(); // Una linea separadora visual
+    export_menu->addSeparator();
     QAction *act_prof2 = export_menu->addAction("Exportar Profesores (CSV)");
     QAction *act_course2 = export_menu->addAction("Exportar Materias (CSV)");
     QAction *act_section2 = export_menu->addAction("Exportar Secciones (CSV)");
 
-    // 4. Conectamos las acciones a los slots correspondientes
     connect(act_json2, &QAction::triggered, this, &MainWindow::export_json);
     connect(act_prof2, &QAction::triggered, this, &MainWindow::export_professors_csv);
     connect(act_course2, &QAction::triggered, this, &MainWindow::export_courses_csv);
     connect(act_section2, &QAction::triggered, this, &MainWindow::export_sections_csv);
 
-    // 5. Asignamos el menú al botón existente
     ui->exportButton->setMenu(export_menu);
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
@@ -110,47 +103,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::create_schedule()
-{
-    std::ofstream out("resultado_schedule.txt");  // 📄 archivo de salida
-
-    // Inicializar red
-    fn_instance.init();
-
-    // 3. Ejecutar algoritmo
-    if (fn_instance.solve_min_cost_max_flow()) 
-    {
-        out << "✅ Algoritmo completado\n";
-
-        auto schedule = fn_instance.get_final_schedule();
-        for (const auto& entry : schedule) 
-        {
-            out << "\n📅 ASIGNACIÓN FINAL:\n";
-            out << "   Profesor: " << entry.professor_name << "\n";
-            out << "   Materia: " << entry.course_name << "\n";
-            out << "   Día: " << day_to_string(entry.day) << "\n";
-            out << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00\n";
-
-            auto professor = dm_instance.get_professor(entry.professor_id);
-            if (professor && professor->get_preference()) {
-                auto pref = professor->get_preference();
-                bool day_ok = pref->get_days().contains(entry.day);
-                bool hour_ok = false;
-
-                for (const auto& hour_range : pref->get_hours()) 
-                {
-                    if (entry.start_hour >= hour_range.first && entry.end_hour <= hour_range.second) {
-                        hour_ok = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    out.close(); // opcional, se cierra solo
-}
-
 void MainWindow::go_to_next_window()
 {
     int it = ui->stackedWidget->currentIndex();
@@ -162,161 +114,6 @@ void MainWindow::go_to_previous_window()
 {
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it - 1);
-}
-
-void MainWindow::import_professors_csv()
-{
-    QString filename = QFileDialog::getOpenFileName(
-        this, "Importar Profesores", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    // Nota: Pasamos 'true' para actualizar datos si el ID ya existe, o 'false' si prefieres solo ignorar.
-    // Usamos 'true' para permitir correcciones masivas.
-    bool ok = dm_instance.import_professors_from_csv(filename.toStdString(), true);
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Profesores importados correctamente.");
-        // Forzamos la vista de profesores
-        showing_professors = false; // El update_table invierte esto, así que lo ponemos en false para que al invertir sea true
-        update_table(); 
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de profesores.");
-    }
-}
-void MainWindow::export_professors_csv()
-{
-    QString filename = QFileDialog::getSaveFileName(
-        this, "Exportar Profesores", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    bool ok = dm_instance.export_professors_to_csv(filename.toStdString());
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Profesores exportados correctamente.");
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de profesores.");
-    }
-}
-
-void MainWindow::import_courses_csv()
-{
-    QString filename = QFileDialog::getOpenFileName(
-        this, "Importar Materias", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    bool ok = dm_instance.import_courses_from_csv(filename.toStdString(), true);
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Materias importadas correctamente.");
-        // Forzamos la vista de materias
-        showing_professors = true; // El update_table invierte esto
-        update_table();
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de materias.");
-    }
-}
-void MainWindow::export_courses_csv()
-{
-    QString filename = QFileDialog::getSaveFileName(
-        this, "Exportar Materias", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    bool ok = dm_instance.export_courses_to_csv(filename.toStdString());
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Materias exportadas correctamente.");
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de materias.");
-    }
-}
-
-void MainWindow::import_sections_csv()
-{
-    // ADVERTENCIA: Para importar secciones, los profesores y materias deben existir previamente.
-    if (dm_instance.get_professor_count() == 0 || dm_instance.get_course_count() == 0) {
-        QMessageBox::warning(this, "Advertencia", 
-            "Para importar secciones, primero debes haber cargado Profesores y Materias.\n"
-            "Esto asegura que las relaciones se creen correctamente.");
-        // No retornamos, dejamos que el usuario intente si quiere, o podrías hacer return;
-    }
-
-    QString filename = QFileDialog::getOpenFileName(
-        this, "Importar Secciones", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    bool ok = dm_instance.import_sections_from_csv(filename.toStdString(), true);
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Secciones importadas correctamente.");
-        // Las secciones no tienen vista propia en tu tabla principal actual (solo profes o materias),
-        // así que refrescamos la vista actual.
-        showing_professors = !showing_professors; // Hack para mantener la vista actual
-        update_table();
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de secciones.");
-    }
-}
-void MainWindow::export_sections_csv()
-{
-    QString filename = QFileDialog::getSaveFileName(
-        this, "Exportar Secciones", "", "CSV Files (*.csv);;All Files (*)"
-    );
-
-    if (filename.isEmpty()) 
-    {
-        return;
-    }
-
-    bool ok = dm_instance.export_sections_to_csv(filename.toStdString());
-
-    if (ok) 
-    {
-        QMessageBox::information(this, "Éxito", "Secciones exportadas correctamente.");
-    } 
-    else 
-    {
-        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de secciones.");
-    }
 }
 
 void MainWindow::import_json()
@@ -346,6 +143,92 @@ void MainWindow::import_json()
         QMessageBox::warning(this, "Error", "No se pudo procesar el archivo JSON.");
     }
 }
+void MainWindow::import_professors_csv()
+{
+    QString filename = QFileDialog::getOpenFileName(
+        this, "Importar Profesores", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.import_professors_from_csv(filename.toStdString(), true);
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Profesores importados correctamente.");
+        // Forzamos la vista de profesores
+        showing_professors = false;
+        update_table(); 
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de profesores.");
+    }
+}
+void MainWindow::import_courses_csv()
+{
+    QString filename = QFileDialog::getOpenFileName(
+        this, "Importar Materias", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.import_courses_from_csv(filename.toStdString(), true);
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Materias importadas correctamente.");
+        showing_professors = true;
+        update_table();
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de materias.");
+    }
+}
+void MainWindow::import_sections_csv()
+{
+    // ADVERTENCIA: Para importar secciones, los profesores y materias deben existir previamente.
+    if (dm_instance.get_professor_count() == 0 || 
+        dm_instance.get_course_count() == 0) 
+    {
+        QMessageBox::warning(this, "Advertencia", 
+            "Para importar secciones, primero debes haber cargado Profesores y Materias.\n"
+            "Esto asegura que las relaciones se creen correctamente.");
+        // No retornamos, dejamos que el usuario intente si quiere, o podrías hacer return;
+    }
+
+    QString filename = QFileDialog::getOpenFileName(
+        this, "Importar Secciones", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.import_sections_from_csv(filename.toStdString(), true);
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Secciones importadas correctamente.");
+        // Las secciones no tienen vista propia en tu tabla principal actual (solo profes o materias),
+        // así que refrescamos la vista actual.
+        showing_professors = !showing_professors;
+        update_table();
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "Error al leer el archivo CSV de secciones.");
+    }
+}
+
 void MainWindow::export_json()
 {
     QString filename = QFileDialog::getSaveFileName(
@@ -369,6 +252,72 @@ void MainWindow::export_json()
     else 
     {
         QMessageBox::warning(this, "Error", "No se pudo exportar el archivo JSON.");
+    }
+}
+void MainWindow::export_professors_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Profesores", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_professors_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Profesores exportados correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de profesores.");
+    }
+}
+void MainWindow::export_courses_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Materias", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_courses_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Materias exportadas correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de materias.");
+    }
+}
+void MainWindow::export_sections_csv()
+{
+    QString filename = QFileDialog::getSaveFileName(
+        this, "Exportar Secciones", "", "CSV Files (*.csv);;All Files (*)"
+    );
+
+    if (filename.isEmpty()) 
+    {
+        return;
+    }
+
+    bool ok = dm_instance.export_sections_to_csv(filename.toStdString());
+
+    if (ok) 
+    {
+        QMessageBox::information(this, "Éxito", "Secciones exportadas correctamente.");
+    } 
+    else 
+    {
+        QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de secciones.");
     }
 }
 
@@ -596,4 +545,45 @@ void MainWindow::onItemClicked(QTableWidgetItem *item)
 
     showing_professors = !showing_professors;
     update_table();
+}
+
+void MainWindow::create_schedule()
+{
+    std::ofstream out("resultado_schedule.txt");  // 📄 archivo de salida
+
+    // Inicializar red
+    fn_instance.init();
+
+    // 3. Ejecutar algoritmo
+    if (fn_instance.solve_min_cost_max_flow()) 
+    {
+        out << "✅ Algoritmo completado\n";
+
+        auto schedule = fn_instance.get_final_schedule();
+        for (const auto& entry : schedule) 
+        {
+            out << "\n📅 ASIGNACIÓN FINAL:\n";
+            out << "   Profesor: " << entry.professor_name << "\n";
+            out << "   Materia: " << entry.course_name << "\n";
+            out << "   Día: " << day_to_string(entry.day) << "\n";
+            out << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00\n";
+
+            auto professor = dm_instance.get_professor(entry.professor_id);
+            if (professor && professor->get_preference()) {
+                auto pref = professor->get_preference();
+                bool day_ok = pref->get_days().contains(entry.day);
+                bool hour_ok = false;
+
+                for (const auto& hour_range : pref->get_hours()) 
+                {
+                    if (entry.start_hour >= hour_range.first && entry.end_hour <= hour_range.second) {
+                        hour_ok = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    out.close(); // opcional, se cierra solo
 }
