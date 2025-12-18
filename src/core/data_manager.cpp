@@ -136,11 +136,6 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
 
     QJsonObject root_obj = doc.object();
 
-    // Mapas temporales para traducir IDs del JSON a punteros reales en memoria
-    // Esto es CRUCIAL si los IDs internos se autogeneran y difieren del archivo.
-    // std::unordered_map<std::string, Professor*> json_id_to_prof;
-    // std::unordered_map<std::string, Course*> json_id_to_course;
-
     if (root_obj.contains("professors") && 
         root_obj["professors"].isArray()) 
     {
@@ -158,14 +153,15 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
 
             auto existing_prof = get_professor(json_id);
 
-            if (existing_prof && update_existing)
+            if (existing_prof && 
+                update_existing)
             {
                 existing_prof->set_name(name_str.toStdString());
-                //existing_prof->set_num_sections(static_cast<uint>(prof_obj.value("num_sections").toInt()));
                 existing_prof->set_max_daily_hours(static_cast<uint>(prof_obj.value("max_daily_hours").toInt()));
                 existing_prof->set_max_consecutive_hours(static_cast<uint>(prof_obj.value("max_consecutive_hours").toInt()));
 
-                if (prof_obj.contains("preference") && prof_obj["preference"].isObject()) 
+                if (prof_obj.contains("preference") && 
+                    prof_obj["preference"].isObject()) 
                 {
                     auto preference = process_preference_from_json(prof_obj["preference"].toObject());
                     if (preference) 
@@ -178,11 +174,11 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
             {
                 auto professor = std::make_unique<Professor>(json_id);
                 professor->set_name(name_str.toStdString());
-                //professor->set_num_sections(static_cast<uint>(prof_obj.value("num_sections").toInt()));
                 professor->set_max_daily_hours(static_cast<uint>(prof_obj.value("max_daily_hours").toInt()));
                 professor->set_max_consecutive_hours(static_cast<uint>(prof_obj.value("max_consecutive_hours").toInt()));
 
-                if (prof_obj.contains("preference") && prof_obj["preference"].isObject()) 
+                if (prof_obj.contains("preference") && 
+                    prof_obj["preference"].isObject()) 
                 {
                     auto preference = process_preference_from_json(prof_obj["preference"].toObject());
                     if (preference) 
@@ -191,16 +187,6 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
                     }
                 }
 
-                // Guardamos el puntero antes de mover el unique_ptr
-                // Professor* prof_ptr = professor.get();
-                // if(add_professor(std::move(professor))) 
-                // {
-                //     // Mapeamos ID JSON -> Puntero real
-                //     if(!json_id.isEmpty()) 
-                //     {
-                //         json_id_to_prof[json_id.toStdString()] = prof_ptr;
-                //     }
-                // }
                 add_professor(std::move(professor));
             }
         }
@@ -223,12 +209,12 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
 
             auto existing_course = get_course(json_id);
 
-            if (existing_course && update_existing)
+            if (existing_course && 
+                update_existing)
             {
                 existing_course->set_name(name_str.toStdString());
                 existing_course->set_level(static_cast<uint>(course_obj.value("level").toInt()));
                 existing_course->set_num_credits(static_cast<uint>(course_obj.value("num_credits").toInt()));
-                //existing_course->set_num_sections(static_cast<uint>(course_obj.value("num_sections").toInt()));
                 existing_course->set_num_weekly_hours(static_cast<uint>(course_obj.value("num_weekly_hours").toInt()));
                 existing_course->set_max_daily_hours(static_cast<uint>(course_obj.value("max_daily_hours").toInt()));
             }
@@ -238,18 +224,9 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
                 course->set_name(name_str.toStdString());
                 course->set_level(static_cast<uint>(course_obj.value("level").toInt()));
                 course->set_num_credits(static_cast<uint>(course_obj.value("num_credits").toInt()));
-                //course->set_num_sections(static_cast<uint>(course_obj.value("num_sections").toInt()));
                 course->set_num_weekly_hours(static_cast<uint>(course_obj.value("num_weekly_hours").toInt()));
                 course->set_max_daily_hours(static_cast<uint>(course_obj.value("max_daily_hours").toInt()));
 
-                // Course* course_ptr = course.get();
-                // if(add_course(std::move(course))) 
-                // {
-                //     if(!json_id.isEmpty()) 
-                //     {
-                //         json_id_to_course[json_id.toStdString()] = course_ptr;
-                //     }
-                // }
                 add_course(std::move(course));
             }
         }
@@ -271,18 +248,13 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
 
             auto existing_section = get_section(json_id);
 
-            if (existing_section && update_existing)
+            if (existing_section && 
+                update_existing)
             {
-                // Vinculación segura usando el mapa
                 if (sect_obj.contains("professor")) 
                 {
                     std::string prof_id = sect_obj["professor"].toString().toStdString();
-                    // if (json_id_to_prof.count(prof_id)) 
-                    // {
-                    //     Professor* prof = json_id_to_prof[prof_id];
-                    //     existing_section->set_professor(prof);
-                    //     prof->add_section(existing_section);
-                    // }
+
                     if (get_professor(prof_id)) 
                     {
                         Professor* prof = get_professor(prof_id);
@@ -294,12 +266,7 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
                 if (sect_obj.contains("course")) 
                 {
                     std::string course_id = sect_obj["course"].toString().toStdString();
-                    // if (json_id_to_course.count(course_id)) 
-                    // {
-                    //     Course* course = json_id_to_course[course_id];
-                    //     existing_section->set_course(course);
-                    //     course->add_section(existing_section);
-                    // }
+
                     if (get_course(course_id)) 
                     {
                         Course* course = get_course(course_id);
@@ -328,16 +295,10 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
             {
                 auto section = std::make_unique<Section>(json_id);
 
-                // Vinculación segura usando el mapa
                 if (sect_obj.contains("professor")) 
                 {
                     std::string prof_id = sect_obj["professor"].toString().toStdString();
-                    // if (json_id_to_prof.count(prof_id)) 
-                    // {
-                    //     Professor* prof = json_id_to_prof[prof_id];
-                    //     section->set_professor(prof);
-                    //     prof->add_section(section.get());
-                    // }
+
                     if (get_professor(prof_id)) 
                     {
                         Professor* prof = get_professor(prof_id);
@@ -349,12 +310,7 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
                 if (sect_obj.contains("course")) 
                 {
                     std::string course_id = sect_obj["course"].toString().toStdString();
-                    // if (json_id_to_course.count(course_id)) 
-                    // {
-                    //     Course* course = json_id_to_course[course_id];
-                    //     section->set_course(course);
-                    //     course->add_section(section.get());
-                    // }
+
                     if (get_course(course_id)) 
                     {
                         Course* course = get_course(course_id);
@@ -406,68 +362,25 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
         // Para robustez total se requiere un parser regex, pero para uso académico/interno esto suele bastar.
         QStringList parts = line.split(","); 
 
-        // if (parts.size() < 5) 
-        // {
-        //     continue;
-        // }
         if (parts.size() < 4) 
         {
             continue;
         } 
 
-        // Limpiar comillas de los nombres
         QString name = parts[1];
         name.remove("\"");
 
         std::string id = parts[0].toStdString();
         
-        // Verificamos si ya existe
-        Professor* existing_prof = get_professor(id);
+        auto existing_prof = get_professor(id);
 
-        if (existing_prof && update_existing)
+        if (existing_prof && 
+            update_existing)
         {
             existing_prof->set_name(name.toStdString());
-            // existing_prof->set_num_sections(parts[2].toUInt());
-            // existing_prof->set_max_daily_hours(parts[3].toUInt());
-            // existing_prof->set_max_consecutive_hours(parts[4].toUInt());
-
-            // // Procesar Preferencias si existen
-            // if (parts.size() >= 6) 
-            // {
-            //     auto preference = std::make_unique<Preference>();
-            //     std::string type_str = parts[5].toStdString();
-            //     preference->set_type(string_to_preference_type(type_str));
-                
-            //     if (parts.size() >= 7) 
-            //     {
-            //         QString desc = parts[6];
-            //         desc.remove("\"");
-            //         preference->set_description(desc.toStdString());
-            //     }
-
-            //     if (parts.size() >= 8 && !parts[7].isEmpty()) 
-            //     {
-            //         auto days = string_to_days(parts[7]);
-            //         for(const auto& d : days) 
-            //         {
-            //             preference->add_day(d);
-            //         }
-            //     }
-                
-            //     if (parts.size() >= 9 && !parts[8].isEmpty()) 
-            //     {
-            //         auto hours = string_to_hours_interval(parts[8]);
-            //         for(const auto& h : hours) 
-            //         {
-            //             preference->add_hour(h.first, h.second);
-            //         }
-            //     }
-            //     existing_prof->set_preference(std::move(preference));
-            // }
             existing_prof->set_max_daily_hours(parts[2].toUInt());
             existing_prof->set_max_consecutive_hours(parts[3].toUInt());
 
-            // Procesar Preferencias si existen
             if (parts.size() >= 5) 
             {
                 auto preference = std::make_unique<Preference>();
@@ -481,7 +394,8 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
                     preference->set_description(desc.toStdString());
                 }
 
-                if (parts.size() >= 7 && !parts[6].isEmpty()) 
+                if (parts.size() >= 7 && 
+                    !parts[6].isEmpty()) 
                 {
                     auto days = string_to_days(parts[6]);
                     for(const auto& d : days) 
@@ -490,7 +404,8 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
                     }
                 }
                 
-                if (parts.size() >= 8 && !parts[7].isEmpty()) 
+                if (parts.size() >= 8 && 
+                    !parts[7].isEmpty()) 
                 {
                     auto hours = string_to_hours_interval(parts[7]);
                     for(const auto& h : hours) 
@@ -505,42 +420,6 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
         {
             auto professor = std::make_unique<Professor>(id);
             professor->set_name(name.toStdString());
-            // professor->set_num_sections(parts[2].toUInt());
-            // professor->set_max_daily_hours(parts[3].toUInt());
-            // professor->set_max_consecutive_hours(parts[4].toUInt());
-
-            // if (parts.size() >= 6) 
-            // {
-            //     auto preference = std::make_unique<Preference>();
-            //     std::string type_str = parts[5].toStdString();
-            //     preference->set_type(string_to_preference_type(type_str));
-                
-            //     if (parts.size() >= 7) 
-            //     {
-            //         QString desc = parts[6];
-            //         desc.remove("\"");
-            //         preference->set_description(desc.toStdString());
-            //     }
-
-            //     if (parts.size() >= 8 && !parts[7].isEmpty()) 
-            //     {
-            //         auto days = string_to_days(parts[7]);
-            //         for(const auto& d : days) 
-            //         {
-            //             preference->add_day(d);
-            //         }
-            //     }
-                
-            //     if (parts.size() >= 9 && !parts[8].isEmpty()) 
-            //     {
-            //         auto hours = string_to_hours_interval(parts[8]);
-            //         for(const auto& h : hours) 
-            //         {
-            //             preference->add_hour(h.first, h.second);
-            //         }
-            //     }
-            //     professor->set_preference(std::move(preference));
-            // }
             professor->set_max_daily_hours(parts[2].toUInt());
             professor->set_max_consecutive_hours(parts[3].toUInt());
 
@@ -557,7 +436,8 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
                     preference->set_description(desc.toStdString());
                 }
 
-                if (parts.size() >= 7 && !parts[6].isEmpty()) 
+                if (parts.size() >= 7 && 
+                    !parts[6].isEmpty()) 
                 {
                     auto days = string_to_days(parts[6]);
                     for(const auto& d : days) 
@@ -566,7 +446,8 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
                     }
                 }
                 
-                if (parts.size() >= 8 && !parts[7].isEmpty()) 
+                if (parts.size() >= 8 && 
+                    !parts[7].isEmpty()) 
                 {
                     auto hours = string_to_hours_interval(parts[7]);
                     for(const auto& h : hours) 
@@ -577,7 +458,6 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
                 professor->set_preference(std::move(preference));
             }
 
-            // Add verifica si el ID ya existe internamente
             add_professor(std::move(professor));
         }
     }
@@ -603,10 +483,6 @@ bool DataManager::import_courses_from_csv(const std::string &filename, bool upda
         QString line = in.readLine();
         QStringList parts = line.split(",");
         
-        // if (parts.size() < 7) 
-        // {
-        //     continue;
-        // }
         if (parts.size() < 6) 
         {
             continue;
@@ -617,16 +493,14 @@ bool DataManager::import_courses_from_csv(const std::string &filename, bool upda
 
         std::string id = parts[0].toStdString();
         
-        Course* existing_course = get_course(id);
+        auto existing_course = get_course(id);
 
-        if (existing_course && update_existing)
+        if (existing_course && 
+            update_existing)
         {
             existing_course->set_name(name.toStdString());
             existing_course->set_level(parts[2].toUInt());
             existing_course->set_num_credits(parts[3].toUInt());
-            // existing_course->set_num_sections(parts[4].toUInt());
-            // existing_course->set_num_weekly_hours(parts[5].toUInt());
-            // existing_course->set_max_daily_hours(parts[6].toUInt());
             existing_course->set_num_weekly_hours(parts[4].toUInt());
             existing_course->set_max_daily_hours(parts[5].toUInt());
         }
@@ -636,9 +510,6 @@ bool DataManager::import_courses_from_csv(const std::string &filename, bool upda
             course->set_name(name.toStdString());
             course->set_level(parts[2].toUInt());
             course->set_num_credits(parts[3].toUInt());
-            // course->set_num_sections(parts[4].toUInt());
-            // course->set_num_weekly_hours(parts[5].toUInt());
-            // course->set_max_daily_hours(parts[6].toUInt());
             course->set_num_weekly_hours(parts[4].toUInt());
             course->set_max_daily_hours(parts[5].toUInt());
 
@@ -677,9 +548,10 @@ bool DataManager::import_sections_from_csv(const std::string &filename, bool upd
 
         std::string id = parts[0].toStdString();
         
-        Section* existing_section = get_section(id);
+        auto existing_section = get_section(id);
 
-        if (existing_section && update_existing)
+        if (existing_section && 
+            update_existing)
         {
             if (!prof_id.isEmpty()) 
             {
@@ -701,24 +573,29 @@ bool DataManager::import_sections_from_csv(const std::string &filename, bool upd
                 }
             }
 
-            // Parsear TimeSlots si existen (Columna 3)
-            if (parts.size() > 3 && !parts[3].isEmpty()) 
+            if (parts.size() > 3 && 
+                !parts[3].isEmpty()) 
             {
                 QStringList time_slots = parts[3].split(";", Qt::SkipEmptyParts);
                 for(const QString& time_slot : time_slots) 
                 {
                     // Formato esperado: DAY:START-END (ej: 1:8-10)
                     QStringList data = time_slot.split(":");
-                    if(data.size() == 2) 
+                    if(data.size() != 2) 
                     {
-                        QStringList hours = data[1].split("-");
-                        if(hours.size() == 2) 
-                        {
-                            // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
-                            Days day = static_cast<Days>(data[0].toInt());
-                            existing_section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
-                        }
+                        continue;
                     }
+
+                    QStringList hours = data[1].split("-");
+                    if(hours.size() != 2) 
+                    {
+                        continue;
+                    }
+
+                    // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
+                    //Days day = static_cast<Days>(data[0].toInt());
+                    Days day = string_to_day(data[0].toStdString());
+                    existing_section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
                 }
             }
         }
@@ -746,24 +623,29 @@ bool DataManager::import_sections_from_csv(const std::string &filename, bool upd
                 }
             }
 
-            // Parsear TimeSlots si existen (Columna 3)
-            if (parts.size() > 3 && !parts[3].isEmpty()) 
+            if (parts.size() > 3 && 
+                !parts[3].isEmpty()) 
             {
                 QStringList time_slots = parts[3].split(";", Qt::SkipEmptyParts);
                 for(const QString& time_slot : time_slots) 
                 {
                     // Formato esperado: DAY:START-END (ej: 1:8-10)
                     QStringList data = time_slot.split(":");
-                    if(data.size() == 2) 
+                    if(data.size() != 2) 
                     {
-                        QStringList hours = data[1].split("-");
-                        if(hours.size() == 2) 
-                        {
-                            // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
-                            Days day = static_cast<Days>(data[0].toInt());
-                            section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
-                        }
+                        continue;
                     }
+
+                    QStringList hours = data[1].split("-");
+                    if(hours.size() != 2) 
+                    {
+                        continue;
+                    }
+
+                    // Aquí deberías usar string_to_day si guardaste texto, o cast si guardaste int
+                    //Days day = static_cast<Days>(data[0].toInt());
+                    Days day = string_to_day(data[0].toStdString());
+                    section->add_time_slot(day, hours[0].toUInt(), hours[1].toUInt());
                 }
             }
 
@@ -790,14 +672,11 @@ bool DataManager::export_to_json(const std::string &filename) const
         const Professor* prof = prof_ptr.get();
         QJsonObject prof_obj;
 
-        // Guardamos el ID para mantener referencias, aunque se regenere al importar
         prof_obj["id"] = QString::fromStdString(prof->get_id());
         prof_obj["name"] = QString::fromStdString(prof->get_name());
-        //prof_obj["num_sections"] = static_cast<int>(prof->get_num_sections());
         prof_obj["max_daily_hours"] = static_cast<int>(prof->get_max_daily_hours());
         prof_obj["max_consecutive_hours"] = static_cast<int>(prof->get_max_consecutive_hours());
 
-        // Preferencias
         const Preference* pref = prof->get_preference();
         if (pref) 
         {
@@ -838,7 +717,6 @@ bool DataManager::export_to_json(const std::string &filename) const
         course_obj["name"] = QString::fromStdString(course->get_name());
         course_obj["level"] = static_cast<int>(course->get_level());
         course_obj["num_credits"] = static_cast<int>(course->get_num_credits());
-        //course_obj["num_sections"] = static_cast<int>(course->get_num_sections());
         course_obj["num_weekly_hours"] = static_cast<int>(course->get_num_weekly_hours());
         course_obj["max_daily_hours"] = static_cast<int>(course->get_max_daily_hours());
 
@@ -852,7 +730,8 @@ bool DataManager::export_to_json(const std::string &filename) const
         const Section* section = sect_ptr.get();
         QJsonObject sect_obj;
 
-        // Referencias por ID (clave para revincular)
+        sect_obj["id"] = QString::fromStdString(section->get_id());
+
         auto professor = section->get_professor();
         if (professor) 
         {
@@ -865,7 +744,6 @@ bool DataManager::export_to_json(const std::string &filename) const
             sect_obj["course"] = QString::fromStdString(course->get_id());
         }
 
-        // Exportar Horarios
         QJsonArray time_slots_array;
         for (const auto& time_slot : section->get_time_slots())
         {
@@ -899,7 +777,6 @@ bool DataManager::export_professors_to_csv(const std::string &filename) const
     }
 
     QTextStream out(&file);
-    // out << "ID,Name,NumSections,MaxDaily,MaxConsecutive,PrefType,PrefDesc,PrefDays,PrefHours\n";
     out << "ID,Name,MaxDaily,MaxConsecutive,PrefType,PrefDesc,PrefDays,PrefHours\n";
 
     for (const auto& [id, prof_ptr] : professors) 
@@ -923,7 +800,6 @@ bool DataManager::export_professors_to_csv(const std::string &filename) const
         // Manejo básico de comillas para evitar romper el CSV si el nombre tiene comas
         out << QString::fromStdString(prof->get_id()) << ","
             << "\"" << QString::fromStdString(prof->get_name()) << "\","
-            //<< prof->get_num_sections() << ","
             << prof->get_max_daily_hours() << ","
             << prof->get_max_consecutive_hours() << ","
             << pref_type << ","
@@ -943,7 +819,6 @@ bool DataManager::export_courses_to_csv(const std::string &filename) const
     }
 
     QTextStream out(&file);
-    // out << "ID,Name,Level,Credits,NumSections,WeeklyHours,MaxDaily\n";
     out << "ID,Name,Level,Credits,WeeklyHours,MaxDaily\n";
 
     for (const auto& [id, course_ptr] : courses) 
@@ -953,7 +828,6 @@ bool DataManager::export_courses_to_csv(const std::string &filename) const
             << "\"" << QString::fromStdString(course->get_name()) << "\","
             << course->get_level() << ","
             << course->get_num_credits() << ","
-            //<< course->get_num_sections() << ","
             << course->get_num_weekly_hours() << ","
             << course->get_max_daily_hours() << "\n";
     }
@@ -969,8 +843,7 @@ bool DataManager::export_sections_to_csv(const std::string &filename) const
     }
 
     QTextStream out(&file);
-    // El ID de sección se autogenera al importar, pero podemos guardarlo si es necesario.
-    // Lo crucial es guardar las relaciones (ID Profe, ID Curso).
+    
     out << "ID,ProfessorID,CourseID,TimeSlots\n"; 
 
     for (const auto& [id, section_ptr] : sections) 
@@ -980,14 +853,14 @@ bool DataManager::export_sections_to_csv(const std::string &filename) const
         QString prof_id = section->get_professor() ? QString::fromStdString(section->get_professor()->get_id()) : "";
         QString course_id = section->get_course() ? QString::fromStdString(section->get_course()->get_id()) : "";
         
-        // Serializar TimeSlots (Day, Start, End)
         QStringList slots_list;
 
         for(const auto& time_slot : section->get_time_slots()) 
         {
             // Formato: DAY_STRING:START-END
-            QString dayStr = QString::number(static_cast<int>(time_slot.first)); // Simplificado a int para el ejemplo
-            slots_list << QString("%1:%2-%3").arg(dayStr).arg(time_slot.second.first).arg(time_slot.second.second);
+            //QString day_str = QString::number(static_cast<int>(time_slot.first)); // Simplificado a int para el ejemplo
+            QString day_str = QString::fromStdString(day_to_string(time_slot.first));
+            slots_list << QString("%1:%2-%3").arg(day_str).arg(time_slot.second.first).arg(time_slot.second.second);
         }
 
         out << QString::fromStdString(section->get_id()) << ","
