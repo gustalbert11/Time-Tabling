@@ -7,7 +7,8 @@ class Section;
 class Professor
 {
 public:
-    Professor(const std::string &name = "Professor",
+    Professor(const std::string &id = "",
+              const std::string &name = "Professor",
               const uint &max_daily_hours = MAX_DAILY_HOURS,
               const uint &max_consecutive_hours = MAX_CONSECUTIVE_HOURS,
               std::unique_ptr<Preference> preference = nullptr);
@@ -40,5 +41,5 @@ private:
 
     static uint num_professors;
 
-    bool set_id();
+    bool set_id(const std::string &forced_id);
 };

@@ -7,7 +7,8 @@ class Section;
 class Course
 {
 public:
-    Course(const std::string &name = "Course",
+    Course(const std::string &id = "",
+           const std::string &name = "Course",
            const uint &level = MAX_NUM_LEVELS,
            const uint &num_credits = MAX_NUM_CREDITS,
            const uint &num_weekly_hours = MAX_WEEKLY_HOURS,
@@ -44,5 +45,5 @@ private:
 
     static uint num_courses;
 
-    bool set_id();
+    bool set_id(const std::string &forced_id);
 };

@@ -8,7 +8,8 @@ class Course;
 class Section
 {
 public:
-    Section(Professor *professor = nullptr,
+    Section(const std::string &id = "",
+            Professor *professor = nullptr,
             Course *course = nullptr);
     Section(const Section&);
 
@@ -30,5 +31,5 @@ private:
 
     static uint num_sections;
 
-    bool set_id();
+    bool set_id(const std::string &forced_id);
 };

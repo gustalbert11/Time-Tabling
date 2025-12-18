@@ -2,10 +2,12 @@
 
 uint Section::num_sections = 0;
 
-Section::Section(Professor *professor,
-                Course *course)
+Section::Section(const std::string &id,
+                 Professor *professor,
+                 Course *course)
 {
-    set_id();
+    ++num_sections;
+    set_id(id);
     set_professor(professor);
     set_course(course);
 }
@@ -74,8 +76,21 @@ bool Section::add_time_slot(const Days &day, const uint &start_hour, const uint 
     return true;
 }
 
-bool Section::set_id()
+// bool Section::set_id()
+// {
+//     this->id = "SEC_" + std::to_string(++num_sections);
+//     return true;
+// }
+bool Section::set_id(const std::string &forced_id)
 {
-    this->id = "SEC_" + std::to_string(++num_sections);
+    //++num_sections;
+    if (!forced_id.empty()) 
+    {
+        this->id = forced_id;
+    } 
+    else 
+    {
+        this->id = "SEC_" + std::to_string(num_sections);
+    }
     return true;
 }

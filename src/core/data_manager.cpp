@@ -138,8 +138,8 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
 
     // Mapas temporales para traducir IDs del JSON a punteros reales en memoria
     // Esto es CRUCIAL si los IDs internos se autogeneran y difieren del archivo.
-    std::unordered_map<std::string, Professor*> json_id_to_prof;
-    std::unordered_map<std::string, Course*> json_id_to_course;
+    // std::unordered_map<std::string, Professor*> json_id_to_prof;
+    // std::unordered_map<std::string, Course*> json_id_to_course;
 
     if (root_obj.contains("professors") && 
         root_obj["professors"].isArray()) 
@@ -154,32 +154,54 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
             QJsonObject prof_obj = value.toObject();
 
             QString name_str = prof_obj.value("name").toString();
-            QString json_id = prof_obj.value("id").toString();
+            auto json_id = prof_obj.value("id").toString().toStdString();
 
-            auto professor = std::make_unique<Professor>();
-            professor->set_name(name_str.toStdString());
-            //professor->set_num_sections(static_cast<uint>(prof_obj.value("num_sections").toInt()));
-            professor->set_max_daily_hours(static_cast<uint>(prof_obj.value("max_daily_hours").toInt()));
-            professor->set_max_consecutive_hours(static_cast<uint>(prof_obj.value("max_consecutive_hours").toInt()));
+            auto existing_prof = get_professor(json_id);
 
-            if (prof_obj.contains("preference") && prof_obj["preference"].isObject()) 
+            if (existing_prof && update_existing)
             {
-                auto preference = process_preference_from_json(prof_obj["preference"].toObject());
-                if (preference) 
+                existing_prof->set_name(name_str.toStdString());
+                //existing_prof->set_num_sections(static_cast<uint>(prof_obj.value("num_sections").toInt()));
+                existing_prof->set_max_daily_hours(static_cast<uint>(prof_obj.value("max_daily_hours").toInt()));
+                existing_prof->set_max_consecutive_hours(static_cast<uint>(prof_obj.value("max_consecutive_hours").toInt()));
+
+                if (prof_obj.contains("preference") && prof_obj["preference"].isObject()) 
                 {
-                    professor->set_preference(std::move(preference));
+                    auto preference = process_preference_from_json(prof_obj["preference"].toObject());
+                    if (preference) 
+                    {
+                        existing_prof->set_preference(std::move(preference));
+                    }
                 }
             }
-
-            // Guardamos el puntero antes de mover el unique_ptr
-            Professor* prof_ptr = professor.get();
-            if(add_professor(std::move(professor))) 
+            else if (!existing_prof)
             {
-                // Mapeamos ID JSON -> Puntero real
-                if(!json_id.isEmpty()) 
+                auto professor = std::make_unique<Professor>(json_id);
+                professor->set_name(name_str.toStdString());
+                //professor->set_num_sections(static_cast<uint>(prof_obj.value("num_sections").toInt()));
+                professor->set_max_daily_hours(static_cast<uint>(prof_obj.value("max_daily_hours").toInt()));
+                professor->set_max_consecutive_hours(static_cast<uint>(prof_obj.value("max_consecutive_hours").toInt()));
+
+                if (prof_obj.contains("preference") && prof_obj["preference"].isObject()) 
                 {
-                    json_id_to_prof[json_id.toStdString()] = prof_ptr;
+                    auto preference = process_preference_from_json(prof_obj["preference"].toObject());
+                    if (preference) 
+                    {
+                        professor->set_preference(std::move(preference));
+                    }
                 }
+
+                // Guardamos el puntero antes de mover el unique_ptr
+                // Professor* prof_ptr = professor.get();
+                // if(add_professor(std::move(professor))) 
+                // {
+                //     // Mapeamos ID JSON -> Puntero real
+                //     if(!json_id.isEmpty()) 
+                //     {
+                //         json_id_to_prof[json_id.toStdString()] = prof_ptr;
+                //     }
+                // }
+                add_professor(std::move(professor));
             }
         }
     }
@@ -197,23 +219,38 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
             QJsonObject course_obj = value.toObject();
 
             QString name_str = course_obj.value("name").toString();
-            QString json_id = course_obj.value("id").toString();
+            auto json_id = course_obj.value("id").toString().toStdString();
 
-            auto course = std::make_unique<Course>();
-            course->set_name(name_str.toStdString());
-            course->set_level(static_cast<uint>(course_obj.value("level").toInt()));
-            course->set_num_credits(static_cast<uint>(course_obj.value("num_credits").toInt()));
-            //course->set_num_sections(static_cast<uint>(course_obj.value("num_sections").toInt()));
-            course->set_num_weekly_hours(static_cast<uint>(course_obj.value("num_weekly_hours").toInt()));
-            course->set_max_daily_hours(static_cast<uint>(course_obj.value("max_daily_hours").toInt()));
+            auto existing_course = get_course(json_id);
 
-            Course* course_ptr = course.get();
-            if(add_course(std::move(course))) 
+            if (existing_course && update_existing)
             {
-                if(!json_id.isEmpty()) 
-                {
-                    json_id_to_course[json_id.toStdString()] = course_ptr;
-                }
+                existing_course->set_name(name_str.toStdString());
+                existing_course->set_level(static_cast<uint>(course_obj.value("level").toInt()));
+                existing_course->set_num_credits(static_cast<uint>(course_obj.value("num_credits").toInt()));
+                //existing_course->set_num_sections(static_cast<uint>(course_obj.value("num_sections").toInt()));
+                existing_course->set_num_weekly_hours(static_cast<uint>(course_obj.value("num_weekly_hours").toInt()));
+                existing_course->set_max_daily_hours(static_cast<uint>(course_obj.value("max_daily_hours").toInt()));
+            }
+            else if (!existing_course)
+            {
+                auto course = std::make_unique<Course>(json_id);
+                course->set_name(name_str.toStdString());
+                course->set_level(static_cast<uint>(course_obj.value("level").toInt()));
+                course->set_num_credits(static_cast<uint>(course_obj.value("num_credits").toInt()));
+                //course->set_num_sections(static_cast<uint>(course_obj.value("num_sections").toInt()));
+                course->set_num_weekly_hours(static_cast<uint>(course_obj.value("num_weekly_hours").toInt()));
+                course->set_max_daily_hours(static_cast<uint>(course_obj.value("max_daily_hours").toInt()));
+
+                // Course* course_ptr = course.get();
+                // if(add_course(std::move(course))) 
+                // {
+                //     if(!json_id.isEmpty()) 
+                //     {
+                //         json_id_to_course[json_id.toStdString()] = course_ptr;
+                //     }
+                // }
+                add_course(std::move(course));
             }
         }
     }
@@ -229,50 +266,121 @@ bool DataManager::import_from_json(const std::string &filename, bool update_exis
                 continue;
             }
             QJsonObject sect_obj = value.toObject();
-            
-            auto section = std::make_unique<Section>();
 
-            // Vinculación segura usando el mapa
-            if (sect_obj.contains("professor")) 
+            auto json_id = sect_obj.value("id").toString().toStdString();
+
+            auto existing_section = get_section(json_id);
+
+            if (existing_section && update_existing)
             {
-                std::string prof_id = sect_obj["professor"].toString().toStdString();
-                if (json_id_to_prof.count(prof_id)) 
+                // Vinculación segura usando el mapa
+                if (sect_obj.contains("professor")) 
                 {
-                    Professor* prof = json_id_to_prof[prof_id];
-                    section->set_professor(prof);
-                    prof->add_section(section.get());
+                    std::string prof_id = sect_obj["professor"].toString().toStdString();
+                    // if (json_id_to_prof.count(prof_id)) 
+                    // {
+                    //     Professor* prof = json_id_to_prof[prof_id];
+                    //     existing_section->set_professor(prof);
+                    //     prof->add_section(existing_section);
+                    // }
+                    if (get_professor(prof_id)) 
+                    {
+                        Professor* prof = get_professor(prof_id);
+                        existing_section->set_professor(prof);
+                        prof->add_section(existing_section);
+                    }
+                }
+
+                if (sect_obj.contains("course")) 
+                {
+                    std::string course_id = sect_obj["course"].toString().toStdString();
+                    // if (json_id_to_course.count(course_id)) 
+                    // {
+                    //     Course* course = json_id_to_course[course_id];
+                    //     existing_section->set_course(course);
+                    //     course->add_section(existing_section);
+                    // }
+                    if (get_course(course_id)) 
+                    {
+                        Course* course = get_course(course_id);
+                        existing_section->set_course(course);
+                        course->add_section(existing_section);
+                    }
+                }
+
+                if (sect_obj.contains("time_slots") && 
+                sect_obj["time_slots"].isArray()) 
+                {
+                    QJsonArray time_slots_array = sect_obj["time_slots"].toArray();
+                    for(const QJsonValue& time_slot_val : time_slots_array) 
+                    {
+                        QJsonObject time_slot_obj = time_slot_val.toObject();
+                        std::string day_str = time_slot_obj["day"].toString().toStdString();
+                        uint start = time_slot_obj["start"].toInt();
+                        uint end = time_slot_obj["end"].toInt();
+                        
+                        Days day = string_to_day(day_str); 
+                        existing_section->add_time_slot(day, start, end);
+                    }
                 }
             }
-
-            if (sect_obj.contains("course")) 
+            else if (!existing_section)
             {
-                std::string course_id = sect_obj["course"].toString().toStdString();
-                if (json_id_to_course.count(course_id)) 
-                {
-                    Course* course = json_id_to_course[course_id];
-                    section->set_course(course);
-                    course->add_section(section.get());
-                }
-            }
+                auto section = std::make_unique<Section>(json_id);
 
-            if (sect_obj.contains("time_slots") && 
-            sect_obj["time_slots"].isArray()) 
-            {
-                QJsonArray time_slots_array = sect_obj["time_slots"].toArray();
-                for(const QJsonValue& time_slot_val : time_slots_array) 
+                // Vinculación segura usando el mapa
+                if (sect_obj.contains("professor")) 
                 {
-                    QJsonObject time_slot_obj = time_slot_val.toObject();
-                    std::string day_str = time_slot_obj["day"].toString().toStdString();
-                    uint start = time_slot_obj["start"].toInt();
-                    uint end = time_slot_obj["end"].toInt();
-                    
-                    // Asumiendo que string_to_day existe y funciona como en Preferences
-                    Days day = string_to_day(day_str); 
-                    section->add_time_slot(day, start, end);
+                    std::string prof_id = sect_obj["professor"].toString().toStdString();
+                    // if (json_id_to_prof.count(prof_id)) 
+                    // {
+                    //     Professor* prof = json_id_to_prof[prof_id];
+                    //     section->set_professor(prof);
+                    //     prof->add_section(section.get());
+                    // }
+                    if (get_professor(prof_id)) 
+                    {
+                        Professor* prof = get_professor(prof_id);
+                        section->set_professor(prof);
+                        prof->add_section(section.get());
+                    }
                 }
-            }
 
-            add_section(std::move(section));
+                if (sect_obj.contains("course")) 
+                {
+                    std::string course_id = sect_obj["course"].toString().toStdString();
+                    // if (json_id_to_course.count(course_id)) 
+                    // {
+                    //     Course* course = json_id_to_course[course_id];
+                    //     section->set_course(course);
+                    //     course->add_section(section.get());
+                    // }
+                    if (get_course(course_id)) 
+                    {
+                        Course* course = get_course(course_id);
+                        section->set_course(course);
+                        course->add_section(section.get());
+                    }
+                }
+
+                if (sect_obj.contains("time_slots") && 
+                sect_obj["time_slots"].isArray()) 
+                {
+                    QJsonArray time_slots_array = sect_obj["time_slots"].toArray();
+                    for(const QJsonValue& time_slot_val : time_slots_array) 
+                    {
+                        QJsonObject time_slot_obj = time_slot_val.toObject();
+                        std::string day_str = time_slot_obj["day"].toString().toStdString();
+                        uint start = time_slot_obj["start"].toInt();
+                        uint end = time_slot_obj["end"].toInt();
+                        
+                        Days day = string_to_day(day_str); 
+                        section->add_time_slot(day, start, end);
+                    }
+                }
+
+                add_section(std::move(section));
+            }
         }
     }     
     return true;
@@ -395,7 +503,7 @@ bool DataManager::import_professors_from_csv(const std::string &filename, bool u
         }
         else if (!existing_prof)
         {
-            auto professor = std::make_unique<Professor>();
+            auto professor = std::make_unique<Professor>(id);
             professor->set_name(name.toStdString());
             // professor->set_num_sections(parts[2].toUInt());
             // professor->set_max_daily_hours(parts[3].toUInt());
@@ -524,7 +632,7 @@ bool DataManager::import_courses_from_csv(const std::string &filename, bool upda
         }
         else if (!existing_course)
         {
-            auto course = std::make_unique<Course>();
+            auto course = std::make_unique<Course>(id);
             course->set_name(name.toStdString());
             course->set_level(parts[2].toUInt());
             course->set_num_credits(parts[3].toUInt());
@@ -616,7 +724,7 @@ bool DataManager::import_sections_from_csv(const std::string &filename, bool upd
         }
         else if (!existing_section)
         {
-            auto section = std::make_unique<Section>();
+            auto section = std::make_unique<Section>(id);
             
             if (!prof_id.isEmpty()) 
             {

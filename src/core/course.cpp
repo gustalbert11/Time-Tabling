@@ -2,13 +2,15 @@
 
 uint Course::num_courses = 0;
 
-Course::Course(const std::string &name,
-                 const uint &level,
-                 const uint &num_credits,
-                 const uint &num_weekly_hours,
-                 const uint &max_daily_hours)
+Course::Course(const std::string &id,
+               const std::string &name,
+               const uint &level,
+               const uint &num_credits,
+               const uint &num_weekly_hours,
+               const uint &max_daily_hours)
 {
-    set_id();
+    ++num_courses;
+    set_id(id);
     set_name(name);
     set_level(level);
     set_num_credits(num_credits);
@@ -133,8 +135,21 @@ bool Course::add_section(Section *section)
     return true;
 }
 
-bool Course::set_id()
+// bool Course::set_id()
+// {
+//     this->id = "COURSE_" + std::to_string(++num_courses);
+//     return true;
+// }
+bool Course::set_id(const std::string &forced_id)
 {
-    this->id = "COURSE_" + std::to_string(++num_courses);
+    //++num_courses;
+    if (!forced_id.empty()) 
+    {
+        this->id = forced_id;
+    } 
+    else 
+    {
+        this->id = "COURSE_" + std::to_string(num_courses);
+    }
     return true;
 }

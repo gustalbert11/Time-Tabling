@@ -2,12 +2,14 @@
 
 uint Professor::num_professors = 0;
 
-Professor::Professor(const std::string &name,
+Professor::Professor(const std::string &id,
+                     const std::string &name,
                      const uint &max_daily_hours,
                      const uint &max_consecutive_hours,
                      std::unique_ptr<Preference> preference)
 {
-    set_id();
+    ++num_professors;
+    set_id(id);
     set_name(name);
     set_max_daily_hours(max_daily_hours);
     set_max_consecutive_hours(max_consecutive_hours);
@@ -116,8 +118,21 @@ bool Professor::add_section(Section* section)
     return true;
 }
 
-bool Professor::set_id()
+// bool Professor::set_id()
+// {
+//     this->id = "PROF_" + std::to_string(++num_professors);
+//     return true;
+// }
+bool Professor::set_id(const std::string &forced_id)
 {
-    this->id = "PROF_" + std::to_string(++num_professors);
+    //++num_professors;
+    if (!forced_id.empty()) 
+    {
+        this->id = forced_id;
+    } 
+    else 
+    {
+        this->id = "PROF_" + std::to_string(num_professors);
+    }
     return true;
 }
