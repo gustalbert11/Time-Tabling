@@ -8,35 +8,30 @@ CourseForm::CourseForm(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Crear widget central y layout principal
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
 
     // Configurar la ventana
-    this->setWindowTitle("Formulario de Datos");
+    this->setWindowTitle("Formulario de Materia");
     this->setMinimumSize(600, 300);
 
-    labels.push_back(new QLabel("Nombre de la Materia", this));
+    labels.push_back(new QLabel("Nombre: ", this));
     line_edit = new QLineEdit(this);
 
-    labels.push_back(new QLabel("Nivel de la materia", this));
+    labels.push_back(new QLabel("Nivel: ", this));
     spinboxes.push_back(new QSpinBox(this));
     spinboxes[0]->setRange(1, MAX_NUM_LEVELS);
 
-    labels.push_back(new QLabel("Numero de UC", this));
+    labels.push_back(new QLabel("Numero de UC: ", this));
     spinboxes.push_back(new QSpinBox(this));
     spinboxes[1]->setRange(1, MAX_NUM_CREDITS);
 
-    // labels.push_back(new QLabel("Numero de secciones", this));
-    // spinboxes.push_back(new QSpinBox(this));
-    // spinboxes[2]->setRange(1, COURSE_MAX_NUM_SECTIONS);
-
-    labels.push_back(new QLabel("Horas semanales", this));
+    labels.push_back(new QLabel("Horas semanales: ", this));
     spinboxes.push_back(new QSpinBox(this));
     spinboxes[2]->setRange(4, MAX_WEEKLY_HOURS);
     spinboxes[2]->setSingleStep(2);
 
-    labels.push_back(new QLabel("Horas maximas diarias", this));
+    labels.push_back(new QLabel("Maximo de horas diarias: ", this));
     spinboxes.push_back(new QSpinBox(this));
     spinboxes[3]->setRange(2, MAX_DAILY_HOURS);
     spinboxes[3]->setSingleStep(2);
@@ -64,7 +59,6 @@ CourseForm::CourseForm(QWidget *parent)
     //Espaciado
     mainLayout->addStretch();
 
-    // Configurar el widget central
     this->setCentralWidget(centralWidget);
     setupConnections();
 }
@@ -78,7 +72,7 @@ void CourseForm::setupConnections()
 
 void CourseForm::onFieldReturnPressed()
 {
-    onSubmit(); // Último campo: enviar
+    onSubmit();
 }
 
 void CourseForm::onSubmit()
@@ -88,24 +82,21 @@ void CourseForm::onSubmit()
 
 void CourseForm::processForm()
 {
-    auto cours = std::make_unique<Course>();
+    auto course = std::make_unique<Course>();
     QString data1 = line_edit->text();
-    cours->set_name(data1.toStdString());
+    course->set_name(data1.toStdString());
 
     uint data2 = static_cast<uint>(spinboxes[0]->value());
-    cours->set_level(data2);
+    course->set_level(data2);
 
     uint data3 = static_cast<uint>(spinboxes[1]->value());
-    cours->set_num_credits(data3);
-
-    // uint data4 = static_cast<uint>(spinboxes[2]->value());
-    // cours->set_num_sections(data4);
+    course->set_num_credits(data3);
 
     uint data5 = static_cast<uint>(spinboxes[2]->value());
-    cours->set_num_weekly_hours(data5);
+    course->set_num_weekly_hours(data5);
 
     uint data6 = static_cast<uint>(spinboxes[3]->value());
-    cours->set_max_daily_hours(data6);
+    course->set_max_daily_hours(data6);
 
     if (data1.isEmpty())
     {
@@ -113,7 +104,7 @@ void CourseForm::processForm()
         return;
     }
 
-    dm_instance.add_course(std::move(cours));
+    dm_instance.add_course(std::move(course));
     this->close();
 }
 

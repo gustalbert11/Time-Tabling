@@ -7,22 +7,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    
     ui->setupUi(this);
     setWindowTitle("Time Tabling");  
     ui->insertCourseButton->hide();
     ui->ShowInfoButton->setText("Mostrar Materias");
-    // ui->tableInfo->setColumnCount(7);
-    // ui->tableInfo->setHorizontalHeaderLabels(
-    //     {"ID","Nombre", "Secciones", "Max horas diario", "Max horas consecutivo","Tipo de Pref","Descripcion Pref"}
-    // );
-    // ui->tableInfo->setColumnWidth(0, 150);
-    // ui->tableInfo->setColumnWidth(1, 150);
-    // ui->tableInfo->setColumnWidth(2, 150);
-    // ui->tableInfo->setColumnWidth(3, 150);
-    // ui->tableInfo->setColumnWidth(4, 150);
-    // ui->tableInfo->setColumnWidth(5, 200);
-    // ui->tableInfo->setColumnWidth(6, 200);
     ui->tableInfo->setColumnCount(6);
     ui->tableInfo->setHorizontalHeaderLabels(
         {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de preferencia","Descripcion preferencia"}
@@ -61,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->importButton->setMenu(import_menu);
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
-    // (Esto depende del estilo de tu SO, pero ayuda al usuario a saber que hay opciones)
     ui->importButton->setStyleSheet("QPushButton { text-align: center; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
 
     //connect(ui->exportButton, &QPushButton::clicked, this, &MainWindow::export_json);
@@ -82,7 +69,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->exportButton->setMenu(export_menu);
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
-    // (Esto depende del estilo de tu SO, pero ayuda al usuario a saber que hay opciones)
     ui->exportButton->setStyleSheet("QPushButton { text-align: center; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
     
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
@@ -159,7 +145,6 @@ void MainWindow::import_professors_csv()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "Profesores importados correctamente.");
-        // Forzamos la vista de profesores
         showing_professors = false;
         update_table(); 
     } 
@@ -334,11 +319,6 @@ void MainWindow::show_professors()
 
         ui->tableInfo->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(prof->get_id())));
         ui->tableInfo->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(prof->get_name())));
-        // ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::number(prof->get_num_sections())));
-        // ui->tableInfo->setItem(row, 3, new QTableWidgetItem(QString::number(prof->get_max_daily_hours())));
-        // ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::number(prof->get_max_consecutive_hours())));
-        // ui->tableInfo->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(preference_type_to_string(prof->get_preference()->get_type()))));
-        // ui->tableInfo->setItem(row, 6, new QTableWidgetItem(QString::fromStdString(prof->get_preference()->get_description())));
         ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::number(prof->get_max_daily_hours())));
         ui->tableInfo->setItem(row, 3, new QTableWidgetItem(QString::number(prof->get_max_consecutive_hours())));
         ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(preference_type_to_string(prof->get_preference()->get_type()))));
@@ -354,7 +334,6 @@ void MainWindow::open_prof_form()
         prof_form = new ProfessorForm();
         prof_form->setAttribute(Qt::WA_DeleteOnClose);
 
-        // Conectar la señal de destrucción
         connect(prof_form, &ProfessorForm::destroyed, this, &MainWindow::on_professor_window_closed);
 
         prof_form->show();
@@ -388,9 +367,6 @@ void MainWindow::show_courses()
         ui->tableInfo->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(course->get_name())));
         ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::number(course->get_level())));
         ui->tableInfo->setItem(row, 3, new QTableWidgetItem(QString::number(course->get_num_credits())));
-        // ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::number(course->get_num_sections())));
-        // ui->tableInfo->setItem(row, 5, new QTableWidgetItem(QString::number(course->get_num_weekly_hours())));
-        // ui->tableInfo->setItem(row, 6, new QTableWidgetItem(QString::number(course->get_max_daily_hours())));
         ui->tableInfo->setItem(row, 4, new QTableWidgetItem(QString::number(course->get_num_weekly_hours())));
         ui->tableInfo->setItem(row, 5, new QTableWidgetItem(QString::number(course->get_max_daily_hours())));
         row++;
@@ -409,9 +385,6 @@ void MainWindow::update_table()
         ui->insertCourseButton->show();
         ui->ShowInfoButton->setText("Mostrar Profesores");
         ui->tableInfo->setColumnCount(6);
-        // ui->tableInfo->setHorizontalHeaderLabels(
-        // {"ID","Nombre", "Semestre", "U.C", "Secciones","Horas Semanales","Max Horas Diarias"}
-        // );
         ui->tableInfo->setHorizontalHeaderLabels(
         {"ID","Nombre", "Semestre", "U.C","Horas Semanales","Max Horas Diarias"}
         );
@@ -431,17 +404,6 @@ void MainWindow::update_table()
         ui->insertProfButton->show();
         ui->insertCourseButton->hide();
         ui->ShowInfoButton->setText("Mostrar Materias");
-        // ui->tableInfo->setColumnCount(7);
-        // ui->tableInfo->setHorizontalHeaderLabels(
-        // {"ID","Nombre", "Secciones", "Max horas diario", "Max horas consecutivo","Tipo de Pref","Descripcion Pref"}
-        // );
-        // ui->tableInfo->setColumnWidth(0, 150);
-        // ui->tableInfo->setColumnWidth(1, 150);
-        // ui->tableInfo->setColumnWidth(2, 150);
-        // ui->tableInfo->setColumnWidth(3, 150);
-        // ui->tableInfo->setColumnWidth(4, 150);
-        // ui->tableInfo->setColumnWidth(5, 200);
-        // ui->tableInfo->setColumnWidth(6, 200);
         ui->tableInfo->setColumnCount(6);
         ui->tableInfo->setHorizontalHeaderLabels(
         {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
@@ -509,7 +471,8 @@ void MainWindow::on_section_window_closed()
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
 {
-    if(item->text().contains(QString("PROF")) && dm_instance.get_professor(item->text().toStdString()))
+    if(item->text().contains(QString("PROF")) && 
+       dm_instance.get_professor(item->text().toStdString()))
     {
         QMessageBox::StandardButton answer = QMessageBox::question
             (
@@ -525,7 +488,8 @@ void MainWindow::onItemClicked(QTableWidgetItem *item)
         }
     }
 
-    if(item->text().contains(QString("COURSE")) && dm_instance.get_course(item->text().toStdString()))
+    if(item->text().contains(QString("COURSE")) && 
+       dm_instance.get_course(item->text().toStdString()))
     {
         QMessageBox::StandardButton answer = QMessageBox::question
             (
@@ -569,7 +533,9 @@ void MainWindow::create_schedule()
             out << "   Horario: " << entry.start_hour << ":00-" << entry.end_hour << ":00\n";
 
             auto professor = dm_instance.get_professor(entry.professor_id);
-            if (professor && professor->get_preference()) {
+            if (professor && 
+                professor->get_preference()) 
+            {
                 auto pref = professor->get_preference();
                 bool day_ok = pref->get_days().contains(entry.day);
                 bool hour_ok = false;

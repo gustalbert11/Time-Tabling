@@ -3,7 +3,8 @@
 
 #include "professorform.h"
 
-namespace Ui {
+namespace Ui 
+{
 class CourseForm;
 }
 

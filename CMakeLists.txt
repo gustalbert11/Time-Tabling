@@ -68,17 +68,17 @@ add_dependencies(Designar Designar_CopyFiles)
 # -------------------------------------------------------------
 
 set(SOURCES_GUI
-    src/gui/mainwindow.cpp
     src/gui/professorform.cpp
     src/gui/courseform.cpp
     src/gui/sectionwindow.cpp
+    src/gui/mainwindow.cpp
 )
 
 set(UI_FILES
-    ui/mainwindow.ui
     ui/professorform.ui
     ui/courseform.ui
     ui/sectionwindow.ui
+    ui/mainwindow.ui
 )
 
 set(SOURCES_CORE

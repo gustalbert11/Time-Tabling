@@ -15,7 +15,8 @@
 #include <QCheckBox>
 #include "core/data_manager.hpp"
 
-namespace Ui {
+namespace Ui 
+{
 class ProfessorForm;
 }
 
@@ -30,7 +31,7 @@ public:
 private slots:
     void onSubmit();
     void onFieldReturnPressed();
-    void combox1_current_text_changed();
+    void combo_box_current_text_changed();
     void start_hour_spin_box_changed();
     void end_hour_spin_box_changed();
 
@@ -39,7 +40,7 @@ private:
     std::vector<QLineEdit*> line_edits;
     std::vector<QLabel*> labels;
     std::vector<QSpinBox*> spin_boxes;
-    std::vector<QCheckBox*> checkBoxes;
+    std::vector<QCheckBox*> check_boxes;
 
     QLineEdit *lineEdit1;
 
@@ -51,7 +52,6 @@ private:
 
     QLineEdit *lineEdit5;
 
-
     QLabel *label1;
     QLabel *label2;
     QLabel *label3;
@@ -61,11 +61,7 @@ private:
     QLabel *label7;
     QLabel *labelp;
 
-
-    QComboBox *combox1;
-
-
-    
+    QComboBox *combo_box;
 
     QPushButton *submitButton;
 

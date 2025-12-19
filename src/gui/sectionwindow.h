@@ -1,10 +1,10 @@
 #ifndef SECTIONWINDOW_H
 #define SECTIONWINDOW_H
 
-#include <QMainWindow>
 #include "professorform.h"
 
-namespace Ui {
+namespace Ui 
+{
 class SectionWindow;
 }
 

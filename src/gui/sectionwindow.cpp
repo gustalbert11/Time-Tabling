@@ -1,6 +1,5 @@
 #include "sectionwindow.h"
 #include "ui_sectionwindow.h"
-#include "core/data_manager.hpp"
 #include <QDebug>
 
 SectionWindow::SectionWindow(QWidget *parent)
@@ -9,15 +8,13 @@ SectionWindow::SectionWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Crear widget central y layout principal
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
 
-    // Configurar la ventana
-    this->setWindowTitle("Formulario de Datos");
+    this->setWindowTitle("Formulario de Seccion");
     this->setMinimumSize(600, 300);
 
-    label1 = new QLabel("Escoga un profesor", this);
+    label1 = new QLabel("Escoge un profesor: ", this);
     combox1 = new QComboBox(this);
 
     auto& prof = dm_instance.get_professors();
@@ -27,7 +24,7 @@ SectionWindow::SectionWindow(QWidget *parent)
         combox1->addItem(QString::fromStdString(pair.second->get_name()));
     }
 
-    label2 = new QLabel("Escoga una materia", this);
+    label2 = new QLabel("Escoge una materia: ", this);
     combox2 = new QComboBox(this);
 
     auto& courses = dm_instance.get_courses();

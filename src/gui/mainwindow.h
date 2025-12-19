@@ -4,7 +4,6 @@
 #include "courseform.h"
 #include "sectionwindow.h"
 #include <QTableWidget>
-#include <QMessageBox>
 // [cite_start]#include <QMenu> //[cite: 1] Necesario para el menú desplegable
 #include <QMenu>
 #include "flow/flow_network.hpp"
