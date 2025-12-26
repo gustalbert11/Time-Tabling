@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "courseform.h"
-#include "sectionwindow.h"
+#include "sectionform.h"
 #include <QTableWidget>
 // [cite_start]#include <QMenu> //[cite: 1] Necesario para el menú desplegable
 #include <QMenu>
@@ -39,6 +39,7 @@ private slots:
 
     void show_professors();
     void show_courses();
+    void show_sections();
     
     void update_table();
 
@@ -58,10 +59,12 @@ private:
     Ui::MainWindow *ui;
     ProfessorForm* prof_form = nullptr;
     CourseForm* course_form = nullptr;
-    SectionWindow* section_window = nullptr;
+    SectionForm* section_form = nullptr;
     bool showing_professors = true;
+    EntityType current_entity_type = EntityType::SECTION;
 
     QMenu *import_menu = nullptr;
     QMenu *export_menu = nullptr;
+    std::vector<QCheckBox*> check_boxes;
 };
 #endif // MAINWINDOW_H

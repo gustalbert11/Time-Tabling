@@ -9,18 +9,20 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Time Tabling");  
-    ui->insertCourseButton->hide();
-    ui->ShowInfoButton->setText("Mostrar Materias");
-    ui->tableInfo->setColumnCount(6);
-    ui->tableInfo->setHorizontalHeaderLabels(
-        {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de preferencia","Descripcion preferencia"}
-    );
-    ui->tableInfo->setColumnWidth(0, 150);
-    ui->tableInfo->setColumnWidth(1, 150);
-    ui->tableInfo->setColumnWidth(2, 150);
-    ui->tableInfo->setColumnWidth(3, 150);
-    ui->tableInfo->setColumnWidth(4, 150);
-    ui->tableInfo->setColumnWidth(5, 200);
+    // ui->insertCourseButton->hide();
+    // ui->ShowInfoButton->setText("Mostrar Materias");
+    // ui->tableInfo->setColumnCount(6);
+    // ui->tableInfo->setHorizontalHeaderLabels(
+    //     {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de preferencia","Descripcion preferencia"}
+    // );
+    // ui->tableInfo->setColumnWidth(0, 150);
+    // ui->tableInfo->setColumnWidth(1, 150);
+    // ui->tableInfo->setColumnWidth(2, 150);
+    // ui->tableInfo->setColumnWidth(3, 150);
+    // ui->tableInfo->setColumnWidth(4, 150);
+    // ui->tableInfo->setColumnWidth(5, 200);
+
+    update_table();
 
     ui->tableInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -373,51 +375,125 @@ void MainWindow::show_courses()
     }
 }
 
+void MainWindow::show_sections()
+{
+    const auto& sections = dm_instance.get_sections();
+
+    ui->tableInfo->setRowCount(static_cast<int>(sections.size()));       
+
+    int row = 0;
+    for (const auto &pair : sections)
+    {
+        const auto &section = pair.second.get();
+
+        ui->tableInfo->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(section->get_id())));
+        ui->tableInfo->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(section->get_course()->get_id())));
+        ui->tableInfo->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(section->get_professor()->get_id())));
+        row++;
+    }
+}
+
 void MainWindow::update_table()
 {
     ui->tableInfo->clear();
     ui->tableInfo->setRowCount(0);
     ui->tableInfo->setColumnCount(0);
   
-    if(showing_professors)
-    {
-        ui->insertProfButton->hide();
-        ui->insertCourseButton->show();
-        ui->ShowInfoButton->setText("Mostrar Profesores");
-        ui->tableInfo->setColumnCount(6);
-        ui->tableInfo->setHorizontalHeaderLabels(
-        {"ID","Nombre", "Semestre", "U.C","Horas Semanales","Max Horas Diarias"}
-        );
-        ui->tableInfo->setColumnWidth(0, 180);
-        ui->tableInfo->setColumnWidth(1, 180);
-        ui->tableInfo->setColumnWidth(2, 180);
-        ui->tableInfo->setColumnWidth(3, 180);
-        ui->tableInfo->setColumnWidth(4, 180);
-        ui->tableInfo->setColumnWidth(5, 180);
+    // if (showing_professors)
+    // {
+    //     ui->insertProfButton->hide();
+    //     ui->insertCourseButton->show();
+    //     ui->ShowInfoButton->setText("Mostrar Profesores");
+    //     ui->tableInfo->setColumnCount(6);
+    //     ui->tableInfo->setHorizontalHeaderLabels(
+    //     {"ID","Nombre", "Semestre", "U.C","Horas Semanales","Max Horas Diarias"}
+    //     );
+    //     ui->tableInfo->setColumnWidth(0, 180);
+    //     ui->tableInfo->setColumnWidth(1, 180);
+    //     ui->tableInfo->setColumnWidth(2, 180);
+    //     ui->tableInfo->setColumnWidth(3, 180);
+    //     ui->tableInfo->setColumnWidth(4, 180);
+    //     ui->tableInfo->setColumnWidth(5, 180);
 
-        show_courses();
+    //     show_courses();
 
-        showing_professors = false;
-    } 
-    else
+    //     showing_professors = false;
+    // } 
+    // else
+    // {
+    //     ui->insertProfButton->show();
+    //     ui->insertCourseButton->hide();
+    //     ui->ShowInfoButton->setText("Mostrar Materias");
+    //     ui->tableInfo->setColumnCount(6);
+    //     ui->tableInfo->setHorizontalHeaderLabels(
+    //     {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
+    //     );
+    //     ui->tableInfo->setColumnWidth(0, 150);
+    //     ui->tableInfo->setColumnWidth(1, 150);
+    //     ui->tableInfo->setColumnWidth(2, 150);
+    //     ui->tableInfo->setColumnWidth(3, 150);
+    //     ui->tableInfo->setColumnWidth(4, 150);
+    //     ui->tableInfo->setColumnWidth(5, 200);
+        
+    //     show_professors();
+        
+    //     showing_professors = true;
+    // }
+
+    switch (current_entity_type) 
     {
-        ui->insertProfButton->show();
-        ui->insertCourseButton->hide();
-        ui->ShowInfoButton->setText("Mostrar Materias");
-        ui->tableInfo->setColumnCount(6);
-        ui->tableInfo->setHorizontalHeaderLabels(
-        {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
-        );
-        ui->tableInfo->setColumnWidth(0, 150);
-        ui->tableInfo->setColumnWidth(1, 150);
-        ui->tableInfo->setColumnWidth(2, 150);
-        ui->tableInfo->setColumnWidth(3, 150);
-        ui->tableInfo->setColumnWidth(4, 150);
-        ui->tableInfo->setColumnWidth(5, 200);
-        
-        show_professors();
-        
-        showing_professors = true;
+        case PROFESSOR:
+            ui->insertProfButton->show();
+            ui->insertCourseButton->hide();
+            ui->insertSecButton->hide();
+            //ui->ShowInfoButton->setText("Mostrar Materias");
+            ui->tableInfo->setColumnCount(6);
+            ui->tableInfo->setHorizontalHeaderLabels(
+                {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
+            );
+            ui->tableInfo->setColumnWidth(0, 150);
+            ui->tableInfo->setColumnWidth(1, 150);
+            ui->tableInfo->setColumnWidth(2, 150);
+            ui->tableInfo->setColumnWidth(3, 150);
+            ui->tableInfo->setColumnWidth(4, 150);
+            ui->tableInfo->setColumnWidth(5, 200);
+            
+            show_professors();
+            break;
+
+        case COURSE:
+            ui->insertProfButton->hide();
+            ui->insertCourseButton->show();
+            ui->insertSecButton->hide();
+            //ui->ShowInfoButton->setText("Mostrar Materias");
+            ui->tableInfo->setColumnCount(6);
+            ui->tableInfo->setHorizontalHeaderLabels(
+                {"ID","Nombre", "Nivel", "U.C","Horas Semanales","Max Horas Diarias"}
+            );
+            ui->tableInfo->setColumnWidth(0, 180);
+            ui->tableInfo->setColumnWidth(1, 180);
+            ui->tableInfo->setColumnWidth(2, 180);
+            ui->tableInfo->setColumnWidth(3, 180);
+            ui->tableInfo->setColumnWidth(4, 180);
+            ui->tableInfo->setColumnWidth(5, 180);
+
+            show_courses();
+            break;
+
+        case SECTION:
+            ui->insertProfButton->hide();
+            ui->insertCourseButton->hide();
+            ui->insertSecButton->show();
+            //ui->ShowInfoButton->setText("Mostrar Profesores");
+            ui->tableInfo->setColumnCount(3);
+            ui->tableInfo->setHorizontalHeaderLabels(
+                {"ID Sección","ID Materia", "ID Profesor"}
+            );
+            ui->tableInfo->setColumnWidth(0, 200);
+            ui->tableInfo->setColumnWidth(1, 200);
+            ui->tableInfo->setColumnWidth(2, 200);
+            show_sections();
+            break;
     }
 }
 
@@ -441,19 +517,19 @@ void MainWindow::open_course_form()
 
 void MainWindow::open_section_form()
 {
-    if (!section_window)
+    if (!section_form)
     {
-        section_window = new SectionWindow();
-        section_window->setAttribute(Qt::WA_DeleteOnClose);
+        section_form = new SectionForm();
+        section_form->setAttribute(Qt::WA_DeleteOnClose);
 
-        connect(section_window, &SectionWindow::destroyed, this, &MainWindow::on_section_window_closed);
+        connect(section_form, &SectionForm::destroyed, this, &MainWindow::on_section_window_closed);
 
-        section_window->show();
+        section_form->show();
     }
     else
     {
-        section_window->raise();
-        section_window->activateWindow();
+        section_form->raise();
+        section_form->activateWindow();
     }
 }
 
@@ -466,7 +542,7 @@ void MainWindow::on_course_window_closed()
 
 void MainWindow::on_section_window_closed()
 {
-    section_window = nullptr;
+    section_form = nullptr;
 }
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)

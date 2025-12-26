@@ -1,10 +1,10 @@
-#include "sectionwindow.h"
-#include "ui_sectionwindow.h"
+#include "sectionform.h"
+#include "ui_sectionform.h"
 #include <QDebug>
 
-SectionWindow::SectionWindow(QWidget *parent)
+SectionForm::SectionForm(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::SectionWindow)
+    , ui(new Ui::SectionForm)
 {
     ui->setupUi(this);
 
@@ -53,34 +53,32 @@ SectionWindow::SectionWindow(QWidget *parent)
 
     mainLayout->addStretch();
 
-    // Configurar el widget central
     this->setCentralWidget(centralWidget);
     setupConnections();
 }
 
-SectionWindow::~SectionWindow()
+SectionForm::~SectionForm()
 {
     delete ui;
 }
 
-void SectionWindow::setupConnections()
+void SectionForm::setupConnections()
 {
-    connect(submitButton, &QPushButton::clicked, this, &SectionWindow::onSubmit);
+    connect(submitButton, &QPushButton::clicked, this, &SectionForm::onSubmit);
     submitButton->setDefault(true);
 }
 
-void SectionWindow::onFieldReturnPressed()
+void SectionForm::onFieldReturnPressed()
 {
     onSubmit();
 }
 
-void SectionWindow::onSubmit()
+void SectionForm::onSubmit()
 {
     processForm();
 }
 
-
-void SectionWindow::processForm()
+void SectionForm::processForm()
 {
     auto section = std::make_unique<Section>();
 

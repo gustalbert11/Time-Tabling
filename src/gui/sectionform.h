@@ -1,20 +1,20 @@
-#ifndef SECTIONWINDOW_H
-#define SECTIONWINDOW_H
+#ifndef SECTIONFORM_H
+#define SECTIONFORM_H
 
 #include "professorform.h"
 
 namespace Ui 
 {
-class SectionWindow;
+class SectionForm;
 }
 
-class SectionWindow : public QMainWindow
+class SectionForm : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit SectionWindow(QWidget *parent = nullptr);
-    ~SectionWindow();
+    explicit SectionForm(QWidget *parent = nullptr);
+    ~SectionForm();
 
 private slots:
     void onSubmit();
@@ -33,7 +33,7 @@ private:
     QComboBox* combox2;
 
     QPushButton* submitButton;
-    Ui::SectionWindow *ui;
+    Ui::SectionForm *ui;
 };
 
-#endif // SECTIONWINDOW_H
+#endif // SECTIONFORM_H

@@ -4,6 +4,50 @@
 #include <vector>
 #include <map.hpp>
 
+enum EntityType 
+{ 
+    UNKNOWN,
+    PROFESSOR, 
+    COURSE, 
+    SECTION 
+};
+
+inline std::string entity_type_to_string(EntityType type)
+{
+    switch (type)
+    {
+        case PROFESSOR: 
+            return "PROFESSOR";
+
+        case COURSE: 
+            return "COURSE";
+
+        case SECTION: 
+            return "SECTION";
+
+        default: 
+            return "UNKNOWN";
+    }
+}
+
+inline EntityType string_to_entity_type(const std::string& str)
+{
+    if (str == "PROFESSOR") 
+    {
+        return PROFESSOR;
+    }
+    else if (str == "COURSE") 
+    {
+        return COURSE;
+    }
+    else if (str == "SECTION") 
+    {
+        return SECTION;
+    }
+
+    return UNKNOWN;
+}
+
 enum Days 
 { 
     NO_SPECIFIED,
