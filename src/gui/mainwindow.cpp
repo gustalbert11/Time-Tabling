@@ -8,20 +8,33 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowTitle("Time Tabling");  
-    // ui->insertCourseButton->hide();
-    // ui->ShowInfoButton->setText("Mostrar Materias");
-    // ui->tableInfo->setColumnCount(6);
-    // ui->tableInfo->setHorizontalHeaderLabels(
-    //     {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de preferencia","Descripcion preferencia"}
-    // );
-    // ui->tableInfo->setColumnWidth(0, 150);
-    // ui->tableInfo->setColumnWidth(1, 150);
-    // ui->tableInfo->setColumnWidth(2, 150);
-    // ui->tableInfo->setColumnWidth(3, 150);
-    // ui->tableInfo->setColumnWidth(4, 150);
-    // ui->tableInfo->setColumnWidth(5, 200);
+    setWindowTitle("Time Tabling");
 
+    ui->showInfoButton->hide();
+
+    // 1. Crear el grupo de botones
+    view_group = new QButtonGroup(this);
+
+    // 2. Instanciar los RadioButtons
+    radio_prof = new QRadioButton("Profesores", this);
+    radio_course = new QRadioButton("Materias", this);
+    radio_sect = new QRadioButton("Secciones", this);
+
+    // 3. Añadirlos al grupo asignando el ID según el enum EntityType 
+    view_group->addButton(radio_prof, EntityType::PROFESSOR);
+    view_group->addButton(radio_course, EntityType::COURSE);
+    view_group->addButton(radio_sect, EntityType::SECTION);
+
+    // 4. Conectar la señal idClicked al slot
+    connect(view_group, &QButtonGroup::idClicked, this, &MainWindow::on_view_changed);
+
+    // 5. Añadirlos a la interfaz (por ejemplo, al layout vertical que ya tienes) [cite: 5, 6]
+    ui->verticalLayout_3->addWidget(radio_prof);
+    ui->verticalLayout_3->addWidget(radio_course);
+    ui->verticalLayout_3->addWidget(radio_sect);
+
+    // 6. Definir el estado inicial
+    radio_prof->setChecked(true);
     update_table();
 
     ui->tableInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -32,8 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::go_to_next_window);
 
     connect(ui->backButton, &QPushButton::clicked, this, &MainWindow::go_to_previous_window);
-
-    //connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::import_json);
 
     import_menu = new QMenu(this);
     
@@ -52,8 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
     
     // Opcional: Para que no parezca un botón normal, le agregamos una flechita visualmente
     ui->importButton->setStyleSheet("QPushButton { text-align: center; }::menu-indicator { subcontrol-origin: padding; subcontrol-position: center right; }");
-
-    //connect(ui->exportButton, &QPushButton::clicked, this, &MainWindow::export_json);
 
     export_menu = new QMenu(this);
     
@@ -75,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     connect(ui->insertProfButton, &QPushButton::clicked, this, &MainWindow::open_prof_form);
 
-    connect(ui->ShowInfoButton, &QPushButton::clicked, this, &MainWindow::update_table);
+    connect(ui->showInfoButton, &QPushButton::clicked, this, &MainWindow::update_table);
 
     connect(ui->insertCourseButton, &QPushButton::clicked, this, &MainWindow::open_course_form);
 
@@ -97,11 +106,17 @@ void MainWindow::go_to_next_window()
     ui->stackedWidget->setCurrentIndex(it + 1);
     dm_instance.clear_all_data();
 }
-
 void MainWindow::go_to_previous_window()
 {
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it - 1);
+}
+
+void MainWindow::on_view_changed(int id)
+{
+    current_entity_type = static_cast<EntityType>(id);
+     
+    update_table();
 }
 
 void MainWindow::import_json()
@@ -328,32 +343,6 @@ void MainWindow::show_professors()
         row++;
     }
 }
-
-void MainWindow::open_prof_form()
-{
-    if (!prof_form) 
-    {
-        prof_form = new ProfessorForm();
-        prof_form->setAttribute(Qt::WA_DeleteOnClose);
-
-        connect(prof_form, &ProfessorForm::destroyed, this, &MainWindow::on_professor_window_closed);
-
-        prof_form->show();
-    }
-    else 
-    {
-        prof_form->raise();
-        prof_form->activateWindow();
-    }
-}
-
-void MainWindow::on_professor_window_closed()
-{
-    prof_form = nullptr;
-    showing_professors = !showing_professors;
-    update_table();
-}
-
 void MainWindow::show_courses()
 {
     const auto& courses = dm_instance.get_courses();
@@ -374,7 +363,6 @@ void MainWindow::show_courses()
         row++;
     }
 }
-
 void MainWindow::show_sections()
 {
     const auto& sections = dm_instance.get_sections();
@@ -403,7 +391,7 @@ void MainWindow::update_table()
     // {
     //     ui->insertProfButton->hide();
     //     ui->insertCourseButton->show();
-    //     ui->ShowInfoButton->setText("Mostrar Profesores");
+    //     ui->showInfoButton->setText("Mostrar Profesores");
     //     ui->tableInfo->setColumnCount(6);
     //     ui->tableInfo->setHorizontalHeaderLabels(
     //     {"ID","Nombre", "Semestre", "U.C","Horas Semanales","Max Horas Diarias"}
@@ -423,7 +411,7 @@ void MainWindow::update_table()
     // {
     //     ui->insertProfButton->show();
     //     ui->insertCourseButton->hide();
-    //     ui->ShowInfoButton->setText("Mostrar Materias");
+    //     ui->showInfoButton->setText("Mostrar Materias");
     //     ui->tableInfo->setColumnCount(6);
     //     ui->tableInfo->setHorizontalHeaderLabels(
     //     {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
@@ -446,8 +434,8 @@ void MainWindow::update_table()
             ui->insertProfButton->show();
             ui->insertCourseButton->hide();
             ui->insertSecButton->hide();
-            //ui->ShowInfoButton->setText("Mostrar Materias");
             ui->tableInfo->setColumnCount(6);
+            ui->scheduleButton->hide();
             ui->tableInfo->setHorizontalHeaderLabels(
                 {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
             );
@@ -457,7 +445,6 @@ void MainWindow::update_table()
             ui->tableInfo->setColumnWidth(3, 150);
             ui->tableInfo->setColumnWidth(4, 150);
             ui->tableInfo->setColumnWidth(5, 200);
-            
             show_professors();
             break;
 
@@ -465,7 +452,7 @@ void MainWindow::update_table()
             ui->insertProfButton->hide();
             ui->insertCourseButton->show();
             ui->insertSecButton->hide();
-            //ui->ShowInfoButton->setText("Mostrar Materias");
+            ui->scheduleButton->hide();
             ui->tableInfo->setColumnCount(6);
             ui->tableInfo->setHorizontalHeaderLabels(
                 {"ID","Nombre", "Nivel", "U.C","Horas Semanales","Max Horas Diarias"}
@@ -476,7 +463,6 @@ void MainWindow::update_table()
             ui->tableInfo->setColumnWidth(3, 180);
             ui->tableInfo->setColumnWidth(4, 180);
             ui->tableInfo->setColumnWidth(5, 180);
-
             show_courses();
             break;
 
@@ -484,7 +470,7 @@ void MainWindow::update_table()
             ui->insertProfButton->hide();
             ui->insertCourseButton->hide();
             ui->insertSecButton->show();
-            //ui->ShowInfoButton->setText("Mostrar Profesores");
+            ui->scheduleButton->show();
             ui->tableInfo->setColumnCount(3);
             ui->tableInfo->setHorizontalHeaderLabels(
                 {"ID Sección","ID Materia", "ID Profesor"}
@@ -494,9 +480,29 @@ void MainWindow::update_table()
             ui->tableInfo->setColumnWidth(2, 200);
             show_sections();
             break;
+
+        default:
+            break;
     }
 }
 
+void MainWindow::open_prof_form()
+{
+    if (!prof_form) 
+    {
+        prof_form = new ProfessorForm();
+        prof_form->setAttribute(Qt::WA_DeleteOnClose);
+
+        connect(prof_form, &ProfessorForm::destroyed, this, &MainWindow::on_professor_window_closed);
+
+        prof_form->show();
+    }
+    else 
+    {
+        prof_form->raise();
+        prof_form->activateWindow();
+    }
+}
 void MainWindow::open_course_form()
 {
     if (!course_form)
@@ -514,7 +520,6 @@ void MainWindow::open_course_form()
         course_form->activateWindow();
     }
 }
-
 void MainWindow::open_section_form()
 {
     if (!section_form)
@@ -533,13 +538,18 @@ void MainWindow::open_section_form()
     }
 }
 
+void MainWindow::on_professor_window_closed()
+{
+    prof_form = nullptr;
+    //showing_professors = !showing_professors;
+    update_table();
+}
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
-    showing_professors = !showing_professors;
+    //showing_professors = !showing_professors;
     update_table();
 }
-
 void MainWindow::on_section_window_closed()
 {
     section_form = nullptr;

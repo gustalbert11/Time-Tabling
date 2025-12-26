@@ -5,6 +5,8 @@
 #include "sectionform.h"
 #include <QTableWidget>
 // [cite_start]#include <QMenu> //[cite: 1] Necesario para el menú desplegable
+#include <QRadioButton>
+#include <QButtonGroup>
 #include <QMenu>
 #include "flow/flow_network.hpp"
 
@@ -26,6 +28,8 @@ public:
 private slots:
     void go_to_next_window();
     void go_to_previous_window();
+
+    void on_view_changed(int id);
 
     void import_json();
     void import_professors_csv();
@@ -61,10 +65,15 @@ private:
     CourseForm* course_form = nullptr;
     SectionForm* section_form = nullptr;
     bool showing_professors = true;
-    EntityType current_entity_type = EntityType::SECTION;
+    EntityType current_entity_type = EntityType::PROFESSOR;
+
+    QButtonGroup *view_group;
+    QRadioButton *radio_prof;
+    QRadioButton *radio_course;
+    QRadioButton *radio_sect;
 
     QMenu *import_menu = nullptr;
     QMenu *export_menu = nullptr;
-    std::vector<QCheckBox*> check_boxes;
+
 };
 #endif // MAINWINDOW_H

@@ -86,24 +86,10 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="insertSecButton">
-            <property name="text">
-             <string>Seccion</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="scheduleButton">
-          <property name="text">
-           <string>Generar Horario</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ShowInfoButton">
+         <widget class="QPushButton" name="showInfoButton">
           <property name="text">
            <string>PushButton</string>
           </property>
@@ -113,6 +99,13 @@
          <widget class="QTableWidget" name="tableInfo"/>
         </item>
         <item>
+         <widget class="QPushButton" name="insertProfButton">
+          <property name="text">
+           <string>Insertar Profesor</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="insertCourseButton">
           <property name="text">
            <string>Insertar Materia</string>
@@ -120,9 +113,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="insertProfButton">
+         <widget class="QPushButton" name="insertSecButton">
           <property name="text">
-           <string>Insertar Profesor</string>
+           <string>Insertar Seccion</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="scheduleButton">
+          <property name="text">
+           <string>Generar Horario</string>
           </property>
          </widget>
         </item>
