@@ -138,7 +138,6 @@ void MainWindow::import_json()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "El archivo JSON fue importado correctamente.");
-        showing_professors = !showing_professors;
         update_table();
     } 
     else 
@@ -162,7 +161,6 @@ void MainWindow::import_professors_csv()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "Profesores importados correctamente.");
-        showing_professors = false;
         update_table(); 
     } 
     else 
@@ -186,7 +184,6 @@ void MainWindow::import_courses_csv()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "Materias importadas correctamente.");
-        showing_professors = true;
         update_table();
     } 
     else 
@@ -204,6 +201,7 @@ void MainWindow::import_sections_csv()
             "Para importar secciones, primero debes haber cargado Profesores y Materias.\n"
             "Esto asegura que las relaciones se creen correctamente.");
         // No retornamos, dejamos que el usuario intente si quiere, o podrías hacer return;
+        return;
     }
 
     QString filename = QFileDialog::getOpenFileName(
@@ -220,9 +218,6 @@ void MainWindow::import_sections_csv()
     if (ok) 
     {
         QMessageBox::information(this, "Éxito", "Secciones importadas correctamente.");
-        // Las secciones no tienen vista propia en tu tabla principal actual (solo profes o materias),
-        // así que refrescamos la vista actual.
-        showing_professors = !showing_professors;
         update_table();
     } 
     else 
@@ -386,47 +381,6 @@ void MainWindow::update_table()
     ui->tableInfo->clear();
     ui->tableInfo->setRowCount(0);
     ui->tableInfo->setColumnCount(0);
-  
-    // if (showing_professors)
-    // {
-    //     ui->insertProfButton->hide();
-    //     ui->insertCourseButton->show();
-    //     ui->showInfoButton->setText("Mostrar Profesores");
-    //     ui->tableInfo->setColumnCount(6);
-    //     ui->tableInfo->setHorizontalHeaderLabels(
-    //     {"ID","Nombre", "Semestre", "U.C","Horas Semanales","Max Horas Diarias"}
-    //     );
-    //     ui->tableInfo->setColumnWidth(0, 180);
-    //     ui->tableInfo->setColumnWidth(1, 180);
-    //     ui->tableInfo->setColumnWidth(2, 180);
-    //     ui->tableInfo->setColumnWidth(3, 180);
-    //     ui->tableInfo->setColumnWidth(4, 180);
-    //     ui->tableInfo->setColumnWidth(5, 180);
-
-    //     show_courses();
-
-    //     showing_professors = false;
-    // } 
-    // else
-    // {
-    //     ui->insertProfButton->show();
-    //     ui->insertCourseButton->hide();
-    //     ui->showInfoButton->setText("Mostrar Materias");
-    //     ui->tableInfo->setColumnCount(6);
-    //     ui->tableInfo->setHorizontalHeaderLabels(
-    //     {"ID","Nombre", "Max horas diarias", "Max horas consecutivas","Tipo de Preferencia","Descripcion preferencia"}
-    //     );
-    //     ui->tableInfo->setColumnWidth(0, 150);
-    //     ui->tableInfo->setColumnWidth(1, 150);
-    //     ui->tableInfo->setColumnWidth(2, 150);
-    //     ui->tableInfo->setColumnWidth(3, 150);
-    //     ui->tableInfo->setColumnWidth(4, 150);
-    //     ui->tableInfo->setColumnWidth(5, 200);
-        
-    //     show_professors();
-        
-    //     showing_professors = true;
-    // }
 
     switch (current_entity_type) 
     {
@@ -541,18 +495,17 @@ void MainWindow::open_section_form()
 void MainWindow::on_professor_window_closed()
 {
     prof_form = nullptr;
-    //showing_professors = !showing_professors;
     update_table();
 }
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
-    //showing_professors = !showing_professors;
     update_table();
 }
 void MainWindow::on_section_window_closed()
 {
     section_form = nullptr;
+    update_table();
 }
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
@@ -593,12 +546,22 @@ void MainWindow::onItemClicked(QTableWidgetItem *item)
         }
     }
 
-    showing_professors = !showing_professors;
     update_table();
 }
 
 void MainWindow::create_schedule()
 {
+    // ADVERTENCIA: Los profesores, materias y secciones deben existir previamente.
+    if (dm_instance.get_professor_count() == 0 || 
+        dm_instance.get_course_count() == 0 ||
+        dm_instance.get_section_count() == 0)
+    {
+        QMessageBox::warning(this, "Advertencia", 
+            "Primero deben existir Profesores, Materias y Secciones.\n"
+            "Esto asegura que el algoritmo de asignación funcione correctamente.");
+        return;
+    }
+    
     std::ofstream out("resultado_schedule.txt");  // 📄 archivo de salida
 
     // Inicializar red

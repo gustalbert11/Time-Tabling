@@ -64,7 +64,6 @@ private:
     ProfessorForm* prof_form = nullptr;
     CourseForm* course_form = nullptr;
     SectionForm* section_form = nullptr;
-    bool showing_professors = true;
     EntityType current_entity_type = EntityType::PROFESSOR;
 
     QButtonGroup *view_group;
