@@ -41,6 +41,9 @@ private slots:
     void export_courses_csv();
     void export_sections_csv();
 
+    void auto_save_data(EntityType type = EntityType::UNKNOWN);
+    //void auto_save_data();
+
     void show_professors();
     void show_courses();
     void show_sections();

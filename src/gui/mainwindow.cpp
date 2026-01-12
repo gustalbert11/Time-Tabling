@@ -93,6 +93,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->insertSecButton, &QPushButton::clicked, this, &MainWindow::open_section_form);
 
     connect(ui->scheduleButton, &QPushButton::clicked, this, &MainWindow::create_schedule);
+
+    connect(qApp, &QCoreApplication::aboutToQuit, this, [this]() 
+    {
+    auto_save_data();
+    });
+    //connect(qApp, &QCoreApplication::aboutToQuit, this, &MainWindow::auto_save_data);
 }
 
 MainWindow::~MainWindow()
@@ -110,6 +116,7 @@ void MainWindow::go_to_previous_window()
 {
     int it = ui->stackedWidget->currentIndex();
     ui->stackedWidget->setCurrentIndex(it - 1);
+    auto_save_data();
 }
 
 void MainWindow::on_view_changed(int id)
@@ -200,7 +207,6 @@ void MainWindow::import_sections_csv()
         QMessageBox::warning(this, "Advertencia", 
             "Para importar secciones, primero debes haber cargado Profesores y Materias.\n"
             "Esto asegura que las relaciones se creen correctamente.");
-        // No retornamos, dejamos que el usuario intente si quiere, o podrías hacer return;
         return;
     }
 
@@ -317,6 +323,78 @@ void MainWindow::export_sections_csv()
         QMessageBox::warning(this, "Error", "No se pudo exportar el archivo CSV de secciones.");
     }
 }
+
+void MainWindow::auto_save_data(EntityType type)
+{
+    std::string json_backup = "autosave_data.json";
+    
+    bool success = dm_instance.export_to_json(json_backup);
+    
+    if (!success) 
+    {
+        qWarning() << "Error en el autoguardado.";
+        return;
+    } 
+
+    qDebug() << "Autoguardado exitoso en:" << QString::fromStdString(json_backup);
+
+    std::string csv_backup;
+
+    switch (type) 
+    {
+        case EntityType::PROFESSOR:
+            csv_backup = "autosave_professors.csv";
+            success = dm_instance.export_professors_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Profesores.";
+                return;
+            }
+            qDebug() << "Autoguardado de Profesores completado.";
+            break;
+        
+        case EntityType::COURSE:
+            csv_backup = "autosave_courses.csv";
+            success = dm_instance.export_courses_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Materias.";
+                return;
+            }
+            qDebug() << "Autoguardado de Materias completado.";
+            break;
+        
+        case EntityType::SECTION:
+            csv_backup = "autosave_sections.csv";
+            success = dm_instance.export_sections_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Secciones.";
+                return;
+            }
+            qDebug() << "Autoguardado de Secciones completado.";
+            break;
+        
+        default:
+            qDebug() << "Autoguardado de todos los datos completado.";
+            break;
+    }
+}
+
+// void MainWindow::auto_save_data()
+// {
+//     std::string json_backup = "autosave_data.json";
+    
+//     bool success = dm_instance.export_to_json(json_backup);
+    
+//     if (!success) 
+//     {
+//         qWarning() << "Error en el autoguardado.";
+//         return;
+//     } 
+
+//     qDebug() << "Autoguardado exitoso en:" << QString::fromStdString(json_backup);
+// }
 
 void MainWindow::show_professors()
 {
@@ -496,16 +574,22 @@ void MainWindow::on_professor_window_closed()
 {
     prof_form = nullptr;
     update_table();
+    auto_save_data(EntityType::PROFESSOR);
+    //auto_save_data();
 }
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
     update_table();
+    auto_save_data(EntityType::COURSE);
+    //auto_save_data();
 }
 void MainWindow::on_section_window_closed()
 {
     section_form = nullptr;
     update_table();
+    auto_save_data(EntityType::SECTION);
+    //auto_save_data();
 }
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
