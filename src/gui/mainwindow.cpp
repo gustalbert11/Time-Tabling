@@ -376,25 +376,31 @@ void MainWindow::auto_save_data(EntityType type)
             break;
         
         default:
-            qDebug() << "Autoguardado de todos los datos completado.";
+            csv_backup = "autosave_professors.csv";
+            success = dm_instance.export_professors_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Profesores.";
+            }
+
+            csv_backup = "autosave_courses.csv";
+            success = dm_instance.export_courses_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Materias.";
+            }
+
+            csv_backup = "autosave_sections.csv";
+            success = dm_instance.export_sections_to_csv(csv_backup);
+            if (!success) 
+            {
+                qWarning() << "Error en el autoguardado de Secciones.";
+            }
+
+            qDebug() << "Autoguardado de todos los datos posibles completado.";
             break;
     }
 }
-
-// void MainWindow::auto_save_data()
-// {
-//     std::string json_backup = "autosave_data.json";
-    
-//     bool success = dm_instance.export_to_json(json_backup);
-    
-//     if (!success) 
-//     {
-//         qWarning() << "Error en el autoguardado.";
-//         return;
-//     } 
-
-//     qDebug() << "Autoguardado exitoso en:" << QString::fromStdString(json_backup);
-// }
 
 void MainWindow::show_professors()
 {
@@ -575,21 +581,18 @@ void MainWindow::on_professor_window_closed()
     prof_form = nullptr;
     update_table();
     auto_save_data(EntityType::PROFESSOR);
-    //auto_save_data();
 }
 void MainWindow::on_course_window_closed()
 {
     course_form = nullptr;
     update_table();
     auto_save_data(EntityType::COURSE);
-    //auto_save_data();
 }
 void MainWindow::on_section_window_closed()
 {
     section_form = nullptr;
     update_table();
     auto_save_data(EntityType::SECTION);
-    //auto_save_data();
 }
 
 void MainWindow::onItemClicked(QTableWidgetItem *item)
